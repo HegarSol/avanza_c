@@ -1129,8 +1129,8 @@ function aceptarasiento(tableID)
 	  var formData = new FormData(formElement);
 	  formData.append('empresa','<?php echo $rfc?>');
 	  $.ajax({
-       //url : "http://avanzab.hegarss.com/api/Comprobantes/upload",
-		 url : "http://localhost:85/getcfdi/api/Comprobantes/upload",
+       url : "http://avanzab.hegarss.com/api/Comprobantes/upload",
+		 //url : "http://localhost:85/getcfdi/api/Comprobantes/upload",
 		 type : "POST",
 		 data : formData,
 		 processData : false,

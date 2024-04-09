@@ -23,7 +23,7 @@ $config = array(
         'cuentas' => array(
               array('field' => 'cuenta','label' => 'cuenta','rules' => 'required','errors' => array('required' => 'El campo <b>%s</b> es requerido')),
               array('field' => 'sub_cta','label' => 'sub_cta','rules' => 'required','errors' => array('required' => 'El campo <b>%s</b> es requerido')),
-              array('field' => 'ssub_cta','label' => 'ssub_cta','rules' => 'required','errors' => array('required' => 'El campo <b>%s</b> es requerido')),
+            //  array('field' => 'ssub_cta','label' => 'ssub_cta','rules' => 'required','errors' => array('required' => 'El campo <b>%s</b> es requerido')),
               array('field' => 'nombre','label' => 'nombre','rules' => 'required','errors' => array('required' => 'El campo <b>%s</b> es requerido')),
         ),
 );
