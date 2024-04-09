@@ -78,7 +78,7 @@ var tipoUsuarioActivo="<?php echo isset($_SESSION['tipo'])?$_SESSION['tipo']:'';
   <?php
   if(!isset($_SESSION['unica']) || $_SESSION['unica']==0 || $_SESSION['tipo']=="SU")
   {
-    echo '<font size="3"><b>Trabajando como : </b>'.$_SESSION['razon'].'</font>&nbsp&nbsp&nbsp<a href="'.base_url().'/index.php/inicio/VerSelecEmpresa" class="btn btn-danger btn-sm" role="button">Cambiar de empresa </a>';
+    echo '<font size="3"><b>Trabajando como : </b>'.$_SESSION['razon'].'</font>&nbsp&nbsp&nbsp<a href="'.base_url().'index.php/inicio/VerSelecEmpresa" class="btn btn-danger btn-sm" role="button">Cambiar de empresa </a>';
   }
   else{ echo "";}
   ?>
