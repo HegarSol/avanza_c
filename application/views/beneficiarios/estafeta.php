@@ -473,24 +473,28 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
         </div>
             <div class="modal-body" >
                   <div class="row">
-                        <div class="col-md-1"></div>
+                        <div class="col-md-2">
                          Prov: 
-                        <b><?php echo $datosbenefi[0]['no_prov']; ?></b>
+                        <b><input type="text" id="num_prodve" name="num_prodve" class="form-control" readonly></b>
+                        </div>
                   </div>
                   <div class="row">
-                        <div class="col-md-1"></div>
+                        <div class="col-md-4">
                         Nombre: 
-                        <b><?php echo $datosbenefi[0]['nombre']; ?></b>
+                        <b><input type="text" id="nom_prodve" name="nom_prodve" class="form-control" readonly></b>
+                        </div>
                   </div>
                   <div class="row">
-                        <div class="col-md-1"></div>
+                        <div class="col-md-3">
                         RFC: 
-                        <b><?php echo $datosbenefi[0]['rfc']; ?></b>
+                        <b><input type="text" id="rfc_prodve" name="rfc_prodve" class="form-control" readonly></b>
+                        </div>
                   </div>
                   <div class="row">
-                        <div class="col-md-1"></div>
+                        <div class="col-md-5">
                         Direccion: 
-                        <b><?php echo $datosbenefi[0]['direccion']; ?></b>
+                        <b><input type="text" id="dire_prodve" name="dire_prodve" class="form-control" readonly></b>
+                        </div>
                   </div>
                   <br>
                   <div class="row">
@@ -542,7 +546,6 @@ function aceptarasiento(tableID)
      var num_fact_pro = document.getElementById('num_factur_provisi').value;
      var serie_provisi = document.getElementById('serie_provisi').value;
      var tol = document.getElementById('totalpoliza').value;
-     var nombre = '<?php echo $datosbenefi[0]['nombre']; ?>';
      
      var mes = '<?php echo $_SESSION["mes"];?>';
      var ano = '<?php echo $_SESSION["ano"];?>';
@@ -578,7 +581,7 @@ function aceptarasiento(tableID)
                     type:"POST",
                     url: baseurl + "catalogos/Beneficiarios/insert_poliza_provision",
                     data: {tipo:tipo_pro,mov:mov_pro,uuid:uuid_pro,fecha:fecha_pro,provee:prove_provi,pago:pago_provi,
-                    num_fact:num_fact_pro,nombre:nombre,serie_provisi:serie_provisi,total:tol,cuenta:cuenta,sub_cta:sub_cta,nom:nom,conce:conce,
+                    num_fact:num_fact_pro,serie_provisi:serie_provisi,total:tol,cuenta:cuenta,sub_cta:sub_cta,nom:nom,conce:conce,
                     mon:mon,c_a:c_a},
                     dataType:"html",
                     success:function(msg)
@@ -755,82 +758,95 @@ function aceptarasiento(tableID)
             var oTT2 = $.fn.dataTable.TableTools.fnGetInstance("tabla_pendientes");
             var aData2 = oTT2.fnGetSelectedData();
 
-            var nom_prov = '<?php echo $datosbenefi[0]['no_prov'] ?>';
 
-            jQuery.ajax({
-                type:"POST",
-                url: baseurl + "catalogos/Operaciones/buildAcientoContable",
-                data:{uuid:aData2[0][1],nom_prov:nom_prov},
-                dataType:"html",
-                success:function(response)
-                {
-                  $("#tableprevisual tbody").empty();
-                  
-                  document.getElementById('negativo').value = '0';
-                  document.getElementById('positivo').value = '0';
-                  document.getElementById('totalpoliza').value = '0';
+           $valorw = jQuery.ajax({
+               url : baseurl + "catalogos/Beneficiarios/getbeneficirfc",
+               type:"POST",
+               data:{rfc:aData2[0][6]},
+               dataType:"html",
+               success:function(response2)
+               {
+                  response2=JSON.parse(response2);
+                   
+               
+                        var nom_prov = response2.no_prov;
 
-                   response=JSON.parse(response);
-                     for(var i in response.data)
-                      {
+                        jQuery.ajax({
+                           type:"POST",
+                           url: baseurl + "catalogos/Operaciones/buildAcientoContable",
+                           data:{uuid:aData2[0][1],nom_prov:nom_prov},
+                           dataType:"html",
+                           success:function(response)
+                           {
+                              $("#tableprevisual tbody").empty();
+                              
+                              document.getElementById('negativo').value = '0';
+                              document.getElementById('positivo').value = '0';
+                              document.getElementById('totalpoliza').value = '0';
 
-                        var btn2 = document.createElement("INPUT");
-                        btn2.setAttribute("type","button");
-                        btn2.setAttribute('onclick','abrirmodalconficun(this)');
-                        btn2.id = 'btnbuscarconfig';
-                        btn2.className = 'btn btn-primary';
-                        btn2.value = 'Configuración cuentas';
+                              response=JSON.parse(response);
+                                 for(var i in response.data)
+                                 {
 
-                        var clave = response.data[i].clave;
-                        var importe = response.data[i].importe;
-                        var c_a = response.data[i].c_a;
-                        var cta = response.data[i].cuenta;
-                        var sub_cta = response.data[i].sub_cta;
-                        var nom_cta = response.data[i].nombre_cta;
+                                    var btn2 = document.createElement("INPUT");
+                                    btn2.setAttribute("type","button");
+                                    btn2.setAttribute('onclick','abrirmodalconficun(this)');
+                                    btn2.id = 'btnbuscarconfig';
+                                    btn2.className = 'btn btn-primary';
+                                    btn2.value = 'Configuración cuentas';
 
-                        if(c_a == '-')
-                        {
-                            var nega = parseFloat(document.getElementById('negativo').value);
-                            var montotal =+ importe + nega;
-                            document.getElementById('negativo').value = montotal.toFixed(2);
-                        }
-                        else
-                        {
-                            var posi = parseFloat(document.getElementById('positivo').value);
-                            var montotal =+ importe + posi;
-                            document.getElementById('positivo').value = montotal.toFixed(2);
-                        }
+                                    var clave = response.data[i].clave;
+                                    var importe = response.data[i].importe;
+                                    var c_a = response.data[i].c_a;
+                                    var cta = response.data[i].cuenta;
+                                    var sub_cta = response.data[i].sub_cta;
+                                    var nom_cta = response.data[i].nombre_cta;
 
-                        var tbody = document.getElementById('tableprevisual').getElementsByTagName('TBODY')[0];
-                        var row = document.createElement("TR")
-                        var td3 = document.createElement("TD")
-                        td3.appendChild(document.createTextNode(cta))
-                        var td4 = document.createElement("TD")
-                        td4.appendChild(document.createTextNode(sub_cta))
-                        var td6 = document.createElement("TD")
-                        td6.appendChild(document.createTextNode(nom_cta))
-                        var td7 = document.createElement("TD")
-                        td7.appendChild(document.createTextNode(''))
-                        var td8 = document.createElement("TD")
-                        td8.setAttribute('style','text-align:right')
-                        td8.appendChild(document.createTextNode(parseFloat(importe).toFixed(2)))
-                        var td9 = document.createElement("TD")
-                        td9.appendChild(document.createTextNode(c_a))
+                                    if(c_a == '-')
+                                    {
+                                       var nega = parseFloat(document.getElementById('negativo').value);
+                                       var montotal =+ importe + nega;
+                                       document.getElementById('negativo').value = montotal.toFixed(2);
+                                    }
+                                    else
+                                    {
+                                       var posi = parseFloat(document.getElementById('positivo').value);
+                                       var montotal =+ importe + posi;
+                                       document.getElementById('positivo').value = montotal.toFixed(2);
+                                    }
 
-                       row.appendChild(td3);
-                       row.appendChild(td4);
-                       row.appendChild(td6);
-                       row.appendChild(td7);
-                       row.appendChild(td8);
-                       row.appendChild(td9);
+                                    var tbody = document.getElementById('tableprevisual').getElementsByTagName('TBODY')[0];
+                                    var row = document.createElement("TR")
+                                    var td3 = document.createElement("TD")
+                                    td3.appendChild(document.createTextNode(cta))
+                                    var td4 = document.createElement("TD")
+                                    td4.appendChild(document.createTextNode(sub_cta))
+                                    var td6 = document.createElement("TD")
+                                    td6.appendChild(document.createTextNode(nom_cta))
+                                    var td7 = document.createElement("TD")
+                                    td7.appendChild(document.createTextNode(''))
+                                    var td8 = document.createElement("TD")
+                                    td8.setAttribute('style','text-align:right')
+                                    td8.appendChild(document.createTextNode(parseFloat(importe).toFixed(2)))
+                                    var td9 = document.createElement("TD")
+                                    td9.appendChild(document.createTextNode(c_a))
 
-                       tbody.appendChild(row);
+                                 row.appendChild(td3);
+                                 row.appendChild(td4);
+                                 row.appendChild(td6);
+                                 row.appendChild(td7);
+                                 row.appendChild(td8);
+                                 row.appendChild(td9);
 
-                     }
+                                 tbody.appendChild(row);
 
-                     var totales = parseFloat(document.getElementById('positivo').value) - parseFloat(document.getElementById('negativo').value);
-                     document.getElementById('totalpoliza').value = totales.toFixed(2);
-                }
+                                 }
+
+                                 var totales = parseFloat(document.getElementById('positivo').value) - parseFloat(document.getElementById('negativo').value);
+                                 document.getElementById('totalpoliza').value = totales.toFixed(2);
+                           }
+                        });
+               }
             });
    }
   function seleccionfacturapaga()
@@ -859,29 +875,71 @@ function aceptarasiento(tableID)
          if(tipo == 1)
          {
               $('#myModalPUEpagada').modal('hide');
+              var oTT = $.fn.dataTable.TableTools.fnGetInstance("tabla_pendientes");
+               var aData = oTT.fnGetSelectedData();
+              
+               jQuery.ajax({
+               url : baseurl + "catalogos/Beneficiarios/getbeneficirfc",
+               type:"POST",
+               data:{rfc:aData[0][6]},
+               dataType:"html",
+               success:function(response2)
+               {
+                  response2=JSON.parse(response2);
 
-               var nom_prov = '<?php echo $datosbenefi[0]['no_prov']; ?>';
-              jQuery.ajax({
-                  type:"POST",
-                  url: baseurl+"catalogos/Beneficiarios/getPolizasPagoProveedor",
-                  data:{datas:1,nom_prov:nom_prov},
-                  dataType:"html",
-                  success:function(data)
-                  {
-
-                        $('#tabla_pagos_polizas').html(data);
-                        $('#tabla_polizas_pagos_prove').DataTable({
-                           language: { "url" : "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json" },
-                           "sDom": 'T<"clear">lfrtip', "oTableTools": {  "sRowSelect": "single","aButtons": ""},
-                           "columnDefs" : [
-                              {
-                                 "targets" : [-1],
-                                 "orderable" : false
-                              }
-                           ]
+                   if(response2=='')
+                   {
+                     //var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: 'No tiene agregado a este proveedor, para aceptar esta factura agregelo primero.'});
+                        swal({
+                           title: "¿Desea agregarlo?",
+                           text: "No tiene agregado a este proveedor, para adjuntar a la poliza.",
+                           type: "warning",
+                           showCancelButton: true,
+                           confirmButtonColor: "#DD6B55",
+                           confirmButtonText: "Aceptar",
+                           cancelButtonText: "No, Cancelar",
+                           closeOnConfirm: false,
+                           closeOnCancel: false
+                           },
+                           function(isConfirm){
+                           if (isConfirm)
+                           { location.href=baseurl+"catalogos/Beneficiarios/agregar";  }
+                           else {
+                              swal("Cancelado", "No se creara al proveedor.", "error");
+                           }
                         });
-                  }
-              });
+                   }
+                   else
+                   {
+                        jQuery.ajax({
+                              type:"POST",
+                              url: baseurl+"catalogos/Beneficiarios/getPolizasPagoProveedor",
+                              data:{datas:1,nom_prov:aData[0][6]},
+                              dataType:"html",
+                              success:function(data)
+                              {
+
+                                    $('#tabla_pagos_polizas').html(data);
+                                    $('#tabla_polizas_pagos_prove').DataTable({
+                                       language: { "url" : "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json" },
+                                       "sDom": 'T<"clear">lfrtip', "oTableTools": {  "sRowSelect": "single","aButtons": ""},
+                                       "columnDefs" : [
+                                          {
+                                             "targets" : [-1],
+                                             "orderable" : false
+                                          }
+                                       ]
+                                    });
+
+                                    document.getElementById('num_prodve').value = response2[0]['no_prov'];
+                                    document.getElementById('nom_prodve').value = response2[0]['nombre'];
+                                    document.getElementById('rfc_prodve').value = response2[0]['rfc'];
+                                    document.getElementById('dire_prodve').value = response2[0]['direccion'];
+                              }
+                        });
+                    }
+               }
+            })
 
               $('#myModalpolizasPago').modal('show');
          }
@@ -964,6 +1022,8 @@ function aceptarasiento(tableID)
 
                let date = new Date(aData2[0][3]);
 
+               
+
               // console.log(date);
 
                 let day = date.getDate();
@@ -978,14 +1038,25 @@ function aceptarasiento(tableID)
                   {
                      month = '0'+month;
                   }
-
+                  jQuery.ajax({
+                  url : baseurl + "catalogos/Beneficiarios/getbeneficirfc",
+                  type:"POST",
+                  data:{rfc:aData2[0][6]},
+                  dataType:"html",
+                  success:function(response)
+                  {
+                     response=JSON.parse(response);
+                    // var idpros = response[0].no_prov;
+                     
+                  
                document.getElementById('uuid_provision').value = aData2[0][1];
-               document.getElementById('provee_provisi').value = '<?php echo $datosbenefi[0]['no_prov']?>';
+               document.getElementById('provee_provisi').value = response[0].no_prov;
                document.getElementById('pago_provision').value = aData2[0][26];
                document.getElementById('fecha_provision').value = year+'-'+month+'-'+day;
                document.getElementById('num_factur_provisi').value = aData2[0][4];
                document.getElementById('serie_provisi').value = aData2[0][5];
-
+            }
+               });
 
                jQuery.ajax({
                      url: baseurl+"catalogos/Beneficiarios/getarchivos",

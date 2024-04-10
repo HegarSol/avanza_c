@@ -59,7 +59,7 @@
     {
         if($this->aauth->is_loggedin())
         {
-        if($_SESSION['tipo']=='SU')
+        if($_SESSION['tipo']=='SU' || $_SESSION['tipo']=='admin')
         {
         
             $items=$this->UsuariosModel->permisos();

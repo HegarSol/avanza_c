@@ -45,13 +45,13 @@ class Beneficiarios extends MY_Controller
             show_error('No tiene permisos para entrar a beneficiarios');
         }
     }
-    public function estafeta($id)
+    public function estafeta()
     {
         if($this->aauth->is_loggedin())
         {
 
             $rfc = $this->configModel->getConfig();
-            $informabene = $this->benefi->datosBenefi($id);
+          //  $informabene = $this->benefi->datosBenefi($id);
 
             $conse = $this->operaciones->maxidPro();
 
@@ -65,7 +65,7 @@ class Beneficiarios extends MY_Controller
             }
 
             $errores=array();
-            $data = array('titulo' => 'Listado de comprobantes pendientes','consepro' => $conesucu,'datosbenefi' => $informabene,'rfc' => $rfc[0]['rfc'],'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores' => $errores);
+            $data = array('titulo' => 'Listado de comprobantes pendientes','consepro' => $conesucu,'rfc' => $rfc[0]['rfc'],'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores' => $errores);
             $items=$this->menuModel->menus($_SESSION['tipo']);
             $this->multi_menu->set_items($items);
             $this->load->view('templates/header');
@@ -143,8 +143,8 @@ class Beneficiarios extends MY_Controller
     {
         $rfc =  $this->input->post('rfc');
         
-        $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/pendientes?empresa=".$rfc);
-       //$ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/pendientes?empresa=".$rfc);
+       // $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/pendientes?empresa=".$rfc);
+       $ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/pendientes?empresa=".$rfc);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -172,7 +172,7 @@ class Beneficiarios extends MY_Controller
         $num_fa = $this->input->post('num_fact');
         $serie_pro = $this->input->post('serie_provisi');
         $total = $this->input->post('total');
-        $nombre = $this->input->post('nombre');
+        $benefinombre = $this->benefi->datosBenefi($provee);
 
         $poliza = $tipo.' '.' 0 '.'       '.$mov;
 
@@ -190,7 +190,7 @@ class Beneficiarios extends MY_Controller
                  'no_banco' => 0,
                  'no_mov' => $mov,
                  'fecha' => $fecha,
-                 'beneficia' => $nombre,
+                 'beneficia' => $$benefinombre[0]['nombre'],
                  'concepto' => '',
                  'monto' => 0.00,
                  'c_a' => '',
@@ -409,7 +409,10 @@ class Beneficiarios extends MY_Controller
     public function getPolizasPagoProveedor()
     {
         $nom_prov = $this->input->post('nom_prov');
-        $data = $this->operaciones->getpolizapagoproveedor($nom_prov);
+  
+        $benfeno = $this->benefi->datosbenerfc($nom_prov);
+
+        $data = $this->operaciones->getpolizapagoproveedor($benfeno[0]['no_prov']);
 
         $datas['getpolizaspagoprove'] = $data;
 
