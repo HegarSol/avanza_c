@@ -241,7 +241,7 @@ class LibroElectronico extends MY_Controller
         $img = $this->rowc[0]['imgName'];
         $formato = explode(".",$this->rowc[0]['imgName']);
         $imagen = $this->rowc[0]['img'];
-        $this->pdf->Image(isset($imagen) ? "data:image/$formato[1];base64,$imagen" : APPPATH.'public'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'logo.png',20,6,40,40,"$formato[1]");
+        if(isset($imagen)){$this->pdf->Image("data:image/$formato[1];base64,$imagen");}
         $this->pdf->SetFont('Helvetica','B',15);
         $this->pdf->Cell(70);
         $this->pdf->Cell(10,0,$this->rowc[0]['nombreEmpresa'],0,0,'L');
