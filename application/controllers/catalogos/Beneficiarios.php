@@ -143,8 +143,8 @@ class Beneficiarios extends MY_Controller
     {
         $rfc =  $this->input->post('rfc');
         
-       // $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/pendientes?empresa=".$rfc);
-       $ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/pendientes?empresa=".$rfc);
+        $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/pendientes?empresa=".$rfc);
+       //$ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/pendientes?empresa=".$rfc);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
