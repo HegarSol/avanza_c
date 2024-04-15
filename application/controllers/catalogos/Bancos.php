@@ -196,14 +196,15 @@ class Bancos extends MY_Controller
 
                 }
 
-                $cons = array('status' => true, 'data' => $datas);
+                $this->opera->CrearTablaTemporal($datas);
+                //$cons = array('status' => true, 'data' => $datas);
             }
             else
             {
                 $cons = array('status' => false,'data' => 0);
             }
 
-$this->output->set_content_type('application/json')->set_output(json_encode($cons));
+         // $this->output->set_content_type('application/json')->set_output(json_encode($cons));
 
     }
     public function ajax_bancos()
@@ -628,8 +629,41 @@ $this->output->set_content_type('application/json')->set_output(json_encode($con
     public function getbanco()
     {
         $id = $this->input->post('id');
-        $datos=$this->bancos->datosBancos($id);
-        $this->output->set_content_type('application/json')->set_output(json_encode($datos));
+        //$clasi = 0;
+        $clasi = $this->input->post('clasi');
+
+
+        if($clasi == 1)
+        {
+
+                $datos=$this->bancos->datosBancos($id);
+
+                $data2 = array('cta'=>$datos[0]['cta'],'sub_cta'=>$datos[0]['sub_cta'],'banco'=>$datos[0]['banco'],'c_a'=>'+','monto'=>0,'val'=>1);
+     
+                 $datostemporal = $this->opera->obtenerTablaTemporal();
+                 $dats = [];
+                 foreach($datostemporal as $dat)
+                 {
+                      $dast[] = array(
+                           'cta' => $dat['cuenta'],
+                           'sub_cta' => $dat['sub_cta'],
+                           'banco' => $dat['nombre_cta'],
+                           'c_a' => $dat['c_a'],
+                           'monto' => $dat['importe'],
+                           'val' => '0'
+     
+                      );
+                 }
+                 array_push($dast, $data2);
+
+
+        }
+        else
+        {
+            $dast=$this->bancos->datosBancos($id);
+        }
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($dast));
     }
     public function eliminar($id)
     {

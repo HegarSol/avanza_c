@@ -218,6 +218,7 @@ $this->load->view('beneficiarios/modales/TablaBancos');
 </div>
 </div>
 
+<input type="text" class="form-control" id="uuidpagar" name="uuidpagar">
 
 <!-- </div> -->
 
@@ -590,6 +591,7 @@ function abrircuentaspagar()
 
                verTabla('<?php echo $rfc ?>','<?php echo $tipo_letra?>');
 
+               document.getElementById('uuidpagar').value = '';
               $('#myModalCuentasPagar').modal('show');
     }     
 }
@@ -709,6 +711,7 @@ function soloNumeros(evt,input)
 
 function recogerDatosPoliza(tableID)
 {
+    var uuidpoliza = document.getElementById('uuidpagar').value;
     var tol = document.getElementById('totalpoliza').value;
     var mes = '<?php echo $_SESSION["mes"];?>';
     var ano = '<?php echo $_SESSION["ano"];?>';
@@ -868,7 +871,7 @@ function recogerDatosPoliza(tableID)
                     cobrado_poli:cobrado_poli,cerrado_poli:cerrado_poli,no_prove:no_prove,fechaCobro:fechaCobro,cobro:cobro,impresopoli:impresopoli,
                     afectar:afectar,bancosat:bancosat,bene_ctaban:bene_ctaban,cta_banco:cta_banco,tieneCxP_pagos:tieneCxP_pagos,
                     tipo_mov:tipo_mov,no_banco:no_banco,no_mov:no_mov,ren:ren,cuenta:cuenta,sub_cta:sub_cta,monto:monto,
-                    c_a:c_a,fecha:fecha,concepto:concepto,referencia:referencia,factrefe:factrefe,no_prov:no_prov,nombre_cuenta:nombre_cuenta},
+                    c_a:c_a,fecha:fecha,concepto:concepto,referencia:referencia,factrefe:factrefe,no_prov:no_prov,nombre_cuenta:nombre_cuenta,uuidpoliza:uuidpoliza},
                     success:function(msg)
                     {
                         if (msg[0].mensaje== "Insertado Correctamente" || msg=="Actualizado Correctamente")
@@ -1061,6 +1064,7 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
             var rowCount = table.rows.length;
 
             var monto = document.getElementById('montopoli').value;
+            var clasi = 0;
             
             if('<?php echo $tipo;?>' == 3)
             {
@@ -1091,7 +1095,7 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
                     jQuery.ajax({
                         type:"POST",
                         url: baseurl+"catalogos/bancos/getbanco",
-                        data:{id:nu_banco},
+                        data:{id:nu_banco,clasi:clasi},
                         dataType:"html",
                         success:function(response)
                         {

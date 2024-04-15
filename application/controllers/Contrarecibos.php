@@ -49,8 +49,16 @@ class Contrarecibos extends MY_Controller
         {
             $sumtori = $idsum[0]['id_contra'] + 1;
 
-             $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/actualicontra");
-            //$ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/actualicontra");
+            if(ENVIRONMENT == 'development')
+            {
+               $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/actualicontra");
+            }
+            else
+            {
+                $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/actualicontra");
+            }
+
+
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uuid."&sumtori=".$sumtori);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

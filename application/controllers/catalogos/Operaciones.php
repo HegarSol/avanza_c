@@ -89,8 +89,7 @@ class Operaciones extends MY_Controller
         foreach($datosprevi as $valor)
         {
             $algo = $this->conficta->getcuenta_sub($valor['cuenta'],$valor['sub_cta']);
-        //    if(count($algo) > 0)
-        //    {
+
                if(isset($algo[0]['idcuentaconfi']) == 28)
                {
                    $contra = $this->conficta->getidcuentaconfi(6);
@@ -245,23 +244,18 @@ class Operaciones extends MY_Controller
                             'importe' => $valor['importe'],
                             'c_a' => $valor['c_a'] == '+' ? '-' : '+'
                         ];
-                        //array_push($datas,$cosas);
                     }
 
-               }
-
-        //    }
-        //    else
-        //    {
-
-        //    }
-            
+               }            
         }
 
-        // var_dump($datas);
-
-        $response = array('status' => true, 'data' => $datas);
-        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        $this->opera->CrearTablaTemporal($datas);
+       // $response = array('status' => true, 'data' => $datas);
+       // $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+    public function eliminartablatemporal()
+    {
+        $this->opera->borrarTablaTemporal();
     }
     public function getAttribute($query)
     {
@@ -312,6 +306,14 @@ class Operaciones extends MY_Controller
         $cta_banco = $this->input->post('cta_banco');
         $tipoproveedor = $this->input->post('tipoproveedor');
 
+        $uuidpoliza = $this->input->post('uuidpoliza');
+        $poliza_contble = $tipo_movimento.'  '.$numero_banco.'        '.$numero_movimento;
+
+        $uuidsep = substr($uuidpoliza, 0, -1);
+
+        $uuidsep = explode(',',$uuidsep);
+
+
        $datos = array(
            'tipo_mov' => $tipo_movimento,
            'no_banco' => $numero_banco,
@@ -359,6 +361,7 @@ class Operaciones extends MY_Controller
                                'comentario' => 'Edito la operacion de tipo: '.$tipo_movimento.' del numero de banco: '.$numero_banco.' del movimiento: '.$numero_movimento,
                                'modulo' => 'Catalogos -> Bancos -> '.$tipo_mo);
            $this->bitacora->operacion($crearopera);
+
        }
        else
        {
@@ -375,14 +378,40 @@ class Operaciones extends MY_Controller
                                    'modulo' => 'Catalogos -> Bancos -> '.$tipo_mo);
                $this->bitacora->operacion($crearopera);
                $correcto = true;
+     
+                if($uuidpoliza =! '' && $ca_poli == '-' && $tipo_movimento == 'T' || $tipo_movimento == 'C')
+                {
+                    foreach($uuidsep as $uid)
+                    {
+                     
+                        if(ENVIRONMENT == 'development')
+                        {
+                            $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/poliza_pago");
+                        }
+                        else
+                        {
+                            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/poliza_pago");
+                        }
+                
+                
+                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uid."&fecha=".$fechapoli."&poliza=".$poliza_contble);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                        $resu = curl_exec($ch);
+                        $response = json_decode($resu);
+                     
+                    }
+                 }
            }
        }
 
        if($correcto == true)
        {
-           $this->opera->actualizarmovimiento($numero_banco,$tipo_movimento,$numero_movimento);
+          $this->opera->actualizarmovimiento($numero_banco,$tipo_movimento,$numero_movimento);
 
-           $this->opera->borrarDetalle($id);
+          $this->opera->borrarDetalle($id);
             
            //detalle poliza
             $tipo_mov = $this->input->post('tipo_mov');

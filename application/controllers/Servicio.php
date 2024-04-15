@@ -20,7 +20,14 @@ class Servicio extends MY_Controller
         foreach($data as $dat)
         {
 
-            $ch = curl_init("http://localhost:85/avanza_facturacion_github/api/Contabilidad/obtener_polizas_ingreso?id=".$dat['IdEmpresa']);
+            if(ENVIRONMENT == 'development')
+            {
+               $ch = curl_init("http://localhost:85/avanza_facturacion_github/api/Contabilidad/obtener_polizas_ingreso?id=".$dat['IdEmpresa']);
+            }
+            else
+            {
+
+            }
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -49,7 +56,14 @@ class Servicio extends MY_Controller
 
         foreach($data as $dat)
         {
+            if(ENVIRONMENT == 'development')
+            {
             $ch = curl_init("http://localhost:85/avanza_facturacion_github/api/Contabilidad/obtener_polizas_cancelacion?id=".$dat['IdEmpresa']);
+            }
+            else
+            {
+
+            }
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -111,7 +125,14 @@ class Servicio extends MY_Controller
     public function actualizar($idempresa,$idFactura,$poliza,$cancelacion)
     {
 
+        if(ENVIRONMENT == 'development')
+        {
         $ch = curl_init("http://localhost:85/avanza_facturacion_github/api/Contabilidad/establece_contabilizada");
+        }
+        else
+        {
+            
+        }
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, "id_empresa=".$idempresa."&id_factura=".$idFactura."&poliza=".$poliza."&cancelacion=".$cancelacion);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
