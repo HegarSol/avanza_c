@@ -86,8 +86,15 @@ class Beneficiarios extends MY_Controller
         $historico = $this->input->post('historico');
         $formaDePago = $this->input->post('formapago');
 
-       $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago);
-       //$ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago);
+        if(ENVIRONMENT == 'development')
+        {
+          $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago);
+        }
+        else
+        {
+          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago);
+        }
+
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -110,8 +117,16 @@ class Beneficiarios extends MY_Controller
 
        $rfc = $this->configModel->getConfig();
 
-       $ch = curl_init("http://avanzaf.hegarss.com/api/Conta/buscar_cliente?rfc=".$rfc[0]['rfc']);
-       //$ch = curl_init("http://localhost:85/facturacioncfdi/api/Conta/buscar_cliente?rfc=".$rfc[0]['rfc']);
+       if(ENVIRONMENT == 'development')
+        {
+            $ch = curl_init("http://localhost:85/avanza_facturacion_github/api/Conta/buscar_cliente?rfc=".$rfc[0]['rfc']);
+        }
+        else
+        {
+            $ch = curl_init("http://avanzaf.hegarss.com/api/Conta/buscar_cliente?rfc=".$rfc[0]['rfc']);
+        }
+
+
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -119,7 +134,7 @@ class Beneficiarios extends MY_Controller
        $response = json_decode($resu);
 
        $data = array();
-       
+      // var_dump($rfc[0]['rfc']);
        foreach($response->data as $cli)
        {
            $row = array();
@@ -143,8 +158,16 @@ class Beneficiarios extends MY_Controller
     {
         $rfc =  $this->input->post('rfc');
         
-        $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/pendientes?empresa=".$rfc);
-       //$ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/pendientes?empresa=".$rfc);
+        if(ENVIRONMENT == 'development')
+        {
+            $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/pendientes?empresa=".$rfc);
+        }
+        else
+        {
+            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/pendientes?empresa=".$rfc);
+        }
+
+
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -190,7 +213,7 @@ class Beneficiarios extends MY_Controller
                  'no_banco' => 0,
                  'no_mov' => $mov,
                  'fecha' => $fecha,
-                 'beneficia' => $$benefinombre[0]['nombre'],
+                 'beneficia' => $benefinombre[0]['nombre'],
                  'concepto' => '',
                  'monto' => 0.00,
                  'c_a' => '',
@@ -243,8 +266,16 @@ class Beneficiarios extends MY_Controller
                     {
                         $mensaje[]=array('mensaje' => "Insertado Correctamente");
 
+                        
+                        if(ENVIRONMENT == 'development')
+                        {
+                            $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/contabiliza");
+                        }
+                        else
+                        {
                             $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/contabiliza");
-                            //$ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/contabiliza");
+                        }
+
                             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                             curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uuid."&fecha=".$fecha."&poliza=".$poliza);
                             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -281,8 +312,17 @@ class Beneficiarios extends MY_Controller
     {
         $uuid = $this->input->post('uuid');
 
-        $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
-       // $ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/archivos?uuid=".$uuid);
+         if(ENVIRONMENT == 'development')
+         {
+             $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
+
+         }
+         else
+         {
+            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
+        }
+
+
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -349,6 +389,7 @@ class Beneficiarios extends MY_Controller
                  //BUSCAR NO EXISTEN
                 foreach($arraySinDuplicados as $clave)
                 {
+                  //  var_dump($clave['clave']);
                    $row =  $this->dicuentas->buscariguales($clave['clave']);
                    $descrip = $this->catalogos->selectprodser($clave['clave']);
 
@@ -424,8 +465,16 @@ class Beneficiarios extends MY_Controller
         $fecha_poliza = $this->input->post('fecha_poliza');
         $poliza = $this->input->post('poliza');
 
-        $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/poliza_pago");
-       // $ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/poliza_pago");
+        if(ENVIRONMENT == 'development')
+        {
+            $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/poliza_pago");
+        }
+        else
+        {
+            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/poliza_pago");
+        }
+
+
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uuid."&fecha=".$fecha_poliza."&poliza=".$poliza);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -443,8 +492,16 @@ class Beneficiarios extends MY_Controller
 
         $uuid = $this->input->post('uuid');
 
-          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/acepta");
-       //$ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/acepta");
+        if(ENVIRONMENT == 'development')
+        {
+            $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/acepta");            
+        }
+        else
+        {
+            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/acepta");
+        }
+
+
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uuid);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -497,8 +554,16 @@ class Beneficiarios extends MY_Controller
         $ieps = $this->input->post('ieps');
         $total = $this->input->post('total');
 
-         $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/uploadpdf");
-        //$ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/uploadpdf");
+        if(ENVIRONMENT == 'development')
+        {
+                    $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/uploadpdf");
+        }
+        else
+        {
+            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/uploadpdf");
+        }
+
+
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, "empresa=".$recep."&tipo_com=".$tipo_com."&versio=".$versio."&foli=".$foli."&seri=".$seri."&fecha=".$fecha.
                   "&fom_pa=".$fom_pa."&met_pa=".$met_pa."&cta=".$cta."&est=".$est."&cod_sat=".$cod_sat."&mone=".$mone."&tipo_cam=".$tipo_cam."&rfc=".$rfc.
@@ -532,8 +597,16 @@ class Beneficiarios extends MY_Controller
 
         $uuid = $this->input->post('uuid');
 
-       $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/rechaza");
-       // $ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/rechaza");
+        if(ENVIRONMENT == 'development')
+        {
+            $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/rechaza");
+        }
+        else
+        {
+            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/rechaza");
+        }
+
+
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uuid);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -564,8 +637,16 @@ class Beneficiarios extends MY_Controller
 
         $uuid = $this->input->post('uuid');
         
-       $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/delete");
-       // $ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/delete");
+        if(ENVIRONMENT == 'development')
+        {
+             $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/delete");
+        }
+        else
+        {
+            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/delete");
+        }
+
+
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uuid);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -597,8 +678,16 @@ class Beneficiarios extends MY_Controller
         $poliza = $this->input->post('poliza');
         $empresa = $this->input->post('empresa');
 
-       $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/quita_poliza_pago");
-      //  $ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/quita_poliza_pago");
+        if(ENVIRONMENT == 'development')
+        {
+            $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/quita_poliza_pago");
+        }
+        else
+        {
+            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/quita_poliza_pago");
+        }
+
+
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uuid."&poliza=".$poliza."&empresa=".$empresa);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

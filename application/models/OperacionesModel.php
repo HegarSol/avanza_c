@@ -220,5 +220,60 @@ class OperacionesModel extends MY_Model
          return $this->db2->get()->result_array();
 
     }
+    public function CrearTablaTemporal($datas)
+    {
+       
+        $query = $this->db2->query("SHOW TABLES LIKE 'builtemporal'");
+
+       if(count($query->result()) == 1)
+       {
+            foreach($datas as $data)
+            {
+                $data = array(
+                    'cuenta' => $data['cuenta'],
+                    'sub_cta' => $data['sub_cta'],
+                    'nombre_cta' => $data['nombre_cta'],
+                    'importe' => $data['importe'],
+                    'c_a' => $data['c_a']
+                );
+                $this->db2->insert('builtemporal', $data);
+            }
+       }
+       else
+       {
+        $query = "CREATE TABLE `builtemporal` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+                `cuenta` smallint(6) DEFAULT NULL,
+                `sub_cta` smallint(6) DEFAULT NULL,
+                `nombre_cta` varchar(90) DEFAULT NULL,
+                `importe` decimal(11,2) DEFAULT NULL,
+                `c_a` char(3) DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;";
+            $this->db2->query($query);
+            foreach($datas as $data)
+            {
+                $data = array(
+                    'cuenta' => $data['cuenta'],
+                    'sub_cta' => $data['sub_cta'],
+                    'nombre_cta' => $data['nombre_cta'],
+                    'importe' => $data['importe'],
+                    'c_a' => $data['c_a']
+                );
+                $this->db2->insert('builtemporal', $data);
+            }
+       }
+
+
+    }
+    public function obtenerTablaTemporal()
+    {
+        $row = $this->db2->select('*')->from('builtemporal')->get();
+        return $row->result_array();
+    }
+    public function borrarTablaTemporal()
+    {
+        $query = $this->db2->query('DROP TABLE IF EXISTS builtemporal');
+    }
 
 }

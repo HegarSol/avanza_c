@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 defined('BASEPATH') or exit('No direct script access alloed');
 
@@ -61,8 +61,16 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
        $conf = $CI->configcon->getConfig();
 
+    //    if(ENVIRONMENT == 'development')
+    //    {
+    //      $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
+    //    }
+    //    else
+      // {
         $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
-        //$ch = curl_init("http://localhost:85/getcfdi/api/Comprobantes/archivos?uuid=".$uuid);
+      // }
+
+
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -73,6 +81,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
         $CI->xmlDom = new DOMDocument();
         $CI->xmlDom->loadXML($response->xmlContent);
+        $xml2 = simplexml_load_string($response->xmlContent);
 
         $sumaimpueiva16 = 0;
         $sumaimpueiva8 = 0;
@@ -104,64 +113,69 @@ defined('BASEPATH') or exit('No direct script access alloed');
                 }
       
                   $retenList = $CI->xmlDom->getElementsByTagName('Retencion');
-                  foreach($retenList as $retencion)
+                  foreach($xml2->children('cfdi',TRUE)->Conceptos->Concepto as $concepto)
                   {
-                      if($retencion->getAttribute('Base'))
-                      {
-                          $tasa = $retencion->getAttribute('TasaOCuota');
-                          $importe = $retencion->getAttribute('Importe');
-                          $impuesto = $retencion->getAttribute('Impuesto');
-
-                          if($impuesto == '002')
-                          {
-                               if($tasa == '0.053334' || $tasa == '0.053333')
-                               {
-                                   $sumareteniva = $sumareteniva + $importe;
-                               }
-                               else if($tasa == '0.106667' || $tasa == '0.106666')
-                               {
-                                   $sumareteniva = $sumareteniva + $importe;
-                               }
-                               else if($tasa == '0.040000')
-                               {
-                                   $sumaretenisr4porflete = $sumaretenisr4porflete + $importe;
-                               }
-                          }
-                          else if($impuesto == '001')
-                          {
-                            $sumaretenisr = $sumaretenisr + $importe;
-                          }
-                      }
-                  }
-
-                  $trasladoList = $CI->xmlDom->getElementsByTagName('Traslado');
-                  foreach($trasladoList as $traslado)
-                  {
-                        if($traslado->getAttribute('Base'))
+                    if(isset($concepto->Impuestos->Retenciones->Retencion))
+                    {
+                        for($j=0;$j <= count($concepto->Impuestos->Retenciones); $j++)
                         {
-                            $tasa = $traslado->getAttribute('TasaOCuota');
-                            $importe = $traslado->getAttribute('Importe');
-                            $impuesto = $traslado->getAttribute('Impuesto');
-
-                            if($impuesto == '002')
+                            if(isset($concepto->Impuestos->Retenciones->Retencion[$j]))
                             {
-                                
-                                if($tasa == '0.160000')
+                                if($concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->Impuesto == 002)
                                 {
-                                    $sumaimpueiva16 = $sumaimpueiva16 + $importe;
+                                     if($concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->TasaOCuota == '0.053334' || $concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->TasaOCuota == '0.053333')
+                                     {
+                                        $sumareteniva = $sumareteniva + (double) $concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->Importe;
+                                     }
+                                     else if($concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->TasaOCuota == '0.106667' || $concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->TasaOCuota == '0.106666')
+                                     {
+                                        $sumareteniva = $sumareteniva + (double) $concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->Importe;
+                                     }
+                                     else if($concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->TasaOCuota == '0.040000')
+                                     {
+                                        $sumaretenisr4porflete = $sumaretenisr4porflete + (double) $concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->Importe;
+                                     }
                                 }
-                                else if($tasa == '0.080000')
+                                if($concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->Impuesto == 001)
                                 {
-                                    $sumaimpueiva8 = $sumaimpueiva8 + $importe;
+                                    $sumaretenisr = $sumaretenisr + (double) $concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->Importe;
                                 }
-
-                            }
-                            else if($impuesto == '003')
-                            {
-                                $sumaimpueeips = $sumaimpueeips + $importe;
                             }
                         }
+                    }
                   }
+
+                 $trasladoList = $CI->xmlDom->getElementsByTagName('Concepto');
+
+                foreach($xml2->children('cfdi',TRUE)->Conceptos->Concepto as $concepto)
+                  {
+                                if(isset($concepto->Impuestos->Traslados->Traslado))
+                                {
+                                    for($j=0;$j <= count($concepto->Impuestos->Traslados); $j++)
+                                    {
+                                        if(isset($concepto->Impuestos->Traslados->Traslado[$j]))
+                                        {
+                                            if($concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Impuesto == 002)
+                                            {
+                                                if($concepto->Impuestos->Traslados->Traslado[$j]->attributes()->TasaOCuota == '0.160000')
+                                                {
+                                                   $sumaimpueiva16 = $sumaimpueiva16 + (double) $concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Importe;  
+                                                }
+                                                else if($concepto->Impuestos->Traslados->Traslado[$j]->attributes()->TasaOCuota == '0.080000')
+                                                {
+                                                    $sumaimpueiva8 = $sumaimpueiva8 + (double) $concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Importe;                                           
+                                                }                                                                    
+                                            }                                           
+                                            if($concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Impuesto == 003)
+                                            {
+                                                $sumaimpueeips = $sumaimpueeips + (double) $concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Importe;
+                                            }
+                                        }
+                                       
+                                    }
+                                 }
+                  }
+
 
                 for($i = 0; $i< count($conceptos); $i++)
                 {
@@ -214,6 +228,8 @@ defined('BASEPATH') or exit('No direct script access alloed');
                     {
 
                        $row =  $CI->dicuentas->buscariguales($resultante['clave']);
+
+                     //  var_dump($deta);
                 
                        if($deta == 0)
                        {
@@ -259,7 +275,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumaimpueiva8 != 0)
                         {
                             $iva8 = $CI->conficue->getidcuentaconfi(37);
-                            $ivaesti = array('importe' => $sumaimpueiva8, 'c_a' => '-','cuenta' => $iva8[0]['cuenta'],'sub_cta' => $iva8[0]['sub_cta'],'nombre_cta' => $iva8[0]['descrip']);
+                            $ivaesti = array('importe' => number_format($sumaimpueiva8,2,'.',''), 'c_a' => '-','cuenta' => $iva8[0]['cuenta'],'sub_cta' => $iva8[0]['sub_cta'],'nombre_cta' => $iva8[0]['descrip']);
                             array_push($datosresul, $ivaesti);
                         }
                     }
@@ -268,7 +284,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumaimpueiva8 != 0)
                         {
                             $iva8 = $CI->conficue->getidcuentaconfi(38);
-                            $ivaesti = array('importe' => $sumaimpueiva8, 'c_a' => '+','cuenta' => $iva8[0]['cuenta'],'sub_cta' => $iva8[0]['sub_cta'],'nombre_cta' => $iva8[0]['descrip']);
+                            $ivaesti = array('importe' => number_format($sumaimpueiva8,2,'.',''), 'c_a' => '+','cuenta' => $iva8[0]['cuenta'],'sub_cta' => $iva8[0]['sub_cta'],'nombre_cta' => $iva8[0]['descrip']);
                             array_push($datosresul, $ivaesti);
                         }
                     }

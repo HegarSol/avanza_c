@@ -589,22 +589,22 @@ function con()
 
 }
 
-   function checartodo() 
-   {
+function checartodo()
+{
 
-      $("#tblCuentasPagar tr:gt(0)").each(function () {
-        var this_row = $(this);
-             var vista = $.trim(this_row.find('td:eq(0)').find('input[type=checkbox]').is(':checked'));
-
-               var total = parseFloat(0);
-                $("input:checkbox:checked").each(function(){
+   var campos = '';
+   var total = parseFloat(0);
+          $("input[type=checkbox]:checked").each(function(){
+                var recibo = [];
+                var tipo = $(this).parent().parent().find('td').eq(2).html();
                 var monto = parseFloat($(this).parent().parent().find('td').eq(20).html());
-                total += monto;
-                document.getElementById('total_pagar').value = total.toFixed(2);
-                });
-      });
-   }
+                total += monto;             
+                campos+= tipo+',';
 
+            });
+            document.getElementById('uuidpagar').value = campos;
+            document.getElementById('total_pagar').value = total.toFixed(2);
+}
 
    function checar()
    {
@@ -1039,83 +1039,84 @@ console.log(1);
                                        success:function(response)
                                        {
 
-                                          response=JSON.parse(response);
+                                         //  response=JSON.parse(response);
 
-                                             for(var i in response.data)
-                                             {
-                                                   var tbody = document.getElementById('asiento_conta').getElementsByTagName("TBODY")[0];
-                                                   var row = document.createElement("TR")
+                                          //    for(var i in response.data)
+                                          //    {
+                                          //          var tbody = document.getElementById('asiento_conta').getElementsByTagName("TBODY")[0];
+                                          //          var row = document.createElement("TR")
                                                    
-                                                   var element1 = document.createElement("input");
-                                                   element1.type = "checkbox";
-                                                   element1.name="chkbox[]"; 
+                                          //          var element1 = document.createElement("input");
+                                          //          element1.type = "checkbox";
+                                          //          element1.name="chkbox[]"; 
                                                    
+                                          //        //  console.log(response.data[i]);
                                                    
-                                                   var td0 = document.createElement("TD")
-                                                   td0.style.textAlign = 'center';
-                                                   td0.appendChild(element1)
-                                                   var td1 = document.createElement("TD")
-                                                   td1.appendChild(document.createTextNode(response.data[i].cuenta))
-                                                   var td2 = document.createElement("TD")
-                                                   td2.appendChild(document.createTextNode(response.data[i].sub_cta))
-                                                   var td3 = document.createElement("TD")
-                                                   td3.appendChild(document.createTextNode(numprov))
-                                                   var td4 = document.createElement("TD")
-                                                   td4.appendChild(document.createTextNode(''))
-                                                   var td5 = document.createElement("TD")
-                                                   td5.appendChild(document.createTextNode(response.data[i].nombre_cta))
-                                                   var td6 = document.createElement("TD")
-                                                   td6.appendChild(document.createTextNode(''))
-                                                   var td7 = document.createElement("TD")
-                                                   td7.appendChild(document.createTextNode(response.data[i].importe))
+                                          //          var td0 = document.createElement("TD")
+                                          //          td0.style.textAlign = 'center';
+                                          //          td0.appendChild(element1)
+                                          //          var td1 = document.createElement("TD")
+                                          //          td1.appendChild(document.createTextNode(response.data[i].cuenta))
+                                          //          var td2 = document.createElement("TD")
+                                          //          td2.appendChild(document.createTextNode(response.data[i].sub_cta))
+                                          //          var td3 = document.createElement("TD")
+                                          //          td3.appendChild(document.createTextNode(numprov))
+                                          //          var td4 = document.createElement("TD")
+                                          //          td4.appendChild(document.createTextNode(''))
+                                          //          var td5 = document.createElement("TD")
+                                          //          td5.appendChild(document.createTextNode(response.data[i].nombre_cta))
+                                          //          var td6 = document.createElement("TD")
+                                          //          td6.appendChild(document.createTextNode(''))
+                                          //          var td7 = document.createElement("TD")
+                                          //          td7.appendChild(document.createTextNode(response.data[i].importe))
                                                 
-                                                      if(response.data[i].c_a == '+')
-                                                      {
-                                                         var c_a = '-';
-                                                      }
-                                                      else
-                                                      {
-                                                         var c_a = '+';
-                                                      }
+                                          //             if(response.data[i].c_a == '+')
+                                          //             {
+                                          //                var c_a = '-';
+                                          //             }
+                                          //             else
+                                          //             {
+                                          //                var c_a = '+';
+                                          //             }
                                                 
-                                                   var td8 = document.createElement("TD")
-                                                   td8.appendChild(document.createTextNode(c_a))
+                                          //          var td8 = document.createElement("TD")
+                                          //          td8.appendChild(document.createTextNode(c_a))
 
-                                                   row.appendChild(td0);
-                                                   row.appendChild(td1);
-                                                   row.appendChild(td2);
-                                                   row.appendChild(td3);
-                                                   row.appendChild(td4);
-                                                   row.appendChild(td5);
-                                                   row.appendChild(td6);
-                                                   row.appendChild(td7);
-                                                   row.appendChild(td8);
-                                                   tbody.appendChild(row);
+                                          //          row.appendChild(td0);
+                                          //          row.appendChild(td1);
+                                          //          row.appendChild(td2);
+                                          //          row.appendChild(td3);
+                                          //          row.appendChild(td4);
+                                          //          row.appendChild(td5);
+                                          //          row.appendChild(td6);
+                                          //          row.appendChild(td7);
+                                          //          row.appendChild(td8);
+                                          //          tbody.appendChild(row);
 
                                                    
-                                                   var posit = parseFloat(document.getElementById('positivo').value);
-                                                   var nega = parseFloat(document.getElementById('negativo').value);
+                                          //          var posit = parseFloat(document.getElementById('positivo').value);
+                                          //          var nega = parseFloat(document.getElementById('negativo').value);
                                                    
-                                                   var monto = parseFloat(response.data[i].importe);
+                                          //          var monto = parseFloat(response.data[i].importe);
 
-                                                   if(c_a == '+')
-                                                   {
-                                                      var total = posit + monto;
-                                                      document.getElementById('positivo').value = total.toFixed(2);
-                                                   }
-                                                   else
-                                                   {
-                                                      var total = nega + monto;
-                                                      document.getElementById('negativo').value = total.toFixed(2);
-                                                   }
+                                          //          if(c_a == '+')
+                                          //          {
+                                          //             var total = posit + monto;
+                                          //             document.getElementById('positivo').value = total.toFixed(2);
+                                          //          }
+                                          //          else
+                                          //          {
+                                          //             var total = nega + monto;
+                                          //             document.getElementById('negativo').value = total.toFixed(2);
+                                          //          }
 
-                                                   var posit2 = parseFloat(document.getElementById('positivo').value);
-                                                   var nega2 = parseFloat(document.getElementById('negativo').value);
+                                          //          var posit2 = parseFloat(document.getElementById('positivo').value);
+                                          //          var nega2 = parseFloat(document.getElementById('negativo').value);
 
-                                                   var total2 = posit2-nega2;
+                                          //          var total2 = posit2-nega2;
                                                    
-                                                   document.getElementById('totalpoliza').value = total2.toFixed(2);
-                                             }
+                                          //          document.getElementById('totalpoliza').value = total2.toFixed(2);
+                                          //    }
                                        }
                                     });
                              }
@@ -1190,87 +1191,87 @@ console.log(1);
                success:function(response)
                {
                                   
-                    response=JSON.parse(response);
-                    if(response.status == true)
-                    {
-                          // console.log(response.data);
-                        for(var i in response.data)
-                        {
-                              var tbody = document.getElementById('asiento_conta').getElementsByTagName("TBODY")[0];
-                              var row = document.createElement("TR")
+                   // response=JSON.parse(response);
+                   // if(response.status == true)
+                   // {
+
+                    //    for(var i in response.data)
+                    //    {
+                    //          var tbody = document.getElementById('asiento_conta').getElementsByTagName("TBODY")[0];
+                     //         var row = document.createElement("TR")
                               
-                              var element1 = document.createElement("input");
-                              element1.type = "checkbox";
-                              element1.name="chkbox[]"; 
+                     //         var element1 = document.createElement("input");
+                     //         element1.type = "checkbox";
+                     //         element1.name="chkbox[]"; 
                               
                               
-                              var td0 = document.createElement("TD")
-                              td0.style.textAlign = 'center';
-                              td0.appendChild(element1)
-                              var td1 = document.createElement("TD")
-                              td1.appendChild(document.createTextNode(response.data[i].cuenta))
-                              var td2 = document.createElement("TD")
-                              td2.appendChild(document.createTextNode(response.data[i].sub_cta))
-                              var td3 = document.createElement("TD")
-                              td3.appendChild(document.createTextNode(numprov))
-                              var td4 = document.createElement("TD")
-                              td4.appendChild(document.createTextNode(''))
-                              var td5 = document.createElement("TD")
-                              td5.appendChild(document.createTextNode(response.data[i].nombre_cta))
-                              var td6 = document.createElement("TD")
-                              td6.appendChild(document.createTextNode(''))
-                              var td7 = document.createElement("TD")
-                              td7.appendChild(document.createTextNode(response.data[i].importe))
+                    //          var td0 = document.createElement("TD")
+                    //          td0.style.textAlign = 'center';
+                    //          td0.appendChild(element1)
+                    //          var td1 = document.createElement("TD")
+                    //          td1.appendChild(document.createTextNode(response.data[i].cuenta))
+                    //          var td2 = document.createElement("TD")
+                    //          td2.appendChild(document.createTextNode(response.data[i].sub_cta))
+                    //          var td3 = document.createElement("TD")
+                    //          td3.appendChild(document.createTextNode(numprov))
+                    //          var td4 = document.createElement("TD")
+                    //          td4.appendChild(document.createTextNode(''))
+                   //           var td5 = document.createElement("TD")
+                   //           td5.appendChild(document.createTextNode(response.data[i].nombre_cta))
+                   //           var td6 = document.createElement("TD")
+                   //           td6.appendChild(document.createTextNode(''))
+                    //          var td7 = document.createElement("TD")
+                  //            td7.appendChild(document.createTextNode(response.data[i].importe))
                            
-                           if(response.data[i].c_a == '+')
-                           {
-                              var c_a = '-';
-                           }
-                           else
-                           {
-                              var c_a = '+';
-                           }
+                    //       if(response.data[i].c_a == '+')
+                   //        {
+                    //          var c_a = '-';
+                    //       }
+                    //       else
+                    //       {
+                    //          var c_a = '+';
+                    //       }
                            
-                              var td8 = document.createElement("TD")
-                              td8.appendChild(document.createTextNode(c_a))
+                   //           var td8 = document.createElement("TD")
+                    //          td8.appendChild(document.createTextNode(c_a))
 
-                              row.appendChild(td0);
-                              row.appendChild(td1);
-                              row.appendChild(td2);
-                              row.appendChild(td3);
-                              row.appendChild(td4);
-                              row.appendChild(td5);
-                              row.appendChild(td6);
-                              row.appendChild(td7);
-                              row.appendChild(td8);
-                              tbody.appendChild(row);
+                    //          row.appendChild(td0);
+                   //           row.appendChild(td1);
+                    //          row.appendChild(td2);
+                    //          row.appendChild(td3);
+                   //           row.appendChild(td4);
+                   //           row.appendChild(td5);
+                   //           row.appendChild(td6);
+                   //           row.appendChild(td7);
+                   //           row.appendChild(td8);
+                   //           tbody.appendChild(row);
 
                               
-                              var posit = parseFloat(document.getElementById('positivo').value);
-                              var nega = parseFloat(document.getElementById('negativo').value);
+                   //           var posit = parseFloat(document.getElementById('positivo').value);
+                   //           var nega = parseFloat(document.getElementById('negativo').value);
                               
-                              var monto = parseFloat(response.data[i].importe);
+                   //           var monto = parseFloat(response.data[i].importe);
 
-                              if(c_a == '+')
-                              {
-                                 var total = posit + monto;
-                                 document.getElementById('positivo').value = total.toFixed(2);
-                              }
-                              else
-                              {
-                                 var total = nega + monto;
-                                 document.getElementById('negativo').value = total.toFixed(2);
-                              }
+                   //           if(c_a == '+')
+                   //           {
+                    //             var total = posit + monto;
+                   //              document.getElementById('positivo').value = total.toFixed(2);
+                   //           }
+                   //           else
+                   //           {
+                   //              var total = nega + monto;
+                    //             document.getElementById('negativo').value = total.toFixed(2);
+                      //        }
 
-                              var posit2 = parseFloat(document.getElementById('positivo').value);
-                              var nega2 = parseFloat(document.getElementById('negativo').value);
+                    //          var posit2 = parseFloat(document.getElementById('positivo').value);
+                   //           var nega2 = parseFloat(document.getElementById('negativo').value);
 
-                              var total2 = posit2-nega2;
+                  //            var total2 = posit2-nega2;
                               
-                              document.getElementById('totalpoliza').value = total2.toFixed(2);
+                  //            document.getElementById('totalpoliza').value = total2.toFixed(2);
                               
-                        }
-                    }
+                  //      }
+                  //  }
                }
            });
  }
