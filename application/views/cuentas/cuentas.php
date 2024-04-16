@@ -116,7 +116,62 @@ if(isset($mensaje))
          </div>
          <label class="control-label col-sm-1" for="tipo">Tipo:</label>
         <div class="col-sm-2">
-           <input type="text" class="form-control" id="tipo" name="tipo" value="<?php echo isset($datos[0]['tipo']) ? $datos[0]['tipo'] : '' ?>">
+            <select name="tipo" id="tipo" class="form-control">
+                <?php
+                if($datos[0]['tipo'] == 1)
+                {
+                ?>
+                    <option value=""> -Seleccione- </option>
+                    <option value="1" selected>1- Ingreso</option>
+                    <option value="2">2- Costos/Compras</option>
+                    <option value="3">3- Gastos Generales</option>
+                    <option value="4">4- Gastos Financieros</option>
+                <?php
+                }
+                else if($datos[0]['tipo'] == 2)
+                {
+                ?>
+                    <option value=""> -Seleccione- </option>
+                    <option value="1">1- Ingreso</option>
+                    <option value="2" selected>2- Costos/Compras</option>
+                    <option value="3">3- Gastos Generales</option>
+                    <option value="4">4- Gastos Financieros</option>
+                <?php
+                }
+                else if($datos[0]['tipo'] == 3)
+                {
+                ?>
+                    <option value=""> -Seleccione- </option>
+                    <option value="1">1- Ingreso</option>
+                    <option value="2">2- Costos/Compras</option>
+                    <option value="3" selected>3- Gastos Generales</option>
+                    <option value="4">4- Gastos Financieros</option>
+                <?php
+                }
+                else if($datos[0]['tipo'] == 4)
+                {
+                ?>
+                    <option value=""> -Seleccione- </option>
+                    <option value="1">1- Ingreso</option>
+                    <option value="2">2- Costos/Compras</option>
+                    <option value="3">3- Gastos Generales</option>
+                    <option value="4" selected>4- Gastos Financieros</option>
+                <?php
+                }
+                else
+                {
+                ?>
+                    <option value="" selected> -Seleccione- </option>
+                    <option value="1">1- Ingreso</option>
+                    <option value="2">2- Costos/Compras</option>
+                    <option value="3">3- Gastos Generales</option>
+                    <option value="4" >4- Gastos Financieros</option>
+                <?php
+                }
+                ?>
+
+
+            </select>
         </div>
     </div>
 
