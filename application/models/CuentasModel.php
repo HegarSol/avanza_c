@@ -9,7 +9,7 @@
        {
            parent::__construct(true);
            $this->table = 'catalogocta';
-           $this->column_order = array('idcuenta','cuenta','sub_cta','nombre','tipo','ctasat','natur','cvecobro','ssub_cta');
+           $this->column_order = array('cuenta','sub_cta','ssub_cta');
            $this->column_search = array('idcuenta','cuenta','sub_cta','nombre','tipo','ctasat','natur','cvecobro','ssub_cta');
            if(isset($_SESSION['idEmpresa'])){
              $this->db2 = $this->hegardb->getDatabase($_SESSION['idEmpresa']);
@@ -29,7 +29,7 @@
         }
         public function getCuentas()
         {
-            $row = $this->db2->select('*')->from('catalogocta')->get();
+            $row = $this->db2->select('*')->from('catalogocta')->order_by('cuenta','sub_cta','ssub_cta')->get();
             return $row->result_array();
         } 
         public function editarCuenta($id,$datos)

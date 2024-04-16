@@ -521,9 +521,10 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
             success:function (msg)
             {
                 var i=1;
+                var nombre = '<?php echo $empresanombre[0]['nombreEmpresa']?>';
                 if(msg != "")
                 {
-                   var tab_text="<h1>Reporte de Cuentas</h1>"+
+                   var tab_text="<h1>Reporte de Cuentas</h1>"+"<h1>"+nombre+"</h1>"+
                     "<table border='2px'> <tr><td bgcolor='#D7D7D7'>Cuenta</td><td bgcolor='#D7D7D7'>Sub Cuenta</td><td bgcolor='#D7D7D7'>Nombre</td><td bgcolor='#D7D7D7'>Tipo</td><td bgcolor='#D7D7D7'>"+
                     "Cuenta SAT</td><td bgcolor='#D7D7D7'>Naturaleza</td><td bgcolor='#D7D7D7'>Clave Cobro</td><td bgcolor='#D7D7D7'>Ssub Cuenta</td>";
                       for(i=0; i<msg.length; i++)

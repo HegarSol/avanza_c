@@ -12,6 +12,7 @@ class Cuentas extends MY_Controller
         $this->load->model('CatalogosModel','cat');
         $this->load->model('BitacoraModel','bitacora');
         $this->load->model('ConfigCuentasModel','conficuentas');
+        $this->load->model('Configuraciones_model','confi');
     }
 
     public function index()
@@ -21,8 +22,8 @@ class Cuentas extends MY_Controller
            $permisos = $this->permisosForma($_SESSION['id'],7);
            if(isset($permisos) && $permisos['leer']=="1")
            {
-               
-               $data = array('titulo' => 'Cuentas','permisosGrupo' =>  $permisos);
+               $nombrempre = $this->confi->getConfig();
+               $data = array('titulo' => 'Cuentas','permisosGrupo' =>  $permisos,'empresanombre'=>$nombrempre);
                $this->load->view('templates/navigation',$data);
                $this->load->view('cuentas/index');
                $this->load->view('templates/footer');
