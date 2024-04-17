@@ -16,6 +16,7 @@ class Bancos extends MY_Controller
         $this->load->model('Configuraciones_model','configModel');
         $this->load->model('BitacoraModel','bitacora');
         $this->load->model('ConfigCuentasModel','conficta');
+        $this->load->model('CuentasModel','cuentas');
         //$this->load->helper('hegarss');
     }
 
@@ -590,6 +591,16 @@ class Bancos extends MY_Controller
             );
             $this->bitacora->operacion($banco);
             $correcto=$this->bancos->editarBanco($id,$datos);
+
+            // $datoscuenta = array('cuenta' => $this->input->post('cuenta'),
+            //                   'sub_cta' => $this->input->post('sub_cuenta_conta'),
+            //                   'nombre'=> $this->input->post('nombre'),
+            //                   'tipo' => '',
+            //                   'ctasat' => $this->input->post('cuenta').'.'.$this->input->post('sub_cuenta_conta'),
+            //                   'natur' => 'D',
+            //                   'cvecobro'=> 0,
+            //                   'ssub_cta' => $this->input->post('sub_sub_cuenta_conta'));
+           // $this->cuentas->editarCuenta($id,$datoscuenta);
         }
         else
         {
@@ -615,6 +626,16 @@ class Bancos extends MY_Controller
                 ); 
                 $this->bitacora->operacion($banco);
                 $correcto=$this->bancos->crearBanco($datos);
+
+                $datoscuenta = array('cuenta' => $this->input->post('cuenta'),
+                              'sub_cta' => $this->input->post('sub_cuenta_conta'),
+                              'nombre'=> $this->input->post('nombre'),
+                              'tipo' => '',
+                              'ctasat' => $this->input->post('cuenta').'.0'.$this->input->post('sub_cuenta_conta'),
+                              'natur' => 'D',
+                              'cvecobro'=>0,
+                              'ssub_cta' => $this->input->post('sub_sub_cuenta_conta'));
+                $this->cuentas->crearCuenta($datoscuenta);
             }
 
         }
