@@ -61,14 +61,14 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
        $conf = $CI->configcon->getConfig();
 
-    //    if(ENVIRONMENT == 'development')
-    //    {
-    //      $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
-    //    }
-    //    else
-      // {
+       if(ENVIRONMENT == 'development')
+       {
+         $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
+       }
+       else
+      {
         $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
-      // }
+       }
 
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

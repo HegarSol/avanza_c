@@ -99,6 +99,7 @@ class Cuentas extends MY_Controller
 
         $this->output->set_content_type('application/json')->set_output(json_encode($dat));
     }
+
     public function insertsubcuentadestino()
     {
         $cuenta = $this->input->post('cuenta');
