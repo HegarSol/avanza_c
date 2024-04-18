@@ -168,6 +168,27 @@ class Reportes extends MY_Controller
            $this->pdf->SetWidths(array(30,30,30));
            $this->Rowpdf(array('TOTAL',number_format($totalcargos,2,'.',''),number_format($totalabono,2,'.','')));
     
+            $this->pdf->SetY(261);
+            $this->pdf->SetCol(0);
+            $this->pdf->Cell(30,4,'Elaborado por',0,1,'C','true');
+            $this->pdf->Cell(30,10,'',1,0,'');
+            $this->pdf->SetY(261);
+            $this->pdf->SetCol(0.5);
+            $this->pdf->Cell(30,4,'Revisado',0,1,'C','true');
+            $this->pdf->Cell(30,10,'',1,0,'');
+            $this->pdf->SetY(261);
+            $this->pdf->SetCol(1);
+            $this->pdf->Cell(30,4,'Autorizado',0,1,'C','true');
+            $this->pdf->Cell(30,10,'',1,0,'');
+            $this->pdf->SetY(261);
+            $this->pdf->SetCol(1.5);
+            $this->pdf->Cell(30,4,'Auxiliar',0,1,'C','true');
+            $this->pdf->Cell(30,10,'',1,0,'');
+            $this->pdf->SetY(261);
+            $this->pdf->SetCol(2);
+            $this->pdf->Cell(69,4,'',0,1,'C','true');
+            $this->pdf->Cell(69,10,'',1,0,'');
+
             $this->pdf->Output('I','Reportepolizas.pdf');
         }
 
@@ -357,6 +378,28 @@ class Reportes extends MY_Controller
        $this->pdf->Cell(115);
        $this->pdf->SetWidths(array(30,30,30));
        $this->Rowpdf(array('TOTAL',number_format($totalcargos,2,'.',''),number_format($totalabono,2,'.','')));
+
+       $this->pdf->SetY(261);
+       $this->pdf->SetCol(0);
+       $this->pdf->Cell(30,4,'Elaborado por',0,1,'C','true');
+       $this->pdf->Cell(30,10,'',1,0,'');
+       $this->pdf->SetY(261);
+       $this->pdf->SetCol(0.5);
+       $this->pdf->Cell(30,4,'Revisado',0,1,'C','true');
+       $this->pdf->Cell(30,10,'',1,0,'');
+       $this->pdf->SetY(261);
+       $this->pdf->SetCol(1);
+       $this->pdf->Cell(30,4,'Autorizado',0,1,'C','true');
+       $this->pdf->Cell(30,10,'',1,0,'');
+       $this->pdf->SetY(261);
+       $this->pdf->SetCol(1.5);
+       $this->pdf->Cell(30,4,'Auxiliar',0,1,'C','true');
+       $this->pdf->Cell(30,10,'',1,0,'');
+       $this->pdf->SetY(261);
+       $this->pdf->SetCol(2);
+       $this->pdf->Cell(69,4,'',0,1,'C','true');
+       $this->pdf->Cell(69,10,'',1,0,'');
+
        $this->pdf->Output('I','Reportepolizas.pdf');
     }
     public function Reportecuenta()

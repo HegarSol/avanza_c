@@ -8,8 +8,8 @@ class Servicio extends MY_Controller
     }
     public function index()
     {
-        $this->pendientes();
-        $this->cancelados();
+       // $this->pendientes();
+       // $this->cancelados();
     }
     public function pendientes()
     {
@@ -26,7 +26,7 @@ class Servicio extends MY_Controller
             }
             else
             {
-
+                $ch = curl_init("https://avanzaf.hegarss.com/api/Contabilidad/obtener_polizas_ingreso?id=".$dat['IdEmpresa']);
             }
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -58,11 +58,11 @@ class Servicio extends MY_Controller
         {
             if(ENVIRONMENT == 'development')
             {
-            $ch = curl_init("http://localhost:85/avanza_facturacion_github/api/Contabilidad/obtener_polizas_cancelacion?id=".$dat['IdEmpresa']);
+                $ch = curl_init("http://localhost:85/avanza_facturacion_github/api/Contabilidad/obtener_polizas_cancelacion?id=".$dat['IdEmpresa']);
             }
             else
             {
-
+                $ch = curl_init("https://avanzaf.hegarss.com/api/Contabilidad/obtener_polizas_cancelacion?id=".$dat['IdEmpresa']);
             }
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -93,18 +93,22 @@ class Servicio extends MY_Controller
                     'tipo_mov' => $inserycance == 1 ? $inserpo->tipo_mov : 'X',
                     'no_banco' => $inserpo->no_banco,
                     'no_mov' => $inserpo->no_mov,
-                    'cuenta' => $poliza->cuenta,
+                    'cuenta' => (int) $poliza->cuenta,
                     'ren' => 0,
                     'referencia' => $inserpo->serie.$inserpo->no_mov,
-                    'sub_cta' => $poliza->sub_cta,
+                    'sub_cta' => (int) $poliza->sub_cta,
                     'monto' => $poliza->monto,
                     'c_a' => $poliza->c_a,
                     'fecha' => $inserpo->fecha,
                     'concepto' => $inserpo->nombreC
                 );
 
-                $this->db2->trans_begin();
+                $this->db2->where('tipo_mov', $inserpo->tipo_mov);
+                $this->db2->where('no_banco', $inserpo->no_banco);
+                $this->db2->where('no_mov', $inserpo->no_mov);
+                $this->db2->delete('opera_banco_detalle');
 
+                $this->db2->trans_begin();
                 $this->db2->insert('opera_banco_detalle', $datos);
                 if ($this->db2->trans_status() === FALSE)
                 {
@@ -131,7 +135,7 @@ class Servicio extends MY_Controller
         }
         else
         {
-            
+            $ch = curl_init("https://avanzaf.hegarss.com/api/Contabilidad/establece_contabilizada");
         }
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, "id_empresa=".$idempresa."&id_factura=".$idFactura."&poliza=".$poliza."&cancelacion=".$cancelacion);
