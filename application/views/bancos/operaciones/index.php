@@ -107,6 +107,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
     $('#operaciones').dataTable({
       responsive: true, filter:true, columnDefs:
       [ { responsivePriority: 1, targets: 0 }, { responsivePriority: 2, targets: -1 }, { responsivePriority: 3, targets: 2 } ],
+      order: [[0, 'desc']],
       processing: true, serverSide: true,
       ajax: { "url": baseurl + "catalogos/Operaciones/ajax_list/"+'<?php echo $tipo;?>/'+'<?php echo $id;?>',"type": "POST" },"language" : {"url":"//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"}
     })

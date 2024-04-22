@@ -8,8 +8,8 @@ class Servicio extends MY_Controller
     }
     public function index()
     {
-       // $this->pendientes();
-       // $this->cancelados();
+       $this->pendientes();
+       $this->cancelados();
     }
     public function pendientes()
     {
@@ -103,10 +103,13 @@ class Servicio extends MY_Controller
                     'concepto' => $inserpo->nombreC
                 );
 
-                $this->db2->where('tipo_mov', $inserpo->tipo_mov);
-                $this->db2->where('no_banco', $inserpo->no_banco);
-                $this->db2->where('no_mov', $inserpo->no_mov);
-                $this->db2->delete('opera_banco_detalle');
+                if($inserycance == 1)
+                {
+                    $this->db2->where('tipo_mov', $inserpo->tipo_mov);
+                    $this->db2->where('no_banco', $inserpo->no_banco);
+                    $this->db2->where('no_mov', $inserpo->no_mov);
+                    $this->db2->delete('opera_banco_detalle');
+                }
 
                 $this->db2->trans_begin();
                 $this->db2->insert('opera_banco_detalle', $datos);
