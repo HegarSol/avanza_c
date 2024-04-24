@@ -1,6 +1,6 @@
 <?php
 
-class Servicio extends MY_Controller
+class Servicio extends CI_Controller
 {
     public function __construct()
     {
@@ -87,6 +87,15 @@ class Servicio extends MY_Controller
     {
         foreach($response as $inserpo)
         {
+
+            if($inserycance == 1)
+                {
+                    $this->db2->where('tipo_mov', $inserpo->tipo_mov);
+                    $this->db2->where('no_banco', $inserpo->no_banco);
+                    $this->db2->where('no_mov', $inserpo->no_mov);
+                    $this->db2->delete('opera_banco_detalle');
+                }
+
             foreach($inserpo->poliza as $poliza)
             {
                 $datos = array(
@@ -103,14 +112,6 @@ class Servicio extends MY_Controller
                     'concepto' => $inserpo->nombreC
                 );
 
-                if($inserycance == 1)
-                {
-                    $this->db2->where('tipo_mov', $inserpo->tipo_mov);
-                    $this->db2->where('no_banco', $inserpo->no_banco);
-                    $this->db2->where('no_mov', $inserpo->no_mov);
-                    $this->db2->delete('opera_banco_detalle');
-                }
-
                 $this->db2->trans_begin();
                 $this->db2->insert('opera_banco_detalle', $datos);
                 if ($this->db2->trans_status() === FALSE)
@@ -123,7 +124,7 @@ class Servicio extends MY_Controller
                     $cancelacion = '';
                     if($inserycance == 1)
                     {
-                        $this->actualizar($idempresa,$inserpo->id_factura,$inserpo->serie.$inserpo->no_mov,$cancelacion);
+                        $this->actualizar($idempresa,$inserpo->id_factura,$inserpo->tipo_mov.$inserpo->no_banco.$inserpo->no_mov,$cancelacion);
                     }
                 }
             }

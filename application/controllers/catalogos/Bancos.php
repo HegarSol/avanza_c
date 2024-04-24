@@ -627,11 +627,11 @@ class Bancos extends MY_Controller
                 $this->bitacora->operacion($banco);
                 $correcto=$this->bancos->crearBanco($datos);
 
-                $datoscuenta = array('cuenta' => $this->input->post('cuenta'),
+                $datoscuenta = array('cuenta' => $this->input->post('cuenta_conta'),
                               'sub_cta' => $this->input->post('sub_cuenta_conta'),
                               'nombre'=> $this->input->post('nombre'),
                               'tipo' => '',
-                              'ctasat' => $this->input->post('cuenta').'.0'.$this->input->post('sub_cuenta_conta'),
+                              'ctasat' => $this->input->post('cuenta_conta').'.0'.$this->input->post('sub_cuenta_conta'),
                               'natur' => 'D',
                               'cvecobro'=>0,
                               'ssub_cta' => $this->input->post('sub_sub_cuenta_conta'));
