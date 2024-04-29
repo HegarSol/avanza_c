@@ -573,9 +573,9 @@ class ReporteCuentasPagar extends MY_Controller
                             $rfc = $datosrfc[0]['nombre'];
                         }
                         $renglony = $this->Rowpdf(array($rfc,
-                                                        number_format($datos[$i]->deuda,2,'.',''),
-                                                        number_format($datos[$i]->pagado,2,'.',''),
-                                                        number_format($datos[$i]->total,2,'.','')
+                                                        number_format($datos[$i]->deuda,2,'.',','),
+                                                        number_format($datos[$i]->pagado,2,'.',','),
+                                                        number_format($datos[$i]->total,2,'.',',')
                                                     ));
 
                                                     $deuda = $deuda + $datos[$i]->deuda;
@@ -590,9 +590,9 @@ class ReporteCuentasPagar extends MY_Controller
                    $this->pdf->Ln(5);
 
                    $this->pdf->Cell(110);
-                   $this->pdf->Cell(20,0,'Totales: '.number_format($deuda,2,'.',''),0,0,'R');
-                   $this->pdf->Cell(25,0,number_format($pagado,2,'.',''),0,0,'R');
-                   $this->pdf->Cell(35,0,number_format($toal,2,'.',''),0,0,'R');
+                   $this->pdf->Cell(20,0,'Totales: '.number_format($deuda,2,'.',','),0,0,'R');
+                   $this->pdf->Cell(25,0,number_format($pagado,2,'.',','),0,0,'R');
+                   $this->pdf->Cell(35,0,number_format($toal,2,'.',','),0,0,'R');
                 }
                 else
                 {
@@ -663,7 +663,7 @@ class ReporteCuentasPagar extends MY_Controller
                                         $this->pdf->Cell(30,1,date('d-m-Y',strtotime($datos[$i]->fecha_pago)),0,0,'C');
                                     }
     
-                                    $this->pdf->Cell(25,1,'$ '.number_format($datos[$i]->total,2,'.',''),0,0,'R');
+                                    $this->pdf->Cell(25,1,'$ '.number_format($datos[$i]->total,2,'.',','),0,0,'R');
         
         
                                     $total = $total + $datos[$i]->total;
@@ -685,7 +685,7 @@ class ReporteCuentasPagar extends MY_Controller
                    $this->pdf->Ln(5);
 
                    $this->pdf->Cell(165);
-                   $this->pdf->Cell(20,0,'Totales: '.number_format($total,2,'.',''),0,0,'R');
+                   $this->pdf->Cell(20,0,'Totales: '.number_format($total,2,'.',','),0,0,'R');
                 }
 
         }
@@ -791,7 +791,7 @@ class ReporteCuentasPagar extends MY_Controller
                                      $this->pdf->Cell(30,1,date('d-m-Y',strtotime($datos[$i]->fecha_pago)),0,0,'C');
                                  }
 
-                                 $this->pdf->Cell(25,1,'$ '.number_format($datos[$i]->total,2,'.',''),0,0,'R');
+                                 $this->pdf->Cell(25,1,'$ '.number_format($datos[$i]->total,2,'.',','),0,0,'R');
 
                                  $total = $total + $datos[$i]->total;
 
@@ -809,7 +809,7 @@ class ReporteCuentasPagar extends MY_Controller
                 $this->pdf->Ln(5);
 
                 $this->pdf->Cell(165);
-                $this->pdf->Cell(20,0,'Totales: '.number_format($total,2,'.',''),0,0,'R');
+                $this->pdf->Cell(20,0,'Totales: '.number_format($total,2,'.',','),0,0,'R');
         }
 
        $this->pdf->Output('I','ReporteCuentasPagar.pdf');
