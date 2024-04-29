@@ -148,13 +148,13 @@ class Reportes extends MY_Controller
             {
                 if($this->detalle[$i]['c_a'] == '+')
                 {
-                   $renglony = $this->Rowpdf(array($this->detalle[$i]['cuenta'],$this->detalle[$i]['referencia'],$this->detalle[$i]['factrefe'],$this->detalle[$i]['nombre_cuenta'],$this->detalle[$i]['concepto'],number_format($this->detalle[$i]['monto'],2,'.',','),''));
+                   $renglony = $this->Rowpdf(array($this->detalle[$i]['cuenta'].' - '.$this->detalle[$i]['sub_cta'],$this->detalle[$i]['referencia'],$this->detalle[$i]['factrefe'],$this->detalle[$i]['nombre_cuenta'],$this->detalle[$i]['concepto'],number_format($this->detalle[$i]['monto'],2,'.',','),''));
                    $totalcargos = $totalcargos + $this->detalle[$i]['monto'];
                    $this->pdf->SetY($renglony-3.5);
                 }
                 else
                 {
-                   $renglony = $this->Rowpdf(array($this->detalle[$i]['cuenta'],$this->detalle[$i]['referencia'],$this->detalle[$i]['factrefe'],$this->detalle[$i]['nombre_cuenta'],$this->detalle[$i]['concepto'],'',number_format($this->detalle[$i]['monto'],2,'.',',')));
+                   $renglony = $this->Rowpdf(array($this->detalle[$i]['cuenta'].' - '.$this->detalle[$i]['sub_cta'],$this->detalle[$i]['referencia'],$this->detalle[$i]['factrefe'],$this->detalle[$i]['nombre_cuenta'],$this->detalle[$i]['concepto'],'',number_format($this->detalle[$i]['monto'],2,'.',',')));
                    $totalabono = $totalabono + $this->detalle[$i]['monto'];
                    $this->pdf->SetY($renglony-3.5);
                 }

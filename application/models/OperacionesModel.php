@@ -85,7 +85,7 @@ class OperacionesModel extends MY_Model
     }
     public function detallepoliza($id)
     {
-        $row = $this->db2->select('*')->from('opera_banco_detalle')->where('id_encabezado',$id)->get();
+        $row = $this->db2->select('*')->from('opera_banco_detalle')->where('id_encabezado',$id)->order_by('cuenta','asc')->get();
         return $row->result_array();
     }
     public function checarPolizas($id)
@@ -189,6 +189,7 @@ class OperacionesModel extends MY_Model
             SUM(IF(c_a = "-" AND fecha BETWEEN "'.$inicial.' "AND" '.$final.'",monto,0.00 )) as abonos')
             ->from('opera_banco_detalle')
             ->where('fecha <=',$final)
+            ->order_by('cuenta,sub_cta','asc')
             ->group_by('cuenta,sub_cta');
         }
         else
@@ -197,7 +198,8 @@ class OperacionesModel extends MY_Model
             SUM(IF(c_a = "+" AND fecha BETWEEN "'.$inicial.' "AND" '.$final.'",monto,0.00 )) as cargos,
             SUM(IF(c_a = "-" AND fecha BETWEEN "'.$inicial.' "AND" '.$final.'",monto,0.00 )) as abonos')
             ->from('opera_banco_detalle')
-            ->where('fecha <=',$final);
+            ->where('fecha <=',$final)
+            ->order_by('cuenta,sub_cta','asc');
         }
 
         return $this->db2->get()->result_array();
