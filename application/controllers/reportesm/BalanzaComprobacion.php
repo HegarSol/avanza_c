@@ -342,10 +342,10 @@ class BalanzaComprobacion extends MY_Controller
 
           $this->pdf->SetFont('Helvetica','B',8);
           $this->pdf->Ln(10);
-          $this->pdf->Cell(20,5,'Cuenta',0,1,'',true);
-          $this->pdf->SetY(55);
-          $this->pdf->SetCol(0.3);
-          $this->pdf->Cell(20,5,'Sub Cta',0,1,'',true);
+          $this->pdf->Cell(40,5,'Cuenta-Sub Cta',0,1,'',true);
+          // $this->pdf->SetY(55);
+          // $this->pdf->SetCol(0.3);
+          //$this->pdf->Cell(20,5,'Sub Cta',0,1,'',true);
           $this->pdf->SetY(55);
           $this->pdf->SetCol(0.6);
           $this->pdf->Cell(70,5,'Nombre',0,1,'',true);
@@ -366,7 +366,7 @@ class BalanzaComprobacion extends MY_Controller
           $this->pdf->Cell(17,5,'Final',0,1,'',true);
           $this->pdf->SetCol(0);
           $this->pdf->Ln(5);
-          $this->pdf->SetWidths(array(10,20,50,30,20,25,25,20));
+          $this->pdf->SetWidths(array(26,50,30,20,25,25,20));
           $this->pdf->SetFont('Helvetica','',8);
 
           $total_inicial = 0;
@@ -378,8 +378,7 @@ class BalanzaComprobacion extends MY_Controller
           for($i=0;$i<count($this->datos);$i++)
           {
               $renlgon = $this->Rowpdf(array(
-                  $this->datos[$i]['cuenta'],
-                  $this->datos[$i]['sub_cta'],
+                  $this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta'],
                   utf8_decode($this->datos[$i]['nombre_cuenta']),
                   number_format($this->datos[$i]['sini'],2,'.',','),
                   number_format($this->datos[$i]['cargos'],2,'.',','),
@@ -601,14 +600,14 @@ class BalanzaComprobacion extends MY_Controller
               }
           }
 
-          $objsheet->setCellValue('A6','Cuenta');
-          $objsheet->setCellValue('B6','Sub Cta');
-          $objsheet->setCellValue('C6','Nombre');
-          $objsheet->setCellValue('D6','Inicial');
-          $objsheet->setCellValue('E6','Cargos');
-          $objsheet->setCellValue('F6','Abonos');
-          $objsheet->setCellValue('G6','Saldo Mensual');
-          $objsheet->setCellValue('H6','Final');
+          $objsheet->setCellValue('A6','Cuenta-Sub Cta');
+          //$objsheet->setCellValue('B6','Sub Cta');
+          $objsheet->setCellValue('B6','Nombre');
+          $objsheet->setCellValue('C6','Inicial');
+          $objsheet->setCellValue('D6','Cargos');
+          $objsheet->setCellValue('E6','Abonos');
+          $objsheet->setCellValue('F6','Saldo Mensual');
+          $objsheet->setCellValue('G6','Final');
 
           
           $total_inicial = 0;
@@ -622,14 +621,14 @@ class BalanzaComprobacion extends MY_Controller
           for($i=0; $i<count($this->datos); $i++)
           {
                $numero++;
-               $objsheet->setCellValue('A'.$numero,$this->datos[$i]['cuenta']);
-               $objsheet->setCellValue('B'.$numero,$this->datos[$i]['sub_cta']);
-               $objsheet->setCellValue('C'.$numero,$this->datos[$i]['nombre_cuenta']);
-               $objsheet->setCellValue('D'.$numero,$this->datos[$i]['sini']);
-               $objsheet->setCellValue('E'.$numero,number_format($this->datos[$i]['cargos'],2,'.',''));
-               $objsheet->setCellValue('F'.$numero,number_format($this->datos[$i]['abonos'],2,'.',''));
-               $objsheet->setCellValue('G'.$numero,number_format($this->datos[$i]['cargos']-$this->datos[$i]['abonos'],2,'.',''));
-               $objsheet->setCellValue('H'.$numero,number_format(($this->datos[$i]['sini']+$this->datos[$i]['cargos'])-$this->datos[$i]['abonos'],2,'.',''));
+               $objsheet->setCellValue('A'.$numero,$this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta']);
+              // $objsheet->setCellValue('B'.$numero,$this->datos[$i]['sub_cta']);
+               $objsheet->setCellValue('B'.$numero,$this->datos[$i]['nombre_cuenta']);
+               $objsheet->setCellValue('C'.$numero,$this->datos[$i]['sini']);
+               $objsheet->setCellValue('D'.$numero,number_format($this->datos[$i]['cargos'],2,'.',''));
+               $objsheet->setCellValue('E'.$numero,number_format($this->datos[$i]['abonos'],2,'.',''));
+               $objsheet->setCellValue('F'.$numero,number_format($this->datos[$i]['cargos']-$this->datos[$i]['abonos'],2,'.',''));
+               $objsheet->setCellValue('G'.$numero,number_format(($this->datos[$i]['sini']+$this->datos[$i]['cargos'])-$this->datos[$i]['abonos'],2,'.',''));
           }
 
           $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
@@ -639,7 +638,7 @@ class BalanzaComprobacion extends MY_Controller
           $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setAutoSize(true);
           $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setAutoSize(true);
           $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
-          $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
+        //  $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
 
 
           $style = array(
