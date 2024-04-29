@@ -1,7 +1,17 @@
 [
     {
-      "empresas":"XENON INDUSTRIAL ARTICLES",
-      "RFC":"HSS1306229V2",
-      "IdEmpresa":103
+      "empresas":"FDI MEXICO",
+      "RFC":"FME031024876",
+      "IdEmpresa":118
+    },
+    {
+      "empresas":"AUTOTRANSPORTES LEMPAC",
+      "RFC":"ALE1306254V8",
+      "IdEmpresa":119
+    },
+    {
+      "empresas":"FDI CARGO MEXICO",
+      "RFC":"FCM210519GK1",
+      "IdEmpresa":120
     }
 ]

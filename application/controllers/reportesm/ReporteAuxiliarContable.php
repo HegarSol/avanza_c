@@ -117,7 +117,7 @@ class ReporteAuxiliarContable extends MY_Controller
         $this->pdf->Cell(10,0,'Cuenta: '.$this->datosbanco[0]['cuenta'].' - '.$this->datosbanco[0]['sub_cta']);
         $this->pdf->Cell(50);
         $this->pdf->Cell(60,0,$this->datosbanco[0]['nombre']);
-        $this->pdf->Cell(10,0,'Saldo Inicial: '.number_format($saldo,2,'.',''));
+        $this->pdf->Cell(10,0,'Saldo Inicial: '.number_format($saldo,2,'.',','));
         $this->pdf->Ln(5);
         $this->pdf->SetWidths(array(20,20,15,74,20,20,25));
         $this->pdf->SetFont('Helvetica','',8);
@@ -139,9 +139,9 @@ class ReporteAuxiliarContable extends MY_Controller
                             $this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov,
                             $this->datosdetalle[$i]->rece,
                             $this->datosdetalle[$i]->concedeta,
-                            number_format($this->datosdetalle[$i]->monto,2,'.',''),
+                            number_format($this->datosdetalle[$i]->monto,2,'.',','),
                             '',
-                            number_format($totalsaldo,2,'.','')
+                            number_format($totalsaldo,2,'.',',')
                          ));                                               
                          $totalcargo=$totalcargo+$this->datosdetalle[$i]->monto;
                          $this->pdf->SetY($renglon-3.5);
@@ -158,8 +158,8 @@ class ReporteAuxiliarContable extends MY_Controller
                             $this->datosdetalle[$i]->rece,
                             $this->datosdetalle[$i]->concedeta,
                             '',
-                            '-'.number_format($this->datosdetalle[$i]->monto,2,'.',''),
-                            number_format($totalsaldo,2,'.','')
+                            '-'.number_format($this->datosdetalle[$i]->monto,2,'.',','),
+                            number_format($totalsaldo,2,'.',',')
                         
                         ));                      
                         $totalabono=$totalabono-$this->datosdetalle[$i]->monto;
@@ -179,9 +179,9 @@ class ReporteAuxiliarContable extends MY_Controller
                             $this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov,
                             $this->datosdetalle[$i]->rece,
                             $this->datosdetalle[$i]->concedeta,
-                            number_format($this->datosdetalle[$i]->monto,2,'.',''),
+                            number_format($this->datosdetalle[$i]->monto,2,'.',','),
                             '',
-                            number_format($totalsaldo,2,'.','')
+                            number_format($totalsaldo,2,'.',',')
                          ));             
                          $totalcargo=$totalcargo+$this->datosdetalle[$i]->monto;             
                          $this->pdf->SetY($renglon-3.5);
@@ -198,8 +198,8 @@ class ReporteAuxiliarContable extends MY_Controller
                             $this->datosdetalle[$i]->rece,
                             $this->datosdetalle[$i]->concedeta,
                             '',
-                            '-'.number_format($this->datosdetalle[$i]->monto,2,'.',''),
-                            number_format($totalsaldo,2,'.','')
+                            '-'.number_format($this->datosdetalle[$i]->monto,2,'.',','),
+                            number_format($totalsaldo,2,'.',',')
                         
                         ));                        
                         $totalabono=$totalabono-$this->datosdetalle[$i]->monto;
@@ -213,18 +213,18 @@ class ReporteAuxiliarContable extends MY_Controller
         $this->pdf->Ln(10);
         $totales = $totalcargo + $totalabono;
         $this->pdf->Cell(120);
-        $this->pdf->Cell(10,0,'Totales: '.' + '.number_format($totalcargo,2,'.',''),0,0,'L');
+        $this->pdf->Cell(10,0,'Totales: '.' + '.number_format($totalcargo,2,'.',','),0,0,'L');
         $this->pdf->Cell(22);
-        $this->pdf->Cell(10,0,number_format($totalabono,2,'.','').' =',0,0,'L');
+        $this->pdf->Cell(10,0,number_format($totalabono,2,'.',',').' =',0,0,'L');
         $this->pdf->Cell(12);
-        $this->pdf->Cell(10,0,number_format($totales,2,'.',''),0,0,'L');
+        $this->pdf->Cell(10,0,number_format($totales,2,'.',','),0,0,'L');
         $this->pdf->Ln(5);
         $this->pdf->Cell(158);
-        $this->pdf->Cell(10,0,'Saldo Inicial: '.number_format($saldo,2,'.',''),0,0,'L');
+        $this->pdf->Cell(10,0,'Saldo Inicial: '.number_format($saldo,2,'.',','),0,0,'L');
         $this->pdf->Line(170,105,200,105);
         $this->pdf->Ln(6);
         $this->pdf->Cell(173);
-        $this->pdf->Cell(10,0,number_format($totales+$saldo,2,'.',''),0,0,'L');
+        $this->pdf->Cell(10,0,number_format($totales+$saldo,2,'.',','),0,0,'L');
 
          $this->pdf->footer2();
 

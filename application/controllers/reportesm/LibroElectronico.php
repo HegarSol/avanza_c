@@ -116,7 +116,7 @@ class LibroElectronico extends MY_Controller
                             utf8_decode($this->datos[$i]['beneficia']),
                             $this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta'],
                             utf8_decode($this->datos[$i]['nombre_cuenta']),
-                            $this->datos[$i]['monto'],
+                            number_format($this->datos[$i]['monto'],2,'.',','),
                             ''
                         ));
                         $this->pdf->SetY($renglon-3.5);
@@ -131,7 +131,7 @@ class LibroElectronico extends MY_Controller
                             $this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta'],
                             utf8_decode($this->datos[$i]['nombre_cuenta']),
                             '',
-                            $this->datos[$i]['monto']
+                            number_format($this->datos[$i]['monto'],2,'.',',')
                         ));
                         $this->pdf->SetY($renglon-3.5);
                         $this->pdf->Ln(4);

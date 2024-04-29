@@ -381,11 +381,11 @@ class BalanzaComprobacion extends MY_Controller
                   $this->datos[$i]['cuenta'],
                   $this->datos[$i]['sub_cta'],
                   utf8_decode($this->datos[$i]['nombre_cuenta']),
-                  number_format($this->datos[$i]['sini'],2,'.',''),
-                  number_format($this->datos[$i]['cargos'],2,'.',''),
-                  number_format($this->datos[$i]['abonos'],2,'.',''),
-                  number_format($this->datos[$i]['cargos']-$this->datos[$i]['abonos'],2,'.',''),
-                  number_format(($this->datos[$i]['sini'] + $this->datos[$i]['cargos']) - $this->datos[$i]['abonos'],2,'.','')
+                  number_format($this->datos[$i]['sini'],2,'.',','),
+                  number_format($this->datos[$i]['cargos'],2,'.',','),
+                  number_format($this->datos[$i]['abonos'],2,'.',','),
+                  number_format($this->datos[$i]['cargos']-$this->datos[$i]['abonos'],2,'.',','),
+                  number_format(($this->datos[$i]['sini'] + $this->datos[$i]['cargos']) - $this->datos[$i]['abonos'],2,'.',',')
               ));
               $this->pdf->SetY($renlgon-3.5);
               $this->pdf->Ln(4);
@@ -403,11 +403,11 @@ class BalanzaComprobacion extends MY_Controller
           $this->pdf->Line(7,260,210,260);
           $this->pdf->Cell(65);
           $this->pdf->Cell(25,0,'Totales: ');
-          $this->pdf->Cell(20,0,number_format($total_inicial,2,'.',''));
-          $this->pdf->Cell(25,0,number_format($total_cargos,2,'.',''));
-          $this->pdf->Cell(27,0,number_format($total_abonos,2,'.',''));
-          $this->pdf->Cell(25,0,number_format($total_saldo_mensual,2,'.',''));
-          $this->pdf->Cell(25,0,number_format($final,2,'.',''));
+          $this->pdf->Cell(20,0,number_format($total_inicial,2,'.',','));
+          $this->pdf->Cell(25,0,number_format($total_cargos,2,'.',','));
+          $this->pdf->Cell(27,0,number_format($total_abonos,2,'.',','));
+          $this->pdf->Cell(25,0,number_format($total_saldo_mensual,2,'.',','));
+          $this->pdf->Cell(25,0,number_format($final,2,'.',','));
 
           $this->pdf->footer2();
           $this->pdf->Output('I','ReporteBalanzaComprobacion.pdf');
