@@ -377,6 +377,12 @@ class BalanzaComprobacion extends MY_Controller
 
           for($i=0;$i<count($this->datos);$i++)
           {
+
+            if($this->datos[$i]['sub_cta'] == 0)
+            {
+              $this->pdf->Line(10, 45, 205, 45);
+            }
+            
               $renlgon = $this->Rowpdf(array(
                   $this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta'],
                   utf8_decode($this->datos[$i]['nombre_cuenta']),
@@ -386,8 +392,11 @@ class BalanzaComprobacion extends MY_Controller
                   number_format($this->datos[$i]['cargos']-$this->datos[$i]['abonos'],2,'.',','),
                   number_format(($this->datos[$i]['sini'] + $this->datos[$i]['cargos']) - $this->datos[$i]['abonos'],2,'.',',')
               ));
+
               $this->pdf->SetY($renlgon-3.5);
               $this->pdf->Ln(4);
+
+
 
               $total_inicial = $total_inicial + $this->datos[$i]['sini']; 
               $total_cargos = $total_cargos + $this->datos[$i]['cargos'];
