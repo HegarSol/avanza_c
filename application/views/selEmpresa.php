@@ -103,7 +103,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
 function mostrarejercicio()
 {
   document.getElementById('empre').value = document.getElementById('empresas').value;
-  dsd();
+  //dsd();
   cambiofecha2();
    $('#modalConfig').modal('show');
    

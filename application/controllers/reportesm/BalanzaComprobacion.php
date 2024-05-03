@@ -378,9 +378,10 @@ class BalanzaComprobacion extends MY_Controller
           for($i=0;$i<count($this->datos);$i++)
           {
 
+
             if($this->datos[$i]['sub_cta'] == 0)
             {
-              $this->pdf->Line(10, 45, 205, 45);
+             // $this->pdf->Line(10, 45, 205, 45);
             }
             
               $renlgon = $this->Rowpdf(array(

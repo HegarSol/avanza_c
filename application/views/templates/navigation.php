@@ -26,10 +26,12 @@ if(isset($_SESSION['img']) && $_SESSION['img']!=""){ $foto=$_SESSION['img'];} el
         echo '<label class="navbar-brand" style="color:white">'.$_SESSION['mesletra'].' - '.$_SESSION['ano'].'</label>';
         echo '<label class="navbar-brand" onclick="abrirejercicio()">Cambiar ejercicio de trabajo</label>';
         // echo '<a class="navbar-brand" data-toggle="tooltip" title="Subir Logo y Certificados" href="'.base_url().'configuracion/certificados"><span class="glyphicon glyphicon-open-file"></span></a>';
+       }
+       else {echo '';}
         if($_SESSION['tipo']=="admin") {echo '<a class="navbar-brand" data-toggle="tooltip" title="Usuarios" href="'.base_url().'index.php/usuarios/index"><span class="glyphicon glyphicon-user"></span></a>';}
         echo '<div style="display:inline" id="notificacion"></div>';
-       }
-        else {echo '';}
+       
+
 
       ?>
     </div>
