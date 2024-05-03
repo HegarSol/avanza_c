@@ -218,7 +218,7 @@ $this->load->view('beneficiarios/modales/TablaBancos');
 </div>
 </div>
 
-<input type="text" class="form-control" id="uuidpagar" name="uuidpagar">
+<input type="hidden" class="form-control" id="uuidpagar" name="uuidpagar">
 
 <!-- </div> -->
 
@@ -240,7 +240,7 @@ $this->load->view('beneficiarios/modales/TablaBancos');
         </div>
         <div class="col-sm-2">
             <?php
-            if($tipo == 2)
+            if($tipo == 2 || $tipo == 1 && $bc == 'min')
             {
             ?>
              <label for="">No prov</label>
@@ -300,7 +300,7 @@ $this->load->view('beneficiarios/modales/TablaBancos');
                     <th>Cuenta</th>
                     <th>Sub cta</th>
                     <?php
-                     if($tipo == 2)
+                     if($tipo == 2 || $tipo == 1 && $bc == 'min')
                      {
                     ?>
                      <th>No. prov</th>
@@ -329,7 +329,7 @@ $this->load->view('beneficiarios/modales/TablaBancos');
                         echo ('<tr><td align="center"><input type="checkbox"></td>');
                         echo ('<td>'.$row['cuenta'].'</td>');
                         echo ('<td>'.$row['sub_cta'].'</td>');
-                        if($tipo == 2)
+                        if($tipo == 2 || $tipo == 1 && $bc == 'min')
                         {
                             echo ('<td>'.$row['no_prov'].'</td>');
                         }
@@ -835,12 +835,12 @@ function recogerDatosPoliza(tableID)
                 fecha[i] = document.getElementById('fecha').value;
                 concepto[i] = table.rows[i].cells[6].innerHTML;
                 referencia[i] = table.rows[i].cells[4].innerHTML;
-                if('<?php echo $tipo;?>' != 2)
+                if(('<?php echo $tipo;?>' == 1 && '<?php echo $bc;?>' == 'plu') || '<?php echo $tipo;?>' == 3)
                 {
                     factrefe[i] = table.rows[i].cells[3].innerHTML;
                     no_prov[i] = 0;
                 }
-                else
+                else if('<?php echo $tipo;?>' == 2 || '<?php echo $tipo;?>' == 1 && '<?php echo $bc;?>' == 'min')
                 {
                     factrefe[i] = 0;  
                     no_prov[i] = table.rows[i].cells[3].innerHTML;
