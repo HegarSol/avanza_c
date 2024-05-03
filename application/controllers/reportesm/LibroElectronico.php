@@ -177,7 +177,7 @@ class LibroElectronico extends MY_Controller
 
         $objsheet->setCellValue('A1',$this->rowc[0]['nombreEmpresa']);
         $objsheet->setCellValue('A2','Reporte Libro Electrónico');
-        $objsheet->setCellValue('A3','Del: '.date('d-m-Y',strtotime($fechaini)).' Al: '.date('d-m-Y',strtotime($fechaini)));
+        $objsheet->setCellValue('A3','Del: '.date('d-m-Y',strtotime($fechaini)).' Al: '.date('d-m-Y',strtotime($fechafin)));
         $objsheet->setCellValue('A4','Tipo de póliza: '.$tipopoliza);
 
         $objsheet->setCellValue('A5','Póliza');
