@@ -77,5 +77,10 @@
             $query = $this->db2->query('CALL getDiot(\''.$fechaini.'\',\''.$fechafin.'\')');
             return $query->result();
         }
+        public function getestadoresultado($tf0,$tfi,$tff)
+        {
+            $query = $this->db2->query('CALL getEstadoResultado(\''.$tf0.'\',\''.$tfi.'\',\''.$tff.'\')');
+            return $query->result();
+        }
 
    }
