@@ -366,7 +366,7 @@ class BalanzaComprobacion extends MY_Controller
           $this->pdf->Cell(17,5,'Final',0,1,'',true);
           $this->pdf->SetCol(0);
           $this->pdf->Ln(5);
-          $this->pdf->SetWidths(array(26,50,30,20,25,25,20));
+//          $this->pdf->SetWidths(array(26,50,30,20,25,25,20));
           $this->pdf->SetFont('Helvetica','',8);
 
           $total_inicial = 0;
@@ -383,19 +383,33 @@ class BalanzaComprobacion extends MY_Controller
             {
              // $this->pdf->Line(10, 45, 205, 45);
             }
-            
-              $renlgon = $this->Rowpdf(array(
-                  $this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta'],
-                  utf8_decode($this->datos[$i]['nombre_cuenta']),
-                  number_format($this->datos[$i]['sini'],2,'.',','),
-                  number_format($this->datos[$i]['cargos'],2,'.',','),
-                  number_format($this->datos[$i]['abonos'],2,'.',','),
-                  number_format($this->datos[$i]['cargos']-$this->datos[$i]['abonos'],2,'.',','),
-                  number_format(($this->datos[$i]['sini'] + $this->datos[$i]['cargos']) - $this->datos[$i]['abonos'],2,'.',',')
-              ));
+            $this->pdf->SetCol(0);
+            $this->pdf->Cell(17,0,$this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta'],0,1,'C');
+            $this->pdf->SetCol(0.3);
+            $this->pdf->Cell(17,0,utf8_decode($this->datos[$i]['nombre_cuenta']),0,1,'');
+            $this->pdf->SetCol(1.4);
+            $this->pdf->Cell(17,0,number_format($this->datos[$i]['sini'],2,'.',','),0,1,'R');
+            $this->pdf->SetCol(1.7);
+            $this->pdf->Cell(17,0,number_format($this->datos[$i]['cargos'],2,'.',','),0,1,'R');
+            $this->pdf->SetCol(2.1);
+            $this->pdf->Cell(17,0,number_format($this->datos[$i]['abonos'],2,'.',','),0,1,'R');
+            $this->pdf->SetCol(2.4);
+            $this->pdf->Cell(17,0,number_format($this->datos[$i]['cargos']-$this->datos[$i]['abonos'],2,'.',','),0,1,'R');
+            $this->pdf->SetCol(2.8);
+            $this->pdf->Cell(17,0,number_format(($this->datos[$i]['sini'] + $this->datos[$i]['cargos']) - $this->datos[$i]['abonos'],2,'.',','),0,1,'R');
 
-              $this->pdf->SetY($renlgon-3.5);
-              $this->pdf->Ln(4);
+              // $renlgon = $this->Rowpdf(array(
+              //     $this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta'],
+              //     utf8_decode($this->datos[$i]['nombre_cuenta']),
+              //     number_format($this->datos[$i]['sini'],2,'.',','),
+              //     number_format($this->datos[$i]['cargos'],2,'.',','),
+              //     number_format($this->datos[$i]['abonos'],2,'.',','),
+              //     number_format($this->datos[$i]['cargos']-$this->datos[$i]['abonos'],2,'.',','),
+              //     number_format(($this->datos[$i]['sini'] + $this->datos[$i]['cargos']) - $this->datos[$i]['abonos'],2,'.',',')
+              // ),'R');
+
+              // $this->pdf->SetY($renlgon-3.5);
+               $this->pdf->Ln(4);
 
 
 
@@ -409,6 +423,7 @@ class BalanzaComprobacion extends MY_Controller
 
           }
           $this->pdf->Ln(5);
+          $this->pdf->SetCol(0.0);
           $this->pdf->Line(7,260,210,260);
           $this->pdf->Cell(65);
           $this->pdf->Cell(25,0,'Totales: ');
@@ -665,10 +680,27 @@ class BalanzaComprobacion extends MY_Controller
     public function encabezado()
     {
         date_default_timezone_set("America/Mexico_City");
-        $img = $this->rowc[0]['imgName'];
-        $formato = explode(".",$this->rowc[0]['imgName']);
-        $imagen = $this->rowc[0]['img'];
-        if(isset($imagen)){$this->pdf->Image("data:image/$formato[1];base64,$imagen");}
+        // $img = $this->rowc[0]['imgName'];
+        // $formato = explode(".",$this->rowc[0]['imgName']);
+        // $imagen = $this->rowc[0]['img'];
+        // base64_decode($imagen));
+        if(!empty($this->rowc[0]['img']) || $this->rowc[0]['img']!='' ){
+
+          
+            $formato = explode(".", $this->rowc[0]['imgName']);
+            $imagen =$this->rowc[0]['img'];
+          
+          // Guardamos la imagen
+          file_put_contents(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1] ,
+            base64_decode($imagen));
+            // if($this->rowSerie[0]['noLogo']!=1)
+            // {$this->pdf->Image(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1],2,2,90,30);}
+        }
+        if(isset($formato))
+        {
+          $this->pdf->Image(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1],2,2,80,50);
+        }
+
         $this->pdf->SetFont('Helvetica','B',15);
         $this->pdf->Cell(70);
         $this->pdf->Cell(10,0,$this->rowc[0]['nombreEmpresa'],0,0,'L');
