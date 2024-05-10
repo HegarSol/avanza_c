@@ -50,10 +50,26 @@ class Reportes extends MY_Controller
     public function encabezado()
     {
         date_default_timezone_set("America/Mexico_City");
-        $img = $this->rowc[0]['imgName'];
-        $formato = explode(".",$this->rowc[0]['imgName']);
-        $imagen = $this->rowc[0]['img'];
-        if(isset($imagen)){$this->pdf->Image("data:image/$formato[1];base64,$imagen");}
+        // $img = $this->rowc[0]['imgName'];
+        // $formato = explode(".",$this->rowc[0]['imgName']);
+        // $imagen = $this->rowc[0]['img'];
+        // base64_decode($imagen));
+        if(!empty($this->rowc[0]['img']) || $this->rowc[0]['img']!='' ){
+
+          
+            $formato = explode(".", $this->rowc[0]['imgName']);
+            $imagen =$this->rowc[0]['img'];
+          
+          // Guardamos la imagen
+          file_put_contents(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1] ,
+            base64_decode($imagen));
+            // if($this->rowSerie[0]['noLogo']!=1)
+            // {$this->pdf->Image(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1],2,2,90,30);}
+        }
+        if(isset($formato))
+        {
+          $this->pdf->Image(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1],120,2,80,50);
+        }
         $this->pdf->SetFont('Helvetica','B',15);
         $this->pdf->Cell(18,5,'','',0,'L');
         if($this->datos[0]['tipo_mov'] == 'C')

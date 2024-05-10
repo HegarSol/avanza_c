@@ -176,7 +176,7 @@ class OperacionesModel extends MY_Model
        {
           $this->db2->order_by('ac.cuenta,ac.sub_cta,ac.fecha,ac.no_mov');
        }
-       $this->db2->group_by('ac.tipo_mov,ac.no_banco,ac.no_mov');
+     //  $this->db2->group_by('ac.tipo_mov,ac.no_banco,ac.no_mov');
 
        return $this->db2->get()->result();
     }
