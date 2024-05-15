@@ -378,6 +378,8 @@ class Operaciones extends MY_Controller
                                    'modulo' => 'Catalogos -> Bancos -> '.$tipo_mo);
                $this->bitacora->operacion($crearopera);
                $correcto = true;
+
+               $this->opera->actualizarmovimiento($numero_banco,$tipo_movimento,$numero_movimento);
      
                 if($uuidpoliza =! '' && $ca_poli == '-' && $tipo_movimento == 'T' || $tipo_movimento == 'C')
                 {
@@ -409,7 +411,7 @@ class Operaciones extends MY_Controller
 
        if($correcto == true)
        {
-          $this->opera->actualizarmovimiento($numero_banco,$tipo_movimento,$numero_movimento);
+
 
           $this->opera->borrarDetalle($id);
             

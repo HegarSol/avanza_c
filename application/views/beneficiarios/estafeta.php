@@ -1381,15 +1381,15 @@ function aceptarDoc()
 
                var metodopago = aData[0][10];
 
-               if(metodopago == 'PUE')
-               {
+               // if(metodopago == 'PUE')
+               // {
                   document.getElementById('uuid_poliza').value = aData[0][1];
                   $('#myModalPUEpagada').modal('show');
-               }
-               else
-               {
-                   alert('la factura es PPD');
-               }
+               // }
+               // else
+               // {
+               //     alert('la factura es PPD');
+               // }
 
             }
 }
