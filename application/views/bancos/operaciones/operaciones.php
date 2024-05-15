@@ -339,7 +339,7 @@ $this->load->view('beneficiarios/modales/TablaBancos');
                         }
                         echo ('<td>'.$row['referencia'].'</td>');
                         echo ('<td>'.$row['nombre_cuenta'].'</td>');
-                        echo ('<td>'.$row['concepto'].'</td>');
+                        echo ('<td contenteditable="true">'.$row['concepto'].'</td>');
                         echo ('<td>'.$row['monto'].'</td>');
                         echo ('<td>'.$row['c_a'].'</td>');
                         echo ('</tr>');
@@ -1125,6 +1125,7 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
                             var td5 = document.createElement("TD")
                             td5.appendChild(document.createTextNode(response[0].banco))
                             var td6 = document.createElement("TD")
+                            td6.setAttribute("contenteditable","true");
                             td6.appendChild(document.createTextNode(''))
                             var td7 = document.createElement("TD")
                             td7.appendChild(document.createTextNode(monto))
@@ -1290,6 +1291,7 @@ function agregarasiento()
                         var td5 = document.createElement("TD")
                         td5.appendChild(document.createTextNode(document.getElementById('nom_cuenta').value))
                         var td6 = document.createElement("TD")
+                        td6.setAttribute("contenteditable","true");
                         td6.appendChild(document.createTextNode(document.getElementById('concep').value))
                         var td7 = document.createElement("TD")
                         td7.appendChild(document.createTextNode(document.getElementById('monto').value == '' ? neu : document.getElementById('monto').value))

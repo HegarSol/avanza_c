@@ -120,12 +120,12 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                               <b><font size="5">Saldos</font></b>
                           </button>
 
-                          <button class="btn btnGrande" type="button" class="btn btn-primary">
+                          <a href="#" id="urlimport" class="btn btnGrande" type="button" class="btn btn-primary">
                              <span class="fa fa-upload fa-4x"></span>
                               <br>
                               <br>
                               <b><font size="5">Importar Info</font></b>
-                          </button>
+                          </a>
                       </div>
 
                   </div>
@@ -214,6 +214,7 @@ function abriroperaciones(id)
          document.getElementById('urlope3').setAttribute('href','<?php echo base_url();?>catalogos/Bancos/operaciones/3/'+response[0].no_banco);
 
          document.getElementById('urlconci').setAttribute('href','<?php echo base_url();?>catalogos/Conciliacion/index/'+response[0].no_banco);
+         document.getElementById('urlimport').setAttribute('href','<?php echo base_url();?>catalogos/Importan/index/'+response[0].no_banco);
          
          $('#modaloperaciones').modal('show');
       }
