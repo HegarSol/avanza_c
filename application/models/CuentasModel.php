@@ -72,6 +72,11 @@
             $row = $this->db2->select('*')->from('catalogocta')->where('cuenta',$cuen)->get();
             return $row->result_array();
         }
+        public function getpagado($fechaini,$fechafin)
+        {
+            $query = $this->db2->query('CALL getefePagado(\''.$fechaini.'\',\''.$fechafin.'\')');
+            return $query->result();
+        }
         public function getdiot($fechaini,$fechafin)
         {
             $query = $this->db2->query('CALL getDiot(\''.$fechaini.'\',\''.$fechafin.'\')');

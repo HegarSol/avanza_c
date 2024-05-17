@@ -12,6 +12,7 @@ class Importan extends MY_Controller
         $this->multi_menu->set_items($items);
         $this->load->view('templates/header');
         $this->load->model('BancosModel','bancos');
+        $this->load->model('OperacionesModel','opera');
         $this->load->model('EmpresasModel','empresas');
     }
     public function index($id)
@@ -46,7 +47,7 @@ class Importan extends MY_Controller
         }
         else
         {
-           $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/poliza_pago");
+           $ch = curl_init("http://avanzan.hegarss.com/ajuste/show?idEmpresa=".$configNueva[0]['idNomina']."&fechapago=".$fechap);
         }              
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -55,5 +56,53 @@ class Importan extends MY_Controller
         $response = json_decode($resu);
 
        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+    public function insertpolizar()
+    {
+        $chek = $this->input->post('chek');
+        $concep = $this->input->post('concep');
+        $refe = $this->input->post('refe');
+        $idbanco = $this->input->post('id');
+
+        // var_dump($concep);
+        // var_dump($refe);
+        // var_dump($idbanco);
+
+
+
+        foreach($chek as $checar)
+        {
+            $datos=$this->bancos->datosBancos($idbanco);
+
+            if($checar[0] == 'Transferencia')
+            {
+                $tipo = 'T';
+                var_dump($datos[0]['movimiento']);
+            }
+            else
+            {
+                $tipo = 'C';
+                var_dump($datos[0]['cheques']);
+
+            }
+           //tipooperacion $checar[0];
+           //nombre $checar[1];
+           //sueldo $checar[2];
+           //vacaciones $checar[3];
+           //aguinaldo $checar[4];
+           //ptu $checar[5];
+           //otras_perce $checar[6];
+           //prima_vaca $checar[7];
+           //isr $checar[8];
+           //imss $checar[9];
+           //infonavit $checar[10];
+           //total $checar[11];
+
+
+
+        }
+
+
+
     }
 }

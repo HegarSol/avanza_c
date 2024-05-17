@@ -45,9 +45,33 @@ $img = $datosbanco[0]['logo'];
                     <br>
                     <a href="<?php echo base_url().'catalogos/Bancos/index'?>" class="btn btn-info" role="button"><span class="fa fa-arrow-left"></span> Atras</a>
                 </div>
+                <div class="col-sm-1">
+                    <br>
+                    <br>
+                    <button type="button" class="btn btn-success" onclick="polizarnomina()"> <span class="fa fa-check"></span> Polizar</button>
+                </div>
             </div>
         </div>
    </div>
+</div>
+
+<div class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading"></div>
+   <div class="panel-body">
+     <div class="row">
+           <div class="col-sm-6">
+                <label for="">Concepto:</label>
+                <input type="text" class="form-control" id="concepto" name="concepto" >
+           </div>
+           <div class="col-sm-4">
+                <label for="">Referencia:</label>
+                <input type="text" class="form-control" id="referencia" name="referencia">
+           </div>
+     </div>
+  </div>
+</div>
+</div>
 </div>
 
 </form>
@@ -64,7 +88,7 @@ $img = $datosbanco[0]['logo'];
                     <th>Tipo operacion</th>
                     <th>Nombre</th>
                     <th>Sueldo</th>
-                    <th>Vacaiones</th>
+                    <th>Vacaciones</th>
                     <th>Aguinaldo</th>
                     <th>PTU</th>
                     <th>Otras percep</th>
@@ -85,6 +109,46 @@ $img = $datosbanco[0]['logo'];
 
 
 <script>
+    function checar()
+   {
+         var detallereci = [];
+          $("input[type=checkbox]:checked").each(function(){
+                var recibo = [];
+                var tipo = $(this).parent().parent().find('td:eq(1)').find('select').val();
+                var nombre = $(this).parent().parent().find('td').eq(2).html();
+                var sueldo = $(this).parent().parent().find('td').eq(3).html();
+                var vacaciones = $(this).parent().parent().find('td').eq(4).html();
+                var aguinaldo = $(this).parent().parent().find('td').eq(5).html();
+                var ptu = $(this).parent().parent().find('td').eq(6).html();
+                var otraperce = $(this).parent().parent().find('td').eq(7).html();
+                var primavaca = $(this).parent().parent().find('td').eq(8).html();
+                var isr = $(this).parent().parent().find('td').eq(9).html();
+                var imss = $(this).parent().parent().find('td').eq(10).html();
+                var infonavit = $(this).parent().parent().find('td').eq(11).html();
+                var total = $(this).parent().parent().find('td').eq(12).html();
+                recibo = [tipo,nombre,sueldo,vacaciones,aguinaldo,ptu,otraperce,primavaca,isr,imss,infonavit,total];
+                detallereci.push(recibo);
+            });
+            return detallereci;
+   }
+    function polizarnomina()
+    {
+        var chek = checar();
+        var concep = document.getElementById('concepto').value;
+        var refe = document.getElementById('referencia').value;
+        var id = document.getElementById('idbanco').value;
+
+        jQuery.ajax({
+            type:"POST",
+            url: baseurl+"catalogos/Importan/insertpolizar",
+            data:{chek:chek,concep:concep,refe:refe,id:id},
+            dataType:"html",
+            success:function(response)
+            {
+
+            }
+        });
+    }
     function buscarnominas()
     {
 
