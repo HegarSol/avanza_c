@@ -24,7 +24,7 @@
       <tr>
          <td><?php echo $balanza['cuenta'] ;?></td>
          <td><?php echo $balanza['sub_cta'] ;?></td>
-         <td><?php echo $balanza['nombre_cuenta'] ;?></td>
+         <td><?php echo $balanza['nombre'] ;?></td>
          <td style="text-align:right;"><?php echo number_format($balanza['sini'],2,'.','') ;?></td>
          <td style="text-align:right;"><?php echo number_format($balanza['cargos'],2,'.','') ;?></td>
          <td style="text-align:right;"><?php echo number_format($balanza['abonos'],2,'.','') ;?></td>
