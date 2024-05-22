@@ -505,7 +505,15 @@ class ReporteCuentasPagar extends MY_Controller
 
         if($valor == 'factu')
         {
+            if(ENVIRONMENT == 'development')
+            {
+                $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/reporte?empresa=".$rfcempresa."&proveedor=".$rfcprove."&fecha_inicial=".$fechaini."&status=".$valor3."&fecha_final=".$fechafin."&acumulado=".$acude);
+            }
+            else
+            {
                 $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/reporte?empresa=".$rfcempresa."&proveedor=".$rfcprove."&fecha_inicial=".$fechaini."&status=".$valor3."&fecha_final=".$fechafin."&acumulado=".$acude);
+            }
+
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -619,7 +627,8 @@ class ReporteCuentasPagar extends MY_Controller
                         for($j=0;$j<count($datos); $j++)
                         {
                              $tajos[] = [
-                                 'rfc_emisor' => $datos[$j]->rfc_emisor
+                                 'rfc_emisor' => $datos[$j]->rfc_emisor,
+                                 'nombre_emisor' => $datos[$j]->nombre_emisor
                              ];
                         }
     
@@ -632,7 +641,7 @@ class ReporteCuentasPagar extends MY_Controller
     
                         foreach($tajos as $key => $row)
                         {
-                            $ordenado[] = ['rfc_emisor' => $row['rfc_emisor'] ];
+                            $ordenado[] = ['rfc_emisor' => $row['rfc_emisor'],'nombre_emisor' => $row['nombre_emisor']];
                         }
     
     
@@ -641,7 +650,7 @@ class ReporteCuentasPagar extends MY_Controller
                         foreach($datosr as $lai)
                         {
     
-                            $this->pdf->Cell(200,7,$lai['rfc_emisor'].' - ',0,0,'L',1);
+                            $this->pdf->Cell(200,7,$lai['rfc_emisor'].' - '.$lai['nombre_emisor'],0,0,'L',1);
                             $this->pdf->Ln(10);
     
                             for($i=0; $i<count($datos); $i++)
