@@ -77,6 +77,7 @@ class Servicio extends CI_Controller
                             show_error('No se puede establecer conexion con la base de datos: '.$dat['IdEmpresa']);
                         }
                     }
+                  
                  if(count($response) > 0)
                  {
                     $this->insertar($response,$dat['IdEmpresa'],$inserycance);
@@ -121,11 +122,18 @@ class Servicio extends CI_Controller
                 else
                 {
                     $this->db2->trans_commit();
-                    $cancelacion = '';
-                    if($inserycance == 1)
+                    if($inserycance == 0)
                     {
-                        $this->actualizar($idempresa,$inserpo->id_factura,$inserpo->tipo_mov.$inserpo->no_banco.$inserpo->no_mov,$cancelacion);
+                        $cancelacion = '1';
+                        $poliza = 'X'.$inserpo->no_banco.$inserpo->no_mov;
                     }
+                    else
+                    {
+                        $cancelacion = '';
+                        $poliza = $inserpo->tipo_mov.$inserpo->no_banco.$inserpo->no_mov;
+                    }
+
+                    $this->actualizar($idempresa,$inserpo->id_factura,$poliza,$cancelacion);
                 }
             }
         }
