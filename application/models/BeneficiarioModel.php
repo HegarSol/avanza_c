@@ -17,6 +17,22 @@ class BeneficiarioModel extends MY_Model
             if(!$this->db2){show_error('No se puede establecer conexion con la base de datos');}
         }
     }
+    public function buscarnombre($nombre)
+    {
+        $row = $this->db2->select('*')
+        ->from('beneficiario')
+        ->where('nombre',$nombre)
+        ->get();
+        return $row->result_array();        
+    }
+    public function buscarbanco($valor)
+    {
+        $row = $this->db2->select('*')
+        ->from('bancobenefi')
+        ->where('no_prov',$valor)
+        ->get();
+        return $row->result_array();
+    }
     public function datosBenefi($id)
     {
         $row = $this->db2->select('*')->from('beneficiario')->where('no_prov',$id)->get();
