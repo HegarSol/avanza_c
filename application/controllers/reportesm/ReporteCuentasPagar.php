@@ -197,6 +197,7 @@ class ReporteCuentasPagar extends MY_Controller
                     $objsheet->setCellValue('G3','Importe');
                     $objsheet->setCellValue('H3','Metodo pago');
                     $objsheet->setCellValue('I3','UUID');
+                    $objsheet->setCellValue('J3','Antiguedad');
 
                     $total = 0;
                     $summon2 = 0;
@@ -270,6 +271,12 @@ class ReporteCuentasPagar extends MY_Controller
                                     $objsheet->setCellValue('G'.$numerod,'$ '.number_format($datos[$i]->total,2,'.',''));
                                     $objsheet->setCellValue('H'.$numerod,$datos[$i]->metodo_pago);
                                     $objsheet->setCellValue('I'.$numerod,$datos[$i]->uuid);
+
+                                    $date1 = new DateTime(date('d-m-Y',strtotime($datos[$i]->fecha)));
+                                    $date2 = new DateTime(date('d-m-Y'));
+                                    $diff = $date1->diff($date2);
+
+                                    $objsheet->setCellValue('J'.$numerod,$diff->days.' dias');
                                     $summon2 = $summon2 + $datos[$i]->total;
                                 }
 
@@ -288,6 +295,7 @@ class ReporteCuentasPagar extends MY_Controller
                        $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
                        $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
                        $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setAutoSize(true);
+                       $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setAutoSize(true);
                     }
                     else
                     {
@@ -300,8 +308,9 @@ class ReporteCuentasPagar extends MY_Controller
                         $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setAutoSize(true);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setAutoSize(true);
 
-                        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A4:I4');
+                        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A4:J4');
                         $objsheet->setCellValue('A4',$response->error);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
                     }
@@ -659,9 +668,10 @@ class ReporteCuentasPagar extends MY_Controller
                     $this->pdf->Cell(20,1,'Folio',0,0,'C',0);
                     $this->pdf->Cell(10,1,'Fecha',0,0,'C',0);
                     $this->pdf->Cell(50,1,utf8_decode('Descripción'),0,0,'C',0);
-                    $this->pdf->Cell(25,1,utf8_decode('Póliza pago'),0,0,'C',0);
+                    $this->pdf->Cell(20,1,utf8_decode('Póliza pago'),0,0,'C',0);
                     $this->pdf->Cell(25,1,'Fecha pago',0,0,'C',0);
                     $this->pdf->Cell(25,1,'Met. pago',0,0,'C',0);
+                    $this->pdf->Cell(15,1,'Antiguedad',0,0,'C',0);
                     $this->pdf->Cell(25,1,'Importe',0,0,'C',0);
                     $this->pdf->Line(5,$y+3,250,$y+3);
                     $this->pdf->Ln(5);
@@ -713,16 +723,23 @@ class ReporteCuentasPagar extends MY_Controller
                                     $this->pdf->Cell(15,1,$datos[$i]->folio,0,0,'R');
                                     $this->pdf->Cell(25,1,date('d-m-Y',strtotime($datos[$i]->fecha)),0,0,'R');
                                     $this->pdf->Cell(50,1,$datos[$i]->descripcion,0,0,'L');
-                                    $this->pdf->Cell(20,1,$datos[$i]->poliza_pago,0,0,'C');
+                                    $this->pdf->Cell(15,1,$datos[$i]->poliza_pago,0,0,'C');
                                     if($datos[$i]->fecha_pago == '')
                                     {
-                                        $this->pdf->Cell(25,1,'',0,0,'C');
+                                        $this->pdf->Cell(20,1,'',0,0,'C');
                                     }
                                     else
                                     {
-                                        $this->pdf->Cell(25,1,date('d-m-Y',strtotime($datos[$i]->fecha_pago)),0,0,'C');
+                                        $this->pdf->Cell(20,1,date('d-m-Y',strtotime($datos[$i]->fecha_pago)),0,0,'C');
                                     }
                                     $this->pdf->Cell(20,1,$datos[$i]->metodo_pago,0,0,'C');
+
+                                    $date1 = new DateTime(date('d-m-Y',strtotime($datos[$i]->fecha)));
+                                    $date2 = new DateTime(date('d-m-Y'));
+                                    $diff = $date1->diff($date2);
+
+
+                                    $this->pdf->Cell(15,1,$diff->days.' dias',0,0,'C');
                                     $this->pdf->Cell(25,1,'$ '.number_format($datos[$i]->total,2,'.',','),0,0,'R');
         
         
