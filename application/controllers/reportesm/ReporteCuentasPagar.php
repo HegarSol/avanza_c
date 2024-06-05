@@ -78,8 +78,15 @@ class ReporteCuentasPagar extends MY_Controller
 
         if($valor == 'factu')
         {
-            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/reporte?empresa=".$rfcempresa."&proveedor=".$rfcprove."&fecha_inicial=".$fechaini."&status=".$valor3."&fecha_final=".$fechafin."&acumulado=".$acude);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            if(ENVIRONMENT == 'development')
+            {
+                $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/reporte?empresa=".$rfcempresa."&proveedor=".$rfcprove."&fecha_inicial=".$fechaini."&status=".$valor3."&fecha_final=".$fechafin."&acumulado=".$acude);
+            }
+            else
+            {
+                $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/reporte?empresa=".$rfcempresa."&proveedor=".$rfcprove."&fecha_inicial=".$fechaini."&status=".$valor3."&fecha_final=".$fechafin."&acumulado=".$acude);
+            }
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 $resu = curl_exec($ch);
@@ -99,8 +106,8 @@ class ReporteCuentasPagar extends MY_Controller
                 }
                 else
                 {
-                    $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:G1');
-                    $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:G2');    
+                    $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:I1');
+                    $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:I2');    
                 }
 
                 if($valor3 == 1)
@@ -188,6 +195,8 @@ class ReporteCuentasPagar extends MY_Controller
                     $objsheet->setCellValue('E3','Poliza pago');
                     $objsheet->setCellValue('F3','Fecha pago');
                     $objsheet->setCellValue('G3','Importe');
+                    $objsheet->setCellValue('H3','Metodo pago');
+                    $objsheet->setCellValue('I3','UUID');
 
                     $total = 0;
                     $summon2 = 0;
@@ -201,7 +210,8 @@ class ReporteCuentasPagar extends MY_Controller
                        for($j=0;$j<count($datos); $j++)
                        {
                            $tajos[] = [
-                               'rfc_emisor' => $datos[$j]->rfc_emisor
+                               'rfc_emisor' => $datos[$j]->rfc_emisor,
+                               'nombre_emisor' => $datos[$j]->nombre_emisor
                            ];
                        }
 
@@ -214,7 +224,7 @@ class ReporteCuentasPagar extends MY_Controller
 
                        foreach($tajos as $key => $row)
                        {
-                           $ordenado[] = ['rfc_emisor' => $row['rfc_emisor'] ];
+                           $ordenado[] = ['rfc_emisor' => $row['rfc_emisor'],'nombre_emisor' => $row['nombre_emisor'] ];
                        }
 
                        $datosr = array_unique($ordenado, SORT_REGULAR);
@@ -229,11 +239,11 @@ class ReporteCuentasPagar extends MY_Controller
                            $datosrfc = $this->beneficiario->datosbenerfc($lai['rfc_emisor']);
                            if(count($datosrfc) == 0)
                            {
-                             $objsheet->setCellValue('A'.$numerod,'');
+                             $objsheet->setCellValue('A'.$numerod,$lai['rfc_emisor'].' - '.$lai['nombre_emisor']);
                            }
                            else
                            {
-                             $objsheet->setCellValue('A'.$numerod,$lai['rfc_emisor'].' - '.$datosrfc[0]['nombre']);
+                             $objsheet->setCellValue('A'.$numerod,$lai['rfc_emisor'].' - '.$lai['nombre_emisor']);
                            }
 
                            for($i=0; $i<count($datos); $i++)
@@ -258,6 +268,8 @@ class ReporteCuentasPagar extends MY_Controller
                                     }
 
                                     $objsheet->setCellValue('G'.$numerod,'$ '.number_format($datos[$i]->total,2,'.',''));
+                                    $objsheet->setCellValue('H'.$numerod,$datos[$i]->metodo_pago);
+                                    $objsheet->setCellValue('I'.$numerod,$datos[$i]->uuid);
                                     $summon2 = $summon2 + $datos[$i]->total;
                                 }
 
@@ -274,6 +286,8 @@ class ReporteCuentasPagar extends MY_Controller
                        $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setAutoSize(true);
                        $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setAutoSize(true);
                        $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
+                       $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
+                       $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setAutoSize(true);
                     }
                     else
                     {
@@ -284,8 +298,10 @@ class ReporteCuentasPagar extends MY_Controller
                         $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setAutoSize(true);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setAutoSize(true);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setAutoSize(true);
 
-                        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A4:G4');
+                        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A4:I4');
                         $objsheet->setCellValue('A4',$response->error);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
                     }
@@ -312,7 +328,14 @@ class ReporteCuentasPagar extends MY_Controller
                $fechafin = date('Y-m-d');
             }
 
+            if(ENVIRONMENT == 'development')
+            {
+                $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/reporte?empresa=".$rfcempresa."&proveedor=".$rfcprove."&fecha_inicial=".$fechaini."&status=".$valor3."&fecha_final=".$fechafin."&acumulado=".$acude);
+            }
+            else
+            {
                 $ch2 = curl_init("http://avanzab.hegarss.com/api/Comprobantes/reporte_pagos?empresa=".$rfcempresa."&proveedor=".$rfcprove."&fechaini=".$fechaini."&fechafin=".$fechafin);
+            }
                 curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch2, CURLOPT_SSL_VERIFYHOST, 0);
                 curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, 0);
@@ -467,6 +490,7 @@ class ReporteCuentasPagar extends MY_Controller
     }
     public function imprimir()
     {
+        
         $valor = $this->input->post('faccom');
         
         $rfcempresa = $this->input->post('rfcempresa');
@@ -520,11 +544,33 @@ class ReporteCuentasPagar extends MY_Controller
                 $resu = curl_exec($ch);
                 $response = json_decode($resu);
 
+                $this->rowc = $this->configModel->getConfig();
+                
+
                 $this->pdf->SetAutoPageBreak(true,10);
                 $this->pdf->AddPage();
                 $this->pdf->SetTitle(utf8_decode('Reporte Cuentas por Pagar'));
                 $this->pdf->SetFillColor(220,220,220);
-                $this->pdf->SetDrawColor(220,220,220);        
+                $this->pdf->SetDrawColor(220,220,220);    
+                
+
+                if(!empty($this->rowc[0]['img']) || $this->rowc[0]['img']!='' ){
+
+          
+                    $formato = explode(".", $this->rowc[0]['imgName']);
+                    $imagen =$this->rowc[0]['img'];
+                  
+                  // Guardamos la imagen
+                  file_put_contents(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1] ,
+                    base64_decode($imagen));
+                    // if($this->rowSerie[0]['noLogo']!=1)
+                    // {$this->pdf->Image(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1],2,2,90,30);}
+                }
+                if(isset($formato))
+                {
+                  $this->pdf->Image(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1],135,2,75,40);
+                }
+                
                 $this->pdf->SetFont('Helvetica','B',10);
                 $this->pdf->Ln(10);
                 if($valor3 == 1)
@@ -553,6 +599,10 @@ class ReporteCuentasPagar extends MY_Controller
                    $this->pdf->Cell(90);
                    $this->pdf->Cell(10,0,'Del: '.date('d-m-Y',strtotime($fechaini)). ' Al: '.date('d-m-Y',strtotime($fechafin)),0,1,'C');
                 }
+                $this->pdf->Ln(5);
+                $this->pdf->Cell(20);
+                $this->pdf->Cell(10,0,' Impreso: '.date('d-m-Y H:i:s'),0,1,'C');
+
                 $this->pdf->Ln(20);
                 $y=$this->pdf->GetY();
                 if($valor5 == 1)
@@ -607,11 +657,12 @@ class ReporteCuentasPagar extends MY_Controller
                     $this->pdf->SetFont('Helvetica','B',9.5);
                     $this->pdf->Cell(15,1,'Serie',0,0,'C',0);
                     $this->pdf->Cell(20,1,'Folio',0,0,'C',0);
-                    $this->pdf->Cell(20,1,'Fecha',0,0,'C',0);
-                    $this->pdf->Cell(60,1,utf8_decode('Descripción'),0,0,'C',0);
+                    $this->pdf->Cell(10,1,'Fecha',0,0,'C',0);
+                    $this->pdf->Cell(50,1,utf8_decode('Descripción'),0,0,'C',0);
                     $this->pdf->Cell(25,1,utf8_decode('Póliza pago'),0,0,'C',0);
-                    $this->pdf->Cell(30,1,'Fecha pago',0,0,'C',0);
-                    $this->pdf->Cell(30,1,'Importe',0,0,'C',0);
+                    $this->pdf->Cell(25,1,'Fecha pago',0,0,'C',0);
+                    $this->pdf->Cell(25,1,'Met. pago',0,0,'C',0);
+                    $this->pdf->Cell(25,1,'Importe',0,0,'C',0);
                     $this->pdf->Line(5,$y+3,250,$y+3);
                     $this->pdf->Ln(5);
 
@@ -659,19 +710,19 @@ class ReporteCuentasPagar extends MY_Controller
                                 if($lai['rfc_emisor'] == $datos[$i]->rfc_emisor)
                                 {
                                     $this->pdf->Cell(15,1,$datos[$i]->serie,0,0,'C');
-                                    $this->pdf->Cell(20,1,$datos[$i]->folio,0,0,'R');
-                                    $this->pdf->Cell(22,1,date('d-m-Y',strtotime($datos[$i]->fecha)),0,0,'R');
-                                    $this->pdf->Cell(60,1,$datos[$i]->descripcion,0,0,'L');
-                                    $this->pdf->Cell(25,1,$datos[$i]->poliza_pago,0,0,'C');
+                                    $this->pdf->Cell(15,1,$datos[$i]->folio,0,0,'R');
+                                    $this->pdf->Cell(25,1,date('d-m-Y',strtotime($datos[$i]->fecha)),0,0,'R');
+                                    $this->pdf->Cell(50,1,$datos[$i]->descripcion,0,0,'L');
+                                    $this->pdf->Cell(20,1,$datos[$i]->poliza_pago,0,0,'C');
                                     if($datos[$i]->fecha_pago == '')
                                     {
-                                        $this->pdf->Cell(30,1,'',0,0,'C');
+                                        $this->pdf->Cell(25,1,'',0,0,'C');
                                     }
                                     else
                                     {
-                                        $this->pdf->Cell(30,1,date('d-m-Y',strtotime($datos[$i]->fecha_pago)),0,0,'C');
+                                        $this->pdf->Cell(25,1,date('d-m-Y',strtotime($datos[$i]->fecha_pago)),0,0,'C');
                                     }
-    
+                                    $this->pdf->Cell(20,1,$datos[$i]->metodo_pago,0,0,'C');
                                     $this->pdf->Cell(25,1,'$ '.number_format($datos[$i]->total,2,'.',','),0,0,'R');
         
         
