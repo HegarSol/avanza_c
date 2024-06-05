@@ -338,7 +338,7 @@ class Polizasdiarias extends MY_Controller
 
             if($detalle > 0)
             {
-                $mensaje[] = array('mensaje' => "Insertado correctamente");
+                $mensaje[] = array('mensaje' => "Insertado Correctamente");
             }
             else
             {
