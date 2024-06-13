@@ -19,7 +19,17 @@ class Archivo extends REST_Controller
         parent::__construct('rest_api');
         $this->load->model('CuentasModel','cuentas');
     }
+    public function buscarcuentaextranjera_post()
+    {
+        $idempre = $_POST['idempre'];
+        $cuentasat = $_POST['cuentasat'];
 
+        $this->cuentas->set_database($idempre);
+
+        $datos = $this->cuentas->MaxCuentaExNa($cuentasat);
+
+        $this->response(array('status' => true, 'data' => $datos));  
+    }
     public function insertclientecuenta_post()
     {
         $idempre = $_POST['idempre'];
