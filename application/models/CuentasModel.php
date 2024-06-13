@@ -72,6 +72,28 @@
             $row = $this->db2->select('*')->from('catalogocta')->where('cuenta',$cuen)->get();
             return $row->result_array();
         }
+        public function MaxCuentaExNa($data)
+        {
+            if($data == '105.01')
+            {
+                $row = $this->dbEmpresa->query('SELECT MAX(ca.sub_cta)+1 AS sub_cta  
+                FROM catalogocta ca LEFT JOIN configuracion_cuentas cc 
+                ON ca.cuenta = cc.cuenta
+                WHERE ctasat = "105.01"'
+                );
+            }
+            else
+            {
+                $row = $this->dbEmpresa->query('SELECT MAX(ca.sub_cta)+1 AS sub_cta  
+                FROM catalogocta ca LEFT JOIN configuracion_cuentas cc 
+                ON ca.cuenta = cc.cuenta
+                WHERE ctasat = "105.02"'
+                );
+            }
+
+
+            return $row->result_array();
+        }
         public function getpagado($fechaini,$fechafin)
         {
             $query = $this->db2->query('CALL getefePagado(\''.$fechaini.'\',\''.$fechafin.'\')');
