@@ -246,6 +246,34 @@ class Importan extends MY_Controller
                     $detalle= $this->opera->guardarDetalle($detalle);  
                }
 
+               //PREMIO PUNTUALIDAD
+
+               if($checar[11] > 0)
+               {
+                        $valorsuel = $this->opera->getcuentanomina(601,100);
+                        // var_dump($valorsuel);
+
+                        $detalle = array(
+                        'id_encabezado' => $id,
+                        'tipo_mov' => $tipo,
+                        'no_banco' => $datos[0]['no_banco'],
+                        'no_mov' => $next_mov,
+                        'ren' => 0,
+                        'cuenta' => $valorsuel[0]['cuenta'],
+                        'sub_cta' => $valorsuel[0]['sub_cta'],
+                        'monto' => $checar[11],
+                        'c_a' => '+',
+                        'fecha' => date('Y-m-d'),
+                        'concepto' =>$checar[1],
+                        'referencia' => $refe,
+                        'no_prov' => $nombreemple[0]['no_prov'],
+                        'factrefe' => 0,
+                        'nombre_cuenta' => $valorsuel[0]['descrip']
+                    );
+
+                    $detalle= $this->opera->guardarDetalle($detalle);  
+               }
+
                //VACACIONES
 
                if($checar[4] > 0)

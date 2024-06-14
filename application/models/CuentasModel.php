@@ -37,6 +37,11 @@
             $this->db2->where('idcuenta',$id);
             return $this->db2->update('catalogocta',$datos);
         }
+        public function buscarcuentamayor($data)
+        {
+            $row = $this->db2->select('*')->from('catalogocta')->where('cuenta',$data)->where('sub_cta',0)->get();
+            return $row->result_array();            
+        }
         public function datosCuentas($id)
         {
             $row = $this->db2->select('*')->from('catalogocta')->where('idcuenta',$id)->get();

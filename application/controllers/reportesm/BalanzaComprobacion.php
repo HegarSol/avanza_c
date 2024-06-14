@@ -332,6 +332,8 @@ class BalanzaComprobacion extends MY_Controller
 
           $this->datos = $this->operaciones->balanza($inicial,$final,$this->radio);
 
+        //  var_dump($this->datos);
+
           $this->pdf->SetAutoPageBreak(true,10);
           $this->pdf->AddPage();
           $this->pdf->SetTitle('Reporte Balanza de Comprobacion');
@@ -368,6 +370,7 @@ class BalanzaComprobacion extends MY_Controller
           $this->pdf->Ln(5);
 //          $this->pdf->SetWidths(array(26,50,30,20,25,25,20));
           $this->pdf->SetFont('Helvetica','',8);
+          
 
           $total_inicial = 0;
           $total_cargos = 0;
@@ -375,53 +378,95 @@ class BalanzaComprobacion extends MY_Controller
           $total_saldo_mensual = 0;
           $final = 0;
 
-          for($i=0;$i<count($this->datos);$i++)
+          $str = count($this->datos);
+          $i = 0;
+
+          while($i < $str-1)
           {
+              
+
+              
+
+                $valors = $this->datos[$i]['cuenta'];
 
 
-            if($this->datos[$i]['sub_cta'] == 0)
+            $total_inicialsub = 0;
+            $total_cargossub = 0;
+            $total_abonossub = 0;
+            $total_saldo_mensualsub = 0;
+            $finalsub = 0;
+            $algosub = 0;
+            $nadasub = 0;
+            while($valors == $this->datos[$i]['cuenta'] AND $i < $str-1)
             {
-             // $this->pdf->Line(10, 45, 205, 45);
+              $cuen = $this->datos[$i];
+                $this->pdf->SetCol(0);
+                $this->pdf->Cell(17,0,$cuen['cuenta'].' - '.$cuen['sub_cta'],0,1,'C');
+                $this->pdf->SetCol(0.3);
+                $this->pdf->Cell(17,0,utf8_decode($cuen['nombre']),0,1,'');
+                $this->pdf->SetCol(1.4);
+                $this->pdf->Cell(17,0,number_format($cuen['sini'],2,'.',','),0,1,'R');
+                $this->pdf->SetCol(1.7);
+                $this->pdf->Cell(17,0,number_format($cuen['cargos'],2,'.',','),0,1,'R');
+                $this->pdf->SetCol(2.1);
+                $this->pdf->Cell(17,0,number_format($cuen['abonos'],2,'.',','),0,1,'R');
+                $this->pdf->SetCol(2.4);
+                $this->pdf->Cell(17,0,number_format($cuen['cargos']-$cuen['abonos'],2,'.',','),0,1,'R');
+                $this->pdf->SetCol(2.8);
+                $this->pdf->Cell(17,0,number_format(($cuen['sini'] + $cuen['cargos']) - $cuen['abonos'],2,'.',','),0,1,'R');
+              
+                $total_inicialsub = $total_inicialsub + $cuen['sini']; 
+                $total_cargossub = $total_cargossub + $cuen['cargos'];
+                $total_abonossub = $total_abonossub + $cuen['abonos'];
+                $nadasub = $cuen['cargos'] - $cuen['abonos'];
+                $total_saldo_mensualsub = $total_saldo_mensualsub + $nadasub;
+                $algosub = ($cuen['sini']+$cuen['cargos'])-$cuen['abonos'];
+                $finalsub = $finalsub + $algosub;
+
+                $this->pdf->Ln(4);
+  
+
+                $i = $i + 1;
+
+                
             }
+
+           
             $this->pdf->SetCol(0);
-            $this->pdf->Cell(17,0,$this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta'],0,1,'C');
-            $this->pdf->SetCol(0.3);
-            $this->pdf->Cell(17,0,utf8_decode($this->datos[$i]['nombre']),0,1,'');
-            $this->pdf->SetCol(1.4);
-            $this->pdf->Cell(17,0,number_format($this->datos[$i]['sini'],2,'.',','),0,1,'R');
-            $this->pdf->SetCol(1.7);
-            $this->pdf->Cell(17,0,number_format($this->datos[$i]['cargos'],2,'.',','),0,1,'R');
-            $this->pdf->SetCol(2.1);
-            $this->pdf->Cell(17,0,number_format($this->datos[$i]['abonos'],2,'.',','),0,1,'R');
-            $this->pdf->SetCol(2.4);
-            $this->pdf->Cell(17,0,number_format($this->datos[$i]['cargos']-$this->datos[$i]['abonos'],2,'.',','),0,1,'R');
-            $this->pdf->SetCol(2.8);
-            $this->pdf->Cell(17,0,number_format(($this->datos[$i]['sini'] + $this->datos[$i]['cargos']) - $this->datos[$i]['abonos'],2,'.',','),0,1,'R');
+            $this->pdf->Cell(94,0);
+            $this->pdf->Cell(10,-7,'__________________________________________________________________');
+                         $cutsn = $this->cuentas->buscarcuentamayor($valors);
+                          $this->pdf->SetCol(0);
+                          $this->pdf->Cell(17,0,'',0,1,'C');
+                          $this->pdf->SetCol(0.3);
+                          $this->pdf->Cell(17,0,utf8_decode(isset($cutsn[0]['nombre']) ? $cutsn[0]['nombre'] : ''),0,1,'');
+                          $this->pdf->SetCol(1.4);
+                          $this->pdf->Cell(17,0,number_format($total_inicialsub,2,'.',','),0,1,'R');
+                          $this->pdf->SetCol(1.7);
+                          $this->pdf->Cell(17,0,number_format($total_cargossub,2,'.',','),0,1,'R');
+                          $this->pdf->SetCol(2.1);
+                          $this->pdf->Cell(17,0,number_format($total_abonossub,2,'.',','),0,1,'R');
+                          $this->pdf->SetCol(2.4);
+                          $this->pdf->Cell(17,0,number_format($total_saldo_mensualsub,2,'.',','),0,1,'R');
+                          $this->pdf->SetCol(2.8);
+                          $this->pdf->Cell(17,0,number_format($finalsub,2,'.',','),0,1,'R');
+            
+                          $this->pdf->SetCol(0);
+                          $this->pdf->Cell(10,1,'______________________________________________________________________________________________________________________________');
+                          $this->pdf->Ln(4);
+                        }
 
-              // $renlgon = $this->Rowpdf(array(
-              //     $this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta'],
-              //     utf8_decode($this->datos[$i]['nombre_cuenta']),
-              //     number_format($this->datos[$i]['sini'],2,'.',','),
-              //     number_format($this->datos[$i]['cargos'],2,'.',','),
-              //     number_format($this->datos[$i]['abonos'],2,'.',','),
-              //     number_format($this->datos[$i]['cargos']-$this->datos[$i]['abonos'],2,'.',','),
-              //     number_format(($this->datos[$i]['sini'] + $this->datos[$i]['cargos']) - $this->datos[$i]['abonos'],2,'.',',')
-              // ),'R');
-
-              // $this->pdf->SetY($renlgon-3.5);
-               $this->pdf->Ln(4);
-
-
-
-              $total_inicial = $total_inicial + $this->datos[$i]['sini']; 
-              $total_cargos = $total_cargos + $this->datos[$i]['cargos'];
-              $total_abonos = $total_abonos + $this->datos[$i]['abonos'];
-              $nada = $this->datos[$i]['cargos'] - $this->datos[$i]['abonos'];
+             
+              $this->pdf->Ln(4);
+              $total_inicial = $total_inicial + isset($this->datos[$i]['sini']); 
+              $total_cargos = $total_cargos + isset($this->datos[$i]['cargos']);
+              $total_abonos = $total_abonos + isset($this->datos[$i]['abonos']);
+              $nada = isset($this->datos[$i]['cargos']) - isset($this->datos[$i]['abonos']);
               $total_saldo_mensual = $total_saldo_mensual + $nada;
-              $algo = ($this->datos[$i]['sini']+$this->datos[$i]['cargos'])-$this->datos[$i]['abonos'];
+              $algo = (isset($this->datos[$i]['sini'])+isset($this->datos[$i]['cargos']))-isset($this->datos[$i]['abonos']);
               $final = $final + $algo;
 
-          }
+         
           $this->pdf->Ln(5);
           $this->pdf->SetCol(0.0);
           $this->pdf->Line(7,260,210,260);
