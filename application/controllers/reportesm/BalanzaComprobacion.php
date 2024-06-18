@@ -383,11 +383,8 @@ class BalanzaComprobacion extends MY_Controller
 
           while($i < $str-1)
           {
-              
 
-              
-
-                $valors = $this->datos[$i]['cuenta'];
+            $valors = $this->datos[$i]['cuenta'];
 
 
             $total_inicialsub = 0;
@@ -401,9 +398,9 @@ class BalanzaComprobacion extends MY_Controller
             {
               $cuen = $this->datos[$i];
                 $this->pdf->SetCol(0);
-                $this->pdf->Cell(17,0,$cuen['cuenta'].' - '.$cuen['sub_cta'],0,1,'C');
+                $this->pdf->Cell(17,0,$cuen['cuenta'].' - '.$cuen['sub_cta'],0,1,'L');
                 $this->pdf->SetCol(0.3);
-                $this->pdf->Cell(17,0,utf8_decode($cuen['nombre']),0,1,'');
+                $this->pdf->Cell(17,0,utf8_decode($cuen['nombre']),0,1,'L');
                 $this->pdf->SetCol(1.4);
                 $this->pdf->Cell(17,0,number_format($cuen['sini'],2,'.',','),0,1,'R');
                 $this->pdf->SetCol(1.7);
@@ -432,10 +429,11 @@ class BalanzaComprobacion extends MY_Controller
             }
 
            
-            $this->pdf->SetCol(0);
-            $this->pdf->Cell(94,0);
-            $this->pdf->Cell(10,-7,'__________________________________________________________________');
-                         $cutsn = $this->cuentas->buscarcuentamayor($valors);
+                          $this->pdf->SetCol(0);
+                          $this->pdf->Cell(94,0);
+                          $this->pdf->Cell(10,-7,'__________________________________________________________________');
+                         
+                          $cutsn = $this->cuentas->buscarcuentamayor($valors);
                           $this->pdf->SetCol(0);
                           $this->pdf->Cell(17,0,'',0,1,'C');
                           $this->pdf->SetCol(0.3);
@@ -454,17 +452,19 @@ class BalanzaComprobacion extends MY_Controller
                           $this->pdf->SetCol(0);
                           $this->pdf->Cell(10,1,'______________________________________________________________________________________________________________________________');
                           $this->pdf->Ln(4);
-                        }
+
+                          $total_inicial = $total_inicial + $this->datos[$i]['sini']; 
+                          $total_cargos = $total_cargos + $this->datos[$i]['cargos'];
+                          $total_abonos = $total_abonos + $this->datos[$i]['abonos'];
+                          $nada = $this->datos[$i]['cargos'] - $this->datos[$i]['abonos'];
+                          $total_saldo_mensual = $total_saldo_mensual + $nada;
+                          $algo = ($this->datos[$i]['sini']+$this->datos[$i]['cargos'])-$this->datos[$i]['abonos'];
+                          $final = $final + $algo;
+          }
 
              
               $this->pdf->Ln(4);
-              $total_inicial = $total_inicial + isset($this->datos[$i]['sini']); 
-              $total_cargos = $total_cargos + isset($this->datos[$i]['cargos']);
-              $total_abonos = $total_abonos + isset($this->datos[$i]['abonos']);
-              $nada = isset($this->datos[$i]['cargos']) - isset($this->datos[$i]['abonos']);
-              $total_saldo_mensual = $total_saldo_mensual + $nada;
-              $algo = (isset($this->datos[$i]['sini'])+isset($this->datos[$i]['cargos']))-isset($this->datos[$i]['abonos']);
-              $final = $final + $algo;
+              
 
          
           $this->pdf->Ln(5);
@@ -687,19 +687,102 @@ class BalanzaComprobacion extends MY_Controller
           $final = 0;
 
           $numero=7;
+          $numero2=12;
+         
+          $str = count($this->datos);
+          $i = 0;
 
-          for($i=0; $i<count($this->datos); $i++)
+          $maespa = (int) $str + (int) $str;
+
+          $styleArray = array(
+            'borders' => array(
+              'bottom' => array(
+                'style' => PHPExcel_Style_Border::BORDER_THIN
+              )
+            )
+          );
+
+
+
+          while($i < $str-1)
           {
-               $numero++;
-               $objsheet->setCellValue('A'.$numero,$this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta']);
-              // $objsheet->setCellValue('B'.$numero,$this->datos[$i]['sub_cta']);
-               $objsheet->setCellValue('B'.$numero,$this->datos[$i]['nombre']);
-               $objsheet->setCellValue('C'.$numero,$this->datos[$i]['sini']);
-               $objsheet->setCellValue('D'.$numero,number_format($this->datos[$i]['cargos'],2,'.',''));
-               $objsheet->setCellValue('E'.$numero,number_format($this->datos[$i]['abonos'],2,'.',''));
-               $objsheet->setCellValue('F'.$numero,number_format($this->datos[$i]['cargos']-$this->datos[$i]['abonos'],2,'.',''));
-               $objsheet->setCellValue('G'.$numero,number_format(($this->datos[$i]['sini']+$this->datos[$i]['cargos'])-$this->datos[$i]['abonos'],2,'.',''));
+              $valors = $this->datos[$i]['cuenta'];
+
+            
+
+              $total_inicialsub = 0;
+              $total_cargossub = 0;
+              $total_abonossub = 0;
+              $total_saldo_mensualsub = 0;
+              $finalsub = 0;
+              $algosub = 0;
+              $nadasub = 0;
+
+              
+
+              while($valors == $this->datos[$i]['cuenta'] AND $i < $str-1)
+              {
+                  $cuen = $this->datos[$i];
+
+                  $numero++;
+                  $numero2++;
+               
+                  $objsheet->setCellValue('A'.$numero,$cuen['cuenta'].' - '.$cuen['sub_cta']);
+                  $objsheet->setCellValue('B'.$numero,utf8_decode($cuen['nombre']));
+                  $objsheet->setCellValue('C'.$numero,number_format($cuen['sini'],2,'.',','));
+                  $objsheet->setCellValue('D'.$numero,number_format($cuen['cargos'],2,'.',','));
+                  $objsheet->setCellValue('E'.$numero,number_format($cuen['abonos'],2,'.',','));
+                  $objsheet->setCellValue('F'.$numero,number_format($cuen['cargos']-$cuen['abonos'],2,'.',','));
+                  $objsheet->setCellValue('G'.$numero,number_format(($cuen['sini'] + $cuen['cargos']) - $cuen['abonos'],2,'.',','));
+                  
+                  $total_inicialsub = $total_inicialsub + $cuen['sini']; 
+                  $total_cargossub = $total_cargossub + $cuen['cargos'];
+                  $total_abonossub = $total_abonossub + $cuen['abonos'];
+                  $nadasub = $cuen['cargos'] - $cuen['abonos'];
+                  $total_saldo_mensualsub = $total_saldo_mensualsub + $nadasub;
+                  $algosub = ($cuen['sini']+$cuen['cargos'])-$cuen['abonos'];
+                  $finalsub = $finalsub + $algosub;
+
+                  $i = $i + 1;
+              }
+
+                $cutsn = $this->cuentas->buscarcuentamayor($valors);
+
+                $objPHPExcel->getActiveSheet()->getStyle('C'.$numero.':G'.$numero)->applyFromArray($styleArray);
+                
+                $numero++;
+
+                $objsheet->setCellValue('A'.$numero,'');
+                $objsheet->setCellValue('B'.$numero,utf8_decode(isset($cutsn[0]['nombre']) ? $cutsn[0]['nombre'] : ''));
+                $objsheet->setCellValue('C'.$numero,number_format($total_inicialsub,2,'.',','));
+                $objsheet->setCellValue('D'.$numero,number_format($total_cargossub,2,'.',','));
+                $objsheet->setCellValue('E'.$numero,number_format($total_abonossub,2,'.',','));
+                $objsheet->setCellValue('F'.$numero,number_format($total_saldo_mensualsub,2,'.',','));
+                $objsheet->setCellValue('G'.$numero,number_format($finalsub,2,'.',','));
+
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$numero.':G'.$numero)->applyFromArray($styleArray);
+
+
+                $total_inicial = $total_inicial + $this->datos[$i]['sini']; 
+                $total_cargos = $total_cargos + $this->datos[$i]['cargos'];
+                $total_abonos = $total_abonos + $this->datos[$i]['abonos'];
+                $nada = $this->datos[$i]['cargos'] - $this->datos[$i]['abonos'];
+                $total_saldo_mensual = $total_saldo_mensual + $nada;
+                $algo = ($this->datos[$i]['sini']+$this->datos[$i]['cargos'])-$this->datos[$i]['abonos'];
+                $final = $final + $algo;
+            
           }
+
+              $objsheet->setCellValue('A'.$maespa,'');
+              $objsheet->setCellValue('B'.$maespa,'Totales: ');
+              $objsheet->setCellValue('C'.$maespa,number_format($total_inicial,2,'.',','));
+              $objsheet->setCellValue('D'.$maespa,number_format($total_cargos,2,'.',','));
+              $objsheet->setCellValue('E'.$maespa,number_format($total_abonos,2,'.',','));
+              $objsheet->setCellValue('F'.$maespa,number_format($total_saldo_mensual,2,'.',','));
+              $objsheet->setCellValue('G'.$maespa,number_format($final,2,'.',','));
+
+          
+
 
           $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
           $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setAutoSize(true);
@@ -708,7 +791,6 @@ class BalanzaComprobacion extends MY_Controller
           $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setAutoSize(true);
           $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setAutoSize(true);
           $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
-        //  $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setAutoSize(true);
 
 
           $style = array(
@@ -717,7 +799,36 @@ class BalanzaComprobacion extends MY_Controller
             )
         );
 
-        $objPHPExcel->getDefaultStyle()->applyFromArray($style);
+        $styleleft = array(
+          'alignment' => array(
+              'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+          )
+      );
+          $styleright = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+            )
+        );
+
+        
+
+      $lastrow = $objPHPExcel->getActiveSheet()->getHighestRow();
+
+
+
+        $objPHPExcel->getActiveSheet()->getStyle('A1:G1')->applyFromArray($style); 
+        $objPHPExcel->getActiveSheet()->getStyle('A2:G2')->applyFromArray($style);
+        $objPHPExcel->getActiveSheet()->getStyle('A3:G3')->applyFromArray($style); 
+        $objPHPExcel->getActiveSheet()->getStyle('A4:G4')->applyFromArray($style);
+        $objPHPExcel->getActiveSheet()->getStyle('A5:G5')->applyFromArray($style);    
+
+        $objPHPExcel->getActiveSheet()->getStyle('B1:B'.$lastrow)->applyFromArray($styleleft);
+        $objPHPExcel->getActiveSheet()->getStyle('C1:C'.$lastrow)->applyFromArray($styleright);
+        $objPHPExcel->getActiveSheet()->getStyle('D1:D'.$lastrow)->applyFromArray($styleright);
+        $objPHPExcel->getActiveSheet()->getStyle('E1:E'.$lastrow)->applyFromArray($styleright);
+        $objPHPExcel->getActiveSheet()->getStyle('F1:F'.$lastrow)->applyFromArray($styleright);
+        $objPHPExcel->getActiveSheet()->getStyle('G1:G'.$lastrow)->applyFromArray($styleright);
+
         $objWriter=PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel5');
         $objWriter->save('php://output');
 
