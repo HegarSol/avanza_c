@@ -381,7 +381,7 @@ class BalanzaComprobacion extends MY_Controller
           $str = count($this->datos);
           $i = 0;
 
-          while($i < $str-1)
+          while($i < $str)
           {
 
             $valors = $this->datos[$i]['cuenta'];
@@ -390,11 +390,9 @@ class BalanzaComprobacion extends MY_Controller
             $total_inicialsub = 0;
             $total_cargossub = 0;
             $total_abonossub = 0;
-            $total_saldo_mensualsub = 0;
             $finalsub = 0;
             $algosub = 0;
-            $nadasub = 0;
-            while($valors == $this->datos[$i]['cuenta'] AND $i < $str-1)
+            while($valors == $this->datos[$i]['cuenta'] AND $i < $str)
             {
               $cuen = $this->datos[$i];
                 $this->pdf->SetCol(0);
@@ -412,11 +410,18 @@ class BalanzaComprobacion extends MY_Controller
                 $this->pdf->SetCol(2.8);
                 $this->pdf->Cell(17,0,number_format(($cuen['sini'] + $cuen['cargos']) - $cuen['abonos'],2,'.',','),0,1,'R');
               
+
+                $total_inicial = $total_inicial + $this->datos[$i]['sini']; 
+                $total_cargos = $total_cargos + $this->datos[$i]['cargos'];
+                $total_abonos = $total_abonos + $this->datos[$i]['abonos'];
+                $nada = $this->datos[$i]['cargos'] - $this->datos[$i]['abonos'];
+                $total_saldo_mensual = $total_saldo_mensual + $nada;
+                $algo = ($this->datos[$i]['sini']+$this->datos[$i]['cargos'])-$this->datos[$i]['abonos'];
+                $final = $final + $algo;
+
                 $total_inicialsub = $total_inicialsub + $cuen['sini']; 
                 $total_cargossub = $total_cargossub + $cuen['cargos'];
                 $total_abonossub = $total_abonossub + $cuen['abonos'];
-                $nadasub = $cuen['cargos'] - $cuen['abonos'];
-                $total_saldo_mensualsub = $total_saldo_mensualsub + $nadasub;
                 $algosub = ($cuen['sini']+$cuen['cargos'])-$cuen['abonos'];
                 $finalsub = $finalsub + $algosub;
 
@@ -445,7 +450,7 @@ class BalanzaComprobacion extends MY_Controller
                           $this->pdf->SetCol(2.1);
                           $this->pdf->Cell(17,0,number_format($total_abonossub,2,'.',','),0,1,'R');
                           $this->pdf->SetCol(2.4);
-                          $this->pdf->Cell(17,0,number_format($total_saldo_mensualsub,2,'.',','),0,1,'R');
+                          $this->pdf->Cell(17,0,number_format($total_cargossub-$total_abonossub,2,'.',','),0,1,'R');
                           $this->pdf->SetCol(2.8);
                           $this->pdf->Cell(17,0,number_format($finalsub,2,'.',','),0,1,'R');
             
@@ -453,13 +458,7 @@ class BalanzaComprobacion extends MY_Controller
                           $this->pdf->Cell(10,1,'______________________________________________________________________________________________________________________________');
                           $this->pdf->Ln(4);
 
-                          $total_inicial = $total_inicial + $this->datos[$i]['sini']; 
-                          $total_cargos = $total_cargos + $this->datos[$i]['cargos'];
-                          $total_abonos = $total_abonos + $this->datos[$i]['abonos'];
-                          $nada = $this->datos[$i]['cargos'] - $this->datos[$i]['abonos'];
-                          $total_saldo_mensual = $total_saldo_mensual + $nada;
-                          $algo = ($this->datos[$i]['sini']+$this->datos[$i]['cargos'])-$this->datos[$i]['abonos'];
-                          $final = $final + $algo;
+                         
           }
 
              
@@ -704,7 +703,7 @@ class BalanzaComprobacion extends MY_Controller
 
 
 
-          while($i < $str-1)
+          while($i < $str)
           {
               $valors = $this->datos[$i]['cuenta'];
 
@@ -720,7 +719,7 @@ class BalanzaComprobacion extends MY_Controller
 
               
 
-              while($valors == $this->datos[$i]['cuenta'] AND $i < $str-1)
+              while($valors == $this->datos[$i]['cuenta'] AND $i < $str)
               {
                   $cuen = $this->datos[$i];
 
@@ -735,6 +734,14 @@ class BalanzaComprobacion extends MY_Controller
                   $objsheet->setCellValue('F'.$numero,number_format($cuen['cargos']-$cuen['abonos'],2,'.',','));
                   $objsheet->setCellValue('G'.$numero,number_format(($cuen['sini'] + $cuen['cargos']) - $cuen['abonos'],2,'.',','));
                   
+                  $total_inicial = $total_inicial + $this->datos[$i]['sini']; 
+                  $total_cargos = $total_cargos + $this->datos[$i]['cargos'];
+                  $total_abonos = $total_abonos + $this->datos[$i]['abonos'];
+                  $nada = $this->datos[$i]['cargos'] - $this->datos[$i]['abonos'];
+                  $total_saldo_mensual = $total_saldo_mensual + $nada;
+                  $algo = ($this->datos[$i]['sini']+$this->datos[$i]['cargos'])-$this->datos[$i]['abonos'];
+                  $final = $final + $algo;
+
                   $total_inicialsub = $total_inicialsub + $cuen['sini']; 
                   $total_cargossub = $total_cargossub + $cuen['cargos'];
                   $total_abonossub = $total_abonossub + $cuen['abonos'];
@@ -763,13 +770,7 @@ class BalanzaComprobacion extends MY_Controller
                 $objPHPExcel->getActiveSheet()->getStyle('A'.$numero.':G'.$numero)->applyFromArray($styleArray);
 
 
-                $total_inicial = $total_inicial + $this->datos[$i]['sini']; 
-                $total_cargos = $total_cargos + $this->datos[$i]['cargos'];
-                $total_abonos = $total_abonos + $this->datos[$i]['abonos'];
-                $nada = $this->datos[$i]['cargos'] - $this->datos[$i]['abonos'];
-                $total_saldo_mensual = $total_saldo_mensual + $nada;
-                $algo = ($this->datos[$i]['sini']+$this->datos[$i]['cargos'])-$this->datos[$i]['abonos'];
-                $final = $final + $algo;
+               
             
           }
 
