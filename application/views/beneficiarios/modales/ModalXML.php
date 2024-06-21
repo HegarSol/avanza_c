@@ -13,6 +13,7 @@
                      <th>Acción</th>
                      <th>Cuenta</th>
                      <th>Sub cuenta</th>
+                     <th>Ssub cuenta</th>
                      <th>Nombre cuenta</th>
                      <th>Clave</th>
                      <th>Descripción SAT</th>

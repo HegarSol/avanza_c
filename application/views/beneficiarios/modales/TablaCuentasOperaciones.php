@@ -14,6 +14,7 @@
                 <th>Cuenta</th>
                 <th>Sub Cuenta</th>
                 <th>Nombre</th>
+                <th>Ssub cuenta</th>
               </thead>
           </table>
             <!-- <button class="btn btn-success" onclick="returnIdCliente()" data-dismiss="modal" aria-hidden="true" ><span class="glyphicon glyphicon-ok"></span> Seleccionar</button> -->

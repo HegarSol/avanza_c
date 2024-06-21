@@ -185,7 +185,8 @@ class Importan extends MY_Controller
                     'referencia' => $refe,
                     'no_prov' => 0,
                     'factrefe' => 0,
-                    'nombre_cuenta' => $datos[0]['banco']
+                    'nombre_cuenta' => $datos[0]['banco'],
+                    'ssub_cta' => $datos[0]['ssub_cta'],
                  );
 
                  $detalle= $this->opera->guardarDetalle($detalle); 
@@ -212,7 +213,8 @@ class Importan extends MY_Controller
                     'referencia' => $refe,
                     'no_prov' => $nombreemple[0]['no_prov'],
                     'factrefe' => 0,
-                    'nombre_cuenta' => $valorsuel[0]['descrip']
+                    'nombre_cuenta' => $valorsuel[0]['descrip'],
+                    'ssub_cta' => $valorsuel[0]['ssub_cta'],
                  );
 
                  $detalle= $this->opera->guardarDetalle($detalle);  
@@ -240,7 +242,8 @@ class Importan extends MY_Controller
                         'referencia' => $refe,
                         'no_prov' => $nombreemple[0]['no_prov'],
                         'factrefe' => 0,
-                        'nombre_cuenta' => $valorsuel[0]['descrip']
+                        'nombre_cuenta' => $valorsuel[0]['descrip'],
+                        'ssub_cta' => $valorsuel[0]['ssub_cta'],
                     );
 
                     $detalle= $this->opera->guardarDetalle($detalle);  
@@ -268,7 +271,8 @@ class Importan extends MY_Controller
                         'referencia' => $refe,
                         'no_prov' => $nombreemple[0]['no_prov'],
                         'factrefe' => 0,
-                        'nombre_cuenta' => $valorsuel[0]['descrip']
+                        'nombre_cuenta' => $valorsuel[0]['descrip'],
+                        'ssub_cta' => $valorsuel[0]['ssub_cta'],
                     );
 
                     $detalle= $this->opera->guardarDetalle($detalle);  
@@ -296,7 +300,8 @@ class Importan extends MY_Controller
                         'referencia' => $refe,
                         'no_prov' => $nombreemple[0]['no_prov'],
                         'factrefe' => 0,
-                        'nombre_cuenta' => $valorsuel[0]['descrip']
+                        'nombre_cuenta' => $valorsuel[0]['descrip'],
+                        'ssub_cta' => $valorsuel[0]['ssub_cta'],
                         );
 
                     $detalle= $this->opera->guardarDetalle($detalle); 
@@ -324,7 +329,8 @@ class Importan extends MY_Controller
                     'referencia' => $refe,
                     'no_prov' => $nombreemple[0]['no_prov'],
                     'factrefe' => 0,
-                    'nombre_cuenta' => $valorsuel[0]['descrip']
+                    'nombre_cuenta' => $valorsuel[0]['descrip'],
+                    'ssub_cta' => $valorsuel[0]['ssub_cta'],
                     );
 
                    $detalle= $this->opera->guardarDetalle($detalle);  
@@ -352,7 +358,8 @@ class Importan extends MY_Controller
                     'referencia' => $refe,
                     'no_prov' => $nombreemple[0]['no_prov'],
                     'factrefe' => 0,
-                    'nombre_cuenta' => $valorsuel[0]['descrip']
+                    'nombre_cuenta' => $valorsuel[0]['descrip'],
+                    'ssub_cta' => $valorsuel[0]['ssub_cta'],
                     );
 
                 $detalle= $this->opera->guardarDetalle($detalle);  
@@ -380,7 +387,8 @@ class Importan extends MY_Controller
                         'referencia' => $refe,
                         'no_prov' => $nombreemple[0]['no_prov'],
                         'factrefe' => 0,
-                        'nombre_cuenta' => $valorsuel[0]['descrip']
+                        'nombre_cuenta' => $valorsuel[0]['descrip'],
+                        'ssub_cta' => $valorsuel[0]['ssub_cta'],
                         );
 
                     $detalle= $this->opera->guardarDetalle($detalle); 
@@ -408,7 +416,8 @@ class Importan extends MY_Controller
                         'referencia' => $refe,
                         'no_prov' => $nombreemple[0]['no_prov'],
                         'factrefe' => 0,
-                        'nombre_cuenta' => $valorsuel[0]['descrip']
+                        'nombre_cuenta' => $valorsuel[0]['descrip'],
+                        'ssub_cta' => $valorsuel[0]['ssub_cta'],
                         );
 
                     $detalle= $this->opera->guardarDetalle($detalle); 
@@ -436,7 +445,8 @@ class Importan extends MY_Controller
                         'referencia' => $refe,
                         'no_prov' => $nombreemple[0]['no_prov'],
                         'factrefe' => 0,
-                        'nombre_cuenta' => $valorsuel[0]['descrip']
+                        'nombre_cuenta' => $valorsuel[0]['descrip'],
+                        'ssub_cta' => $valorsuel[0]['ssub_cta'],
                     );
 
                     $detalle= $this->opera->guardarDetalle($detalle);  
@@ -464,7 +474,8 @@ class Importan extends MY_Controller
                         'referencia' => $refe,
                         'no_prov' => $nombreemple[0]['no_prov'],
                         'factrefe' => 0,
-                        'nombre_cuenta' => $valorsuel[0]['descrip']
+                        'nombre_cuenta' => $valorsuel[0]['descrip'],
+                        'ssub_cta' => $valorsuel[0]['ssub_cta'],
                     );
 
                     $detalle= $this->opera->guardarDetalle($detalle); 
@@ -492,7 +503,8 @@ class Importan extends MY_Controller
                         'referencia' => $refe,
                         'no_prov' => $nombreemple[0]['no_prov'],
                         'factrefe' => 0,
-                        'nombre_cuenta' => $valorsuel[0]['descrip']
+                        'nombre_cuenta' => $valorsuel[0]['descrip'],
+                        'ssub_cta' => $valorsuel[0]['ssub_cta'],
                     );
 
                     $detalle= $this->opera->guardarDetalle($detalle); 

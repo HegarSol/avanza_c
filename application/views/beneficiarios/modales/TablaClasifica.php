@@ -59,12 +59,10 @@ function cuentaautomaticabanco(tableID)
           success:function(response)
           {
              response=JSON.parse(response);
-         
 
              if(response.length > 1)
              {
 
-                        
                   $('#asiento_conta tbody').empty();
                   document.getElementById('positivo').value = 0;
                   document.getElementById('negativo').value = 0;
@@ -95,6 +93,8 @@ function cuentaautomaticabanco(tableID)
                         td1.appendChild(document.createTextNode(response[i].cta))
                         var td2 = document.createElement("TD")
                         td2.appendChild(document.createTextNode(response[i].sub_cta))
+                        var td9 = document.createElement("TD")
+                        td9.appendChild(document.createTextNode(response[i].ssub_cta))
                         var td3 = document.createElement("TD")
                         td3.appendChild(document.createTextNode(nom_prov))
                         var td4 = document.createElement("TD")
@@ -121,6 +121,7 @@ function cuentaautomaticabanco(tableID)
                         row.appendChild(td0);
                         row.appendChild(td1);
                         row.appendChild(td2);
+                        row.appendChild(td9);
                         row.appendChild(td3);
                         row.appendChild(td4);
                         row.appendChild(td5);
@@ -186,6 +187,8 @@ function cuentaautomaticabanco(tableID)
                   td1.appendChild(document.createTextNode(response[0].cta))
                   var td2 = document.createElement("TD")
                   td2.appendChild(document.createTextNode(response[0].sub_cta))
+                  var td9 = document.createElement("TD")
+                  td9.appendChild(document.createTextNode(response[0].ssub_cta))
                   var td3 = document.createElement("TD")
                   td3.appendChild(document.createTextNode(nom_prov))
                   var td4 = document.createElement("TD")
@@ -216,6 +219,7 @@ function cuentaautomaticabanco(tableID)
                   row.appendChild(td0);
                   row.appendChild(td1);
                   row.appendChild(td2);
+                  row.appendChild(td9);
                   row.appendChild(td3);
                   row.appendChild(td4);
                   row.appendChild(td5);

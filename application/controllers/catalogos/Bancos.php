@@ -65,7 +65,7 @@ class Bancos extends MY_Controller
                 foreach($valor as $as)
                 {
 
-                    $algo = $this->conficta->getcuenta_sub($as['cuenta'],$as['sub_cta']);
+                    $algo = $this->conficta->getcuenta_sub($as['cuenta'],$as['sub_cta'],$as['ssub_cta']);
                     if(count($algo) > 0)
                     {
                          if($algo[0]['idcuentaconfi'] == 28)
@@ -74,13 +74,16 @@ class Bancos extends MY_Controller
                              $datas[] = [
                                 'cuenta' => $as['cuenta'],
                                 'sub_cta' => $as['sub_cta'],
+                                'ssub_cta' => $as['ssub_cta'],
                                 'nombre_cta' => $as['nombre_cuenta'],
                                 'importe' => $as['monto'],
-                                'c_a' => $as['c_a']
+                                'c_a' => $as['c_a'],
+
                             ];
 
                             $cosas = array('cuenta' => $contra[0]['cuenta'],
                                            'sub_cta' => $contra[0]['sub_cta'],
+                                           'ssub_cta' => $contra[0]['ssub_cta'],
                                         'nombre_cta' => $contra[0]['descrip'],
                                         'importe' => $as['monto'],
                                           'c_a' => $as['c_a'] == '+' ? '-' : '+');
@@ -93,6 +96,7 @@ class Bancos extends MY_Controller
                              $datas[] = [
                                 'cuenta' => $as['cuenta'],
                                 'sub_cta' => $as['sub_cta'],
+                                'ssub_cta' => $as['ssub_cta'],
                                 'nombre_cta' => $as['nombre_cuenta'],
                                 'importe' => $as['monto'],
                                 'c_a' => $as['c_a']
@@ -100,6 +104,7 @@ class Bancos extends MY_Controller
 
                             $cosas = array('cuenta' => $contra[0]['cuenta'],
                                            'sub_cta' => $contra[0]['sub_cta'],
+                                           'ssub_cta' => $contra[0]['ssub_cta'],
                                         'nombre_cta' => $contra[0]['descrip'],
                                         'importe' => $as['monto'],
                                           'c_a' => $as['c_a'] == '+' ? '-' : '+');
@@ -112,6 +117,7 @@ class Bancos extends MY_Controller
                              $datas[] = [
                                 'cuenta' => $as['cuenta'],
                                 'sub_cta' => $as['sub_cta'],
+                                'ssub_cta' => $as['sub_cta'],
                                 'nombre_cta' => $as['nombre_cuenta'],
                                 'importe' => $as['monto'],
                                 'c_a' => $as['c_a']
@@ -119,6 +125,7 @@ class Bancos extends MY_Controller
 
                             $cosas = array('cuenta' => $contra[0]['cuenta'],
                                            'sub_cta' => $contra[0]['sub_cta'],
+                                           'ssub_cta' => $contra[0]['ssub_cta'],
                                         'nombre_cta' => $contra[0]['descrip'],
                                         'importe' => $as['monto'],
                                           'c_a' => $as['c_a'] == '+' ? '-' : '+');
@@ -132,6 +139,7 @@ class Bancos extends MY_Controller
                               $datas[] = [
                                 'cuenta' => $as['cuenta'],
                                 'sub_cta' => $as['sub_cta'],
+                                'ssub_cta' => $as['ssub_cta'],
                                 'nombre_cta' => $as['nombre_cuenta'],
                                 'importe' => $as['monto'],
                                 'c_a' => $as['c_a']
@@ -139,6 +147,7 @@ class Bancos extends MY_Controller
 
                             $cosas = array('cuenta' => $contra[0]['cuenta'],
                                            'sub_cta' => $contra[0]['sub_cta'],
+                                           'ssub_cta' => $contra[0]['ssub_cta'],
                                         'nombre_cta' => $contra[0]['descrip'],
                                         'importe' => $as['monto'],
                                           'c_a' => $as['c_a'] == '+' ? '-' : '+');
@@ -151,6 +160,7 @@ class Bancos extends MY_Controller
                               $datas[] = [
                                 'cuenta' => $as['cuenta'],
                                 'sub_cta' => $as['sub_cta'],
+                                'ssub_cta' => $as['ssub_cta'],
                                 'nombre_cta' => $as['nombre_cuenta'],
                                 'importe' => $as['monto'],
                                 'c_a' => $as['c_a']
@@ -158,6 +168,7 @@ class Bancos extends MY_Controller
 
                             $cosas = array('cuenta' => $contra[0]['cuenta'],
                                            'sub_cta' => $contra[0]['sub_cta'],
+                                           'ssub_cta' => $contra[0]['ssub_cta'],
                                         'nombre_cta' => $contra[0]['descrip'],
                                         'importe' => $as['monto'],
                                           'c_a' => $as['c_a'] == '+' ? '-' : '+');
@@ -170,6 +181,7 @@ class Bancos extends MY_Controller
                               $datas[] = [
                                 'cuenta' => $as['cuenta'],
                                 'sub_cta' => $as['sub_cta'],
+                                'ssub_cta' => $as['ssub_cta'],
                                 'nombre_cta' => $as['nombre_cuenta'],
                                 'importe' => $as['monto'],
                                 'c_a' => $as['c_a']
@@ -177,6 +189,7 @@ class Bancos extends MY_Controller
 
                             $cosas = array('cuenta' => $contra[0]['cuenta'],
                                            'sub_cta' => $contra[0]['sub_cta'],
+                                           'ssub_cta' => $contra[0]['ssub_cta'],
                                         'nombre_cta' => $contra[0]['descrip'],
                                         'importe' => $as['monto'],
                                           'c_a' => $as['c_a'] == '+' ? '-' : '+');
@@ -188,6 +201,7 @@ class Bancos extends MY_Controller
                             $datas[] = [
                                 'cuenta' => $as['cuenta'],
                                 'sub_cta' => $as['sub_cta'],
+                                'ssub_cta' => $as['ssub_cta'],
                                 'nombre_cta' => $as['nombre_cuenta'],
                                 'importe' => $as['monto'],
                                 'c_a' => $as['c_a']
@@ -659,7 +673,7 @@ class Bancos extends MY_Controller
 
                 $datos=$this->bancos->datosBancos($id);
 
-                $data2 = array('cta'=>$datos[0]['cta'],'sub_cta'=>$datos[0]['sub_cta'],'banco'=>$datos[0]['banco'],'c_a'=>'+','monto'=>0,'val'=>1);
+                $data2 = array('cta'=>$datos[0]['cta'],'sub_cta'=>$datos[0]['sub_cta'],'ssub_cta'=>$datos[0]['ssub_cta'],'banco'=>$datos[0]['banco'],'c_a'=>'+','monto'=>0,'val'=>1);
      
                  $datostemporal = $this->opera->obtenerTablaTemporal();
                  $dats = [];
@@ -668,6 +682,7 @@ class Bancos extends MY_Controller
                       $dast[] = array(
                            'cta' => $dat['cuenta'],
                            'sub_cta' => $dat['sub_cta'],
+                           'ssub_cta' => $dat['ssub_cta'],
                            'banco' => $dat['nombre_cta'],
                            'c_a' => $dat['c_a'],
                            'monto' => $dat['importe'],

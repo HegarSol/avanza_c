@@ -25,12 +25,13 @@ class ConfigCuentasModel extends MY_Model
         ->get();
         return $row->result_array();
     }
-    public function getcuenta_sub($cta,$sub_cta)
+    public function getcuenta_sub($cta,$sub_cta,$ssub_cta)
     {
         $row = $this->db2->select('*')
         ->from('configuracion_cuentas')
         ->where('cuenta',$cta)
         ->where('sub_cta',$sub_cta)
+        ->where('ssub_cta',$ssub_cta)
         ->get();
         return $row->result_array();
     }

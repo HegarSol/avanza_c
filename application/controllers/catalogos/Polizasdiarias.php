@@ -300,6 +300,8 @@ class Polizasdiarias extends MY_Controller
 
             $sub_cta = $this->input->post('sub_cta');
 
+            $ssub_cta = $this->input->post('ssub_cta');
+
             $monto = $this->input->post('monto');
 
             $c_a = $this->input->post('c_a');
@@ -331,7 +333,8 @@ class Polizasdiarias extends MY_Controller
                     'referencia' => $referencia[$i],
                     'no_prov' => 0,
                     'factrefe' => 0,
-                    'nombre_cuenta' => $nombre_cuenta[$i]
+                    'nombre_cuenta' => $nombre_cuenta[$i],
+                    'ssub_cta' => $ssub_cta[$i]
                 );
                 $detalle = $this->opera->guardarDetalle($detalle);
             }

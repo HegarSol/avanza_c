@@ -47,9 +47,9 @@
             $row = $this->db2->select('*')->from('catalogocta')->where('idcuenta',$id)->get();
             return $row->result_array();
         }
-        public function get_cuenta($cuen,$subcu)
+        public function get_cuenta($cuen,$subcu,$ssub_cta)
         {
-            $row = $this->db2->select('*')->from('catalogocta')->where('cuenta',$cuen)->where('sub_cta',$subcu)->get();
+            $row = $this->db2->select('*')->from('catalogocta')->where('cuenta',$cuen)->where('sub_cta',$subcu)->where('ssub_cta',$ssub_cta)->get();
             return $row->result_array();
         }
         public function get_cuenta_existe($cuenta,$dessubcuenta)

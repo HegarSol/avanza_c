@@ -50,7 +50,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
 {
     function get_factura_poliza($uuid,$nom_prov,$deta = 0,$porpaga = 0,$poli = '')
     {
-        
+
         $CI =& get_instance();
 
         $CI->load->model('DicCuentasModel','dicuentas');
@@ -66,8 +66,8 @@ defined('BASEPATH') or exit('No direct script access alloed');
          $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
        }
        else
-      {
-        $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
+       {
+         $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
        }
 
 
@@ -93,10 +93,14 @@ defined('BASEPATH') or exit('No direct script access alloed');
         $conceptos = [];
         $completo = [];
 
-          $totalfactu = $CI->getAttribute('cfdi:Comprobante/@Total');
-          //var_dump($totalfactu);
-          $rfcReceptor = $CI->getAttribute('cfdi:Comprobante/cfdi:Receptor/@Rfc');
-          //var_dump($rfcReceptor);
+          //$totalfactu = $CI->getAttribute('cfdi:Comprobante/@Total');
+          $totalfactu = (string) $xml2->attributes()->Total;
+          $rfcReceptors = $CI->xmlDom->getElementsBytagName('Receptor');
+          foreach($rfcReceptors as $rfc)
+          {
+                $rfcReceptor = $rfc->getAttribute('Rfc');
+          }
+
   
                  $conceplist = $CI->xmlDom->getElementsBytagName('Concepto');
                 foreach($conceplist as $concepto)
@@ -229,27 +233,29 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                        $row =  $CI->dicuentas->buscariguales($resultante['clave']);
 
-                     //  var_dump($deta);
                 
                        if($deta == 0)
                        {
+
                         $datosprevi[] = ['clave' => $resultante['clave'],
                                           'importe' => $resultante['importe'],
                                           'c_a' => $result[$i]['c_a'],
                                           'cuenta' => $row[0]['cuenta'],
                                           'sub_cta' => $row[0]['sub_cta'],
-                                          'nombre_cta' => ''
+                                          'nombre_cta' => '',
+                                          'ssub_cta' => $row[0]['ssub_cta'],
                                          ];
                        }
                        else
                        {
-                           
+
                          $datosprevi[] = ['clave' => $resultante['clave'],
                             'importe' => $resultante['importe'],
                             'c_a' => $result[$i]['c_a'],
-                            'cuenta' => $deta[$i][0],
-                            'sub_cta' => $deta[$i][1],
-                            'nombre_cta' => ''
+                            'cuenta' => $row[0]['cuenta'],
+                            'sub_cta' => $row[0]['sub_cta'],
+                            'nombre_cta' => '',
+                            'ssub_cta' => $row[0]['ssub_cta'],
                         ];
 
                        }
@@ -258,16 +264,18 @@ defined('BASEPATH') or exit('No direct script access alloed');
                     $datosresul = [];
                     foreach($datosprevi as $cu)
                     {
-                        $nom_cuen = $CI->cuentas->get_cuenta($cu['cuenta'],$cu['sub_cta']);
+                        $nom_cuen = $CI->cuentas->get_cuenta($cu['cuenta'],$cu['sub_cta'],$cu['ssub_cta']);
 
                         $datosresul[] = ['clave' => $cu['clave'],
                                         'importe' => $cu['importe'],
                                         'c_a' => $cu['c_a'],
                                         'cuenta' => $cu['cuenta'],
                                         'sub_cta' => $cu['sub_cta'],
-                                        'nombre_cta' =>  $nom_cuen[0]['nombre']
+                                        'nombre_cta' =>  $nom_cuen[0]['nombre'],
+                                        'ssub_cta' => $cu['ssub_cta'],
                                       ];
                     }
+
                     //SI LA FACTURA TIENE IVA al 8%
 
                     if($porpaga == 1 && $poli == '')
@@ -275,7 +283,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumaimpueiva8 != 0)
                         {
                             $iva8 = $CI->conficue->getidcuentaconfi(37);
-                            $ivaesti = array('importe' => number_format($sumaimpueiva8,2,'.',''), 'c_a' => '-','cuenta' => $iva8[0]['cuenta'],'sub_cta' => $iva8[0]['sub_cta'],'nombre_cta' => $iva8[0]['descrip']);
+                            $ivaesti = array('importe' => number_format($sumaimpueiva8,2,'.',''), 'c_a' => '-','cuenta' => $iva8[0]['cuenta'],'sub_cta' => $iva8[0]['sub_cta'],'nombre_cta' => $iva8[0]['descrip'],'ssub_cta' => $iva8[0]['ssub_cta']);
                             array_push($datosresul, $ivaesti);
                         }
                     }
@@ -284,7 +292,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumaimpueiva8 != 0)
                         {
                             $iva8 = $CI->conficue->getidcuentaconfi(38);
-                            $ivaesti = array('importe' => number_format($sumaimpueiva8,2,'.',''), 'c_a' => '+','cuenta' => $iva8[0]['cuenta'],'sub_cta' => $iva8[0]['sub_cta'],'nombre_cta' => $iva8[0]['descrip']);
+                            $ivaesti = array('importe' => number_format($sumaimpueiva8,2,'.',''), 'c_a' => '+','cuenta' => $iva8[0]['cuenta'],'sub_cta' => $iva8[0]['sub_cta'],'nombre_cta' => $iva8[0]['descrip'],'ssub_cta' => $iva8[0]['ssub_cta']);
                             array_push($datosresul, $ivaesti);
                         }
                     }
@@ -295,7 +303,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumaimpueiva16 != 0)
                         {
                             $iva16 = $CI->conficue->getidcuentaconfi(6);
-                            $ivaesti = array('importe' => $sumaimpueiva16, 'c_a' => '-','cuenta' => $iva16[0]['cuenta'],'sub_cta' => $iva16[0]['sub_cta'],'nombre_cta' => $iva16[0]['descrip']);
+                            $ivaesti = array('importe' => $sumaimpueiva16, 'c_a' => '-','cuenta' => $iva16[0]['cuenta'],'sub_cta' => $iva16[0]['sub_cta'],'nombre_cta' => $iva16[0]['descrip'],'ssub_cta' => $iva16[0]['ssub_cta']);
                             array_push($datosresul, $ivaesti);
                         }
                     }
@@ -304,7 +312,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumaimpueiva16 != 0)
                         {
                             $iva16 = $CI->conficue->getidcuentaconfi(28);
-                            $ivaesti = array('importe' => $sumaimpueiva16, 'c_a' => '+','cuenta' => $iva16[0]['cuenta'],'sub_cta' => $iva16[0]['sub_cta'],'nombre_cta' => $iva16[0]['descrip']);
+                            $ivaesti = array('importe' => $sumaimpueiva16, 'c_a' => '+','cuenta' => $iva16[0]['cuenta'],'sub_cta' => $iva16[0]['sub_cta'],'nombre_cta' => $iva16[0]['descrip'],'ssub_cta' => $iva16[0]['ssub_cta']);
                             array_push($datosresul, $ivaesti);
                         }
                     }
@@ -316,7 +324,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumaimpueeips != 0)
                         {
                             $ieps = $CI->conficue->getidcuentaconfi(40);
-                            $eip = array('importe' => $sumaimpueeips, 'c_a' => '-','cuenta' => $ieps[0]['cuenta'],'sub_cta' => $ieps[0]['sub_cta'],'nombre_cta' => $ieps[0]['descrip']);
+                            $eip = array('importe' => $sumaimpueeips, 'c_a' => '-','cuenta' => $ieps[0]['cuenta'],'sub_cta' => $ieps[0]['sub_cta'],'nombre_cta' => $ieps[0]['descrip'],'ssub_cta' => $ieps[0]['ssub_cta']);
                             array_push($datosresul, $eip);
                         }
                     }
@@ -325,7 +333,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumaimpueeips != 0)
                         {
                             $ieps = $CI->conficue->getidcuentaconfi(42);
-                            $eip = array('importe' => $sumaimpueeips, 'c_a' => '+','cuenta' => $ieps[0]['cuenta'],'sub_cta' => $ieps[0]['sub_cta'],'nombre_cta' => $ieps[0]['descrip']);
+                            $eip = array('importe' => $sumaimpueeips, 'c_a' => '+','cuenta' => $ieps[0]['cuenta'],'sub_cta' => $ieps[0]['sub_cta'],'nombre_cta' => $ieps[0]['descrip'],'ssub_cta' => $ieps[0]['ssub_cta']);
                             array_push($datosresul, $eip);
                         }
                     }
@@ -337,7 +345,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumaretenisr != 0)
                         {
                             $isrrete = $CI->conficue->getidcuentaconfi(31);
-                            $reteisr = array('importe' => $sumaretenisr, 'c_a' => '+','cuenta' => $isrrete[0]['cuenta'],'sub_cta' => $isrrete[0]['sub_cta'],'nombre_cta' => $isrrete[0]['descrip']);
+                            $reteisr = array('importe' => $sumaretenisr, 'c_a' => '+','cuenta' => $isrrete[0]['cuenta'],'sub_cta' => $isrrete[0]['sub_cta'],'nombre_cta' => $isrrete[0]['descrip'],'ssub_cta' => $isrrete[0]['ssub_cta']);
                             array_push($datosresul, $reteisr);
                         }
                     }
@@ -346,7 +354,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumaretenisr != 0)
                         {
                             $isrrete = $CI->conficue->getidcuentaconfi(34);
-                            $reteisr = array('importe' => $sumaretenisr, 'c_a' => '-','cuenta' => $isrrete[0]['cuenta'],'sub_cta' => $isrrete[0]['sub_cta'],'nombre_cta' => $isrrete[0]['descrip']);
+                            $reteisr = array('importe' => $sumaretenisr, 'c_a' => '-','cuenta' => $isrrete[0]['cuenta'],'sub_cta' => $isrrete[0]['sub_cta'],'nombre_cta' => $isrrete[0]['descrip'],'ssub_cta' => $isrrete[0]['ssub_cta']);
                             array_push($datosresul, $reteisr);
                         }
                     }
@@ -357,7 +365,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumaretenisr4porflete != 0)
                         {
                             $flete = $CI->conficue->getidcuentaconfi(41);
-                            $ivafle = array('importe' => $sumaretenisr4porflete, 'c_a' => '+','cuenta' => $flete[0]['cuenta'],'sub_cta' => $flete[0]['sub_cta'],'nombre_cta' => $flete[0]['descrip']);
+                            $ivafle = array('importe' => $sumaretenisr4porflete, 'c_a' => '+','cuenta' => $flete[0]['cuenta'],'sub_cta' => $flete[0]['sub_cta'],'nombre_cta' => $flete[0]['descrip'],'ssub_cta' => $flete[0]['ssub_cta']);
                             array_push($datosresul, $ivafle);
                         }
                     }
@@ -366,7 +374,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumaretenisr4porflete != 0)
                         {
                             $flete = $CI->conficue->getidcuentaconfi(46);
-                            $ivafle = array('importe' => $sumaretenisr4porflete, 'c_a' => '-','cuenta' => $flete[0]['cuenta'],'sub_cta' => $flete[0]['sub_cta'],'nombre_cta' => $flete[0]['descrip']);
+                            $ivafle = array('importe' => $sumaretenisr4porflete, 'c_a' => '-','cuenta' => $flete[0]['cuenta'],'sub_cta' => $flete[0]['sub_cta'],'nombre_cta' => $flete[0]['descrip'],'ssub_cta' => $flete[0]['ssub_cta']);
                             array_push($datosresul, $ivafle);
                         }
                     }
@@ -378,7 +386,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumareteniva != 0)
                         {
                             $ivarete = $CI->conficue->getidcuentaconfi(30);
-                            $reteiva = array('importe' => $sumareteniva, 'c_a' => '+','cuenta' => $ivarete[0]['cuenta'],'sub_cta' => $ivarete[0]['sub_cta'],'nombre_cta' => $ivarete[0]['descrip']);
+                            $reteiva = array('importe' => $sumareteniva, 'c_a' => '+','cuenta' => $ivarete[0]['cuenta'],'sub_cta' => $ivarete[0]['sub_cta'],'nombre_cta' => $ivarete[0]['descrip'],'ssub_cta' => $ivarete[0]['ssub_cta']);
                             array_push($datosresul, $reteiva);
                         }
                     }
@@ -387,7 +395,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($sumareteniva != 0)
                         {
                             $ivarete = $CI->conficue->getidcuentaconfi(33);
-                            $reteiva = array('importe' => $sumareteniva, 'c_a' => '-','cuenta' => $ivarete[0]['cuenta'],'sub_cta' => $ivarete[0]['sub_cta'],'nombre_cta' => $ivarete[0]['descrip']);
+                            $reteiva = array('importe' => $sumareteniva, 'c_a' => '-','cuenta' => $ivarete[0]['cuenta'],'sub_cta' => $ivarete[0]['sub_cta'],'nombre_cta' => $ivarete[0]['descrip'],'ssub_cta' => $ivarete[0]['ssub_cta']);
                             array_push($datosresul, $reteiva);
                         }
                     }
@@ -406,14 +414,21 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         $propios = $CI->conficue->getidcuentaconfi(29);
                         if($activo[0]['valor'] == 1 && $activo[0]['inactiva'] == 0)
                         {
-                              $sub_cuenta = $nom_prov;
+                            $sub_cuenta = $propios[0]['sub_cta'];
+                            $ssub_cuenta = $propios[0]['ssub_cta'];
                         }
                         else
                         {
                               $sub_cuenta = $propios[0]['sub_cta'];
+                              $ssub_cuenta = $propios[0]['ssub_cta'];
                         }
                          //SI EL RFC DE LA EMPRESA ES LA MISMA AL RFC DEL RECEPTOR DE LA FACTURA ENTONCES EN PROVEEDOR PROPIO
-                         $total = array('importe' => $totalfactu, 'c_a' => '-','cuenta' => $propios[0]['cuenta'],'sub_cta' => $sub_cuenta,'nombre_cta' => $propios[0]['descrip']);
+                         $total = array('importe' => $totalfactu, 'c_a' => '-',
+                                      'cuenta' => $propios[0]['cuenta'],
+                                      'sub_cta' => $sub_cuenta,
+                                      'nombre_cta' => $propios[0]['descrip'],
+                                      'ssub_cta' => $ssub_cuenta
+                                    );
                     }
                     else
                     {
@@ -422,15 +437,22 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         $terceros = $CI->conficue->getidcuentaconfi(35);
                         if($activo[0]['valor'] == 1 && $activo[0]['inactiva'] == 0)
                         {
-                              $sub_cuenta = '';
+                            $sub_cuenta = $terceros[0]['sub_cta'];
+                            $ssub_cuenta = $terceros[0]['ssub_cta'];
                         }
                         else
                         {
                               $sub_cuenta = $terceros[0]['sub_cta'];
+                              $ssub_cuenta = $terceros[0]['ssub_cta'];
                         }
 
                         //SI ES DIFERENTE AL DE LA FACTURA ENTONCES ES PROVEEDOR TERCEROS
-                        $total = array('importe' => $totalfactu, 'c_a' => '-','cuenta' => $terceros[0]['cuenta'],'sub_cta' => $sub_cuenta,'nombre_cta' => $terceros[0]['descrip']);
+                        $total = array('importe' => $totalfactu, 'c_a' => '-',
+                                     'cuenta' => $terceros[0]['cuenta'],
+                                     'sub_cta' => $sub_cuenta,
+                                     'nombre_cta' => $terceros[0]['descrip'],
+                                     'ssub_cta' => $ssub_cuenta
+                                    );
                         //var_dump($total);
                     }
 
@@ -440,7 +462,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                     if($sumadescu != 0)
                     {
                         $DAtos = $CI->conficue->getidcuentaconfi(39);
-                        $des = array('importe' => $sumadescu,'c_a' => '-' , 'cuenta' => $DAtos[0]['cuenta'],'sub_cta' => $DAtos[0]['sub_cta'],'nombre_cta' => $DAtos[0]['descrip'] );
+                        $des = array('importe' => $sumadescu,'c_a' => '-' , 'cuenta' => $DAtos[0]['cuenta'],'sub_cta' => $DAtos[0]['sub_cta'],'nombre_cta' => $DAtos[0]['descrip'],'ssub_cta' => $DAtos[0]['ssub_cta']);
 
                         array_push($datosresul, $des);
                     }

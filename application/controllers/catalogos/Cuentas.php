@@ -42,8 +42,9 @@ class Cuentas extends MY_Controller
     {
         $cuen = $this->input->post('cuen');
         $subcu = $this->input->post('subcuen');
+        $ssubcu = $this->input->post('ssubcuen');
 
-         $valor = $this->cuentas->get_cuenta($cuen,$subcu);
+         $valor = $this->cuentas->get_cuenta($cuen,$subcu,$ssubcu);
 
         $this->output->set_content_type('application/json')->set_output(json_encode($valor));
     }
@@ -76,11 +77,12 @@ class Cuentas extends MY_Controller
         foreach($list as $cuentas)
         {
             $row = array();
-            $row[] = '<button type="button" class="btn btn-primary" onclick="seleccionarcuneta(\''.$cuentas->cuenta.'\',\''.$cuentas->sub_cta.'\',\''.$cuentas->nombre.'\')">Seleccionar</button>';
+            $row[] = '<button type="button" class="btn btn-primary" onclick="seleccionarcuneta(\''.$cuentas->cuenta.'\',\''.$cuentas->sub_cta.'\',\''.$cuentas->nombre.'\',\''.$cuentas->ssub_cta.'\')">Seleccionar</button>';
             // $row[] = $cuentas->idcuenta;
             $row[] = $cuentas->cuenta;
             $row[] = $cuentas->sub_cta;
             $row[] = $cuentas->nombre;
+            $row[] = $cuentas->ssub_cta;
             $data[] = $row;
         }
         $output = array(
@@ -148,11 +150,12 @@ class Cuentas extends MY_Controller
         foreach($list as $cuentas)
         {
             $row = array();
-            $row[] = '<button type="button" class="btn btn-primary" onclick="seleccionarcunetaoperaciones(\''.$cuentas->cuenta.'\',\''.$cuentas->sub_cta.'\',\''.$cuentas->nombre.'\')">Seleccionar</button>';
+            $row[] = '<button type="button" class="btn btn-primary" onclick="seleccionarcunetaoperaciones(\''.$cuentas->cuenta.'\',\''.$cuentas->sub_cta.'\',\''.$cuentas->nombre.'\',\''.$cuentas->ssub_cta.'\')">Seleccionar</button>';
             // $row[] = $cuentas->idcuenta;
             $row[] = $cuentas->cuenta;
             $row[] = $cuentas->sub_cta;
             $row[] = $cuentas->nombre;
+            $row[] = $cuentas->ssub_cta;
             $data[] = $row;
         }
         $output = array(

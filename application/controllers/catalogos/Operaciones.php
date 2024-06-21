@@ -82,13 +82,15 @@ class Operaciones extends MY_Controller
         $poli = $this->input->post('poli');
         $porpaga = $this->input->post('porpaga');
 
+
         $datosprevi = get_factura_poliza($uuid,$nom_prov,$deta,$porpaga,$poli);
-       
+
+        
         $datas = [];
 
         foreach($datosprevi as $valor)
         {
-            $algo = $this->conficta->getcuenta_sub($valor['cuenta'],$valor['sub_cta']);
+            $algo = $this->conficta->getcuenta_sub($valor['cuenta'],$valor['sub_cta'],$valor['ssub_cta']);
 
                if(isset($algo[0]['idcuentaconfi']) == 28)
                {
@@ -96,6 +98,7 @@ class Operaciones extends MY_Controller
                    $datas[] = [
                          'cuenta' => $valor['cuenta'],
                          'sub_cta' => $valor['sub_cta'],
+                         'ssub_cta' => $valor['ssub_cta'],
                          'nombre_cta' => $valor['nombre_cta'],
                          'importe' => $valor['importe'],
                          'c_a' => $valor['c_a']
@@ -105,6 +108,7 @@ class Operaciones extends MY_Controller
                    $cosas = array(
                        'cuenta' => $contra[0]['cuenta'],
                                   'sub_cta' => $contra[0]['sub_cta'],
+                                  'ssub_cta' => $contra[0]['ssub_cta'],
                                 'nombre_cta' => $contra[0]['descrip'],
                                  'importe' => $valor['importe'],
                                  'c_a' => $valor['c_a'] == '+' ? '-' : '+'
@@ -119,6 +123,7 @@ class Operaciones extends MY_Controller
                   $datas[] = [
                       'cuenta' => $valor['cuenta'],
                       'sub_cta' => $valor['sub_cta'],
+                      'ssub_cta' => $valor['ssub_cta'],
                       'nombre_cta' => $valor['nombre_cta'],
                       'importe' => $valor['importe'],
                       'c_a' => $valor['c_a']
@@ -128,6 +133,7 @@ class Operaciones extends MY_Controller
                   $cosas = array(
                        'cuenta' => $contra[0]['cuenta'],
                                  'sub_cta' => $contra[0]['sub_cta'],
+                                 'ssub_cta' => $contra[0]['ssub_cta'],
                                  'nombre_cta' => $contra[0]['descrip'],
                                  'importe' => $valor['importe'],
                                 'c_a' => $valor['c_a'] == '+' ? '-' : '+'
@@ -142,6 +148,7 @@ class Operaciones extends MY_Controller
                     $datas[] = [
                         'cuenta' => $valor['cuenta'],
                         'sub_cta' => $valor['sub_cta'],
+                        'ssub_cta' => $valor['ssub_cta'],
                         'nombre_cta' => $valor['nombre_cta'],
                         'importe' => $valor['importe'],
                         'c_a' => $valor['c_a']
@@ -151,6 +158,7 @@ class Operaciones extends MY_Controller
                     $cosas = array(
                         'cuenta' => $contra[0]['cuenta'],
                                 'sub_cta' => $contra[0]['sub_cta'],
+                                'ssub_cta' => $contra[0]['ssub_cta'],
                                  'nombre_cta' => $contra[0]['descrip'],
                                 'importe' => $valor['importe'],
                                 'c_a' => $valor['c_a'] == '+' ? '-' : '+'
@@ -165,6 +173,7 @@ class Operaciones extends MY_Controller
                    $data[] = [
                        'cuenta' => $valor['cuenta'],
                        'sub_cta' => $valor['sub_cta'],
+                       'ssub_cta' => $valor['ssub_cta'],
                        'nombre_cta' => $valor['nombre_cta'],
                        'importe' => $valor['importe'],
                        'c_a' => $valor['c_a']
@@ -174,6 +183,7 @@ class Operaciones extends MY_Controller
                    $cosas = array(
                        'cuenta' => $contra[0]['cuenta'],
                                 'sub_cta' => $contra[0]['sub_cta'],
+                                'ssub_cta' => $contra[0]['ssub_cta'],
                             'nombre_cta' => $contra[0]['descrip'],
                              'importe' => $valor['importe'],
                             'c_a' => $valor['c_a'] == '+' ? '-' : '+'
@@ -188,6 +198,7 @@ class Operaciones extends MY_Controller
                    $datas[] = [
                          'cuenta' => $valor['cuenta'],
                          'sub_cta' => $valor['sub_cta'],
+                         'ssub_cta' => $valor['ssub_cta'],
                          'nombre_cta' => $valor['nombre_cta'],
                          'importe' => $valor['importe'],
                          'c_a' => $valor['c_a']
@@ -197,6 +208,7 @@ class Operaciones extends MY_Controller
                    $cosas = array(
                        'cuenta' => $contra[0]['cuenta'],
                               'sub_cta' => $contra[0]['sub_cta'],
+                              'ssub_cta' => $contra[0]['ssub_cta'],
                               'nombre_cta' => $contra[0]['descrip'],
                               'importe' => $valor['importe'],
                             'c_a' => $valor['c_a'] == '+' ? '-' : '+'
@@ -211,6 +223,7 @@ class Operaciones extends MY_Controller
                    $datas[] = [
                        'cuenta' => $valor['cuenta'],
                        'sub_cta' => $valor['sub_cta'],
+                       'ssub_cta' => $valor['ssub_cta'],
                        'nombre_cta' => $valor['nombre_cta'],
                        'importe' => $valor['importe'],
                        'c_a' => $valor['c_a']
@@ -221,6 +234,7 @@ class Operaciones extends MY_Controller
                    $cosas = array(
                        'cuenta' => $contra[0]['cuenta'],
                                  'sub_cta' => $contra[0]['sub_cta'],
+                                 'ssub_cta' => $contra[0]['ssub_cta'],
                                   'nombre_cta' => $contra[0]['descrip'],
                                 'importe' => $valor['importe'],
                                 'c_a' => $valor['c_a'] == '+' ? '-' : '+');
@@ -240,6 +254,7 @@ class Operaciones extends MY_Controller
                         $datas[] = [
                             'cuenta' => $valor['cuenta'],
                             'sub_cta' => $valor['sub_cta'],
+                            'ssub_cta' => $valor['ssub_cta'],
                             'nombre_cta' => $valor['nombre_cta'],
                             'importe' => $valor['importe'],
                             'c_a' => $valor['c_a'] == '+' ? '-' : '+'
@@ -428,6 +443,8 @@ class Operaciones extends MY_Controller
 
             $sub_cta = $this->input->post('sub_cta');
 
+            $ssub_cta = $this->input->post('ssub_cta');
+
             $monto = $this->input->post('monto');
 
             $c_a = $this->input->post('c_a');
@@ -463,7 +480,8 @@ class Operaciones extends MY_Controller
                        'referencia' => $referencia[$i],
                        'no_prov' => $no_prov[$i],
                        'factrefe' => $factrefe[$i],
-                       'nombre_cuenta' => $nombre_cuenta[$i]
+                       'nombre_cuenta' => $nombre_cuenta[$i],
+                       'ssub_cta' => $ssub_cta[$i]
                     );
                     $detalle= $this->opera->guardarDetalle($detalle);               
             }
