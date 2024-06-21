@@ -396,7 +396,7 @@ class BalanzaComprobacion extends MY_Controller
             {
               $cuen = $this->datos[$i];
                 $this->pdf->SetCol(0);
-                $this->pdf->Cell(17,0,$cuen['cuenta'].' - '.$cuen['sub_cta'],0,1,'L');
+                $this->pdf->Cell(17,0,$cuen['cuenta'].' - '.$cuen['sub_cta']. ' - ' .$cuen['ssub_cta'],0,1,'L');
                 $this->pdf->SetCol(0.3);
                 $this->pdf->Cell(17,0,utf8_decode($cuen['nombre']),0,1,'L');
                 $this->pdf->SetCol(1.4);
@@ -726,7 +726,7 @@ class BalanzaComprobacion extends MY_Controller
                   $numero++;
                   $numero2++;
                
-                  $objsheet->setCellValue('A'.$numero,$cuen['cuenta'].' - '.$cuen['sub_cta']);
+                  $objsheet->setCellValue('A'.$numero,$cuen['cuenta'].' - '.$cuen['sub_cta'].' - '.$cuen['ssub_cta']);
                   $objsheet->setCellValue('B'.$numero,utf8_decode($cuen['nombre']));
                   $objsheet->setCellValue('C'.$numero,number_format($cuen['sini'],2,'.',','));
                   $objsheet->setCellValue('D'.$numero,number_format($cuen['cargos'],2,'.',','));
