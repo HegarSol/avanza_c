@@ -41,17 +41,25 @@ class Archivo extends REST_Controller
 
         $this->cuentas->set_database($idempre);
 
-        $datos = array('cuenta' => $cuenta,
-        'sub_cta' => $subcuenta,
-        'nombre'=> $nombre,
-           'tipo' => $this->input->post('tipo'),
-           'ctasat' => $cuentas_sat,
-           'natur' => $naturaleza,
-           'cvecobro'=> 0,
-           'ssub_cta' => 0
-        );
+        $dat = $this->cuentas->get_cuenta_existe_empresa($cuenta,$subcuenta);
 
-        $this->cuentas->crearCuenta($datos);
-        
+        if(count($dat) > 0)
+        {
+
+        }
+        else
+        {
+            $datos = array('cuenta' => $cuenta,
+            'sub_cta' => $subcuenta,
+            'nombre'=> $nombre,
+               'tipo' => $this->input->post('tipo'),
+               'ctasat' => $cuentas_sat,
+               'natur' => $naturaleza,
+               'cvecobro'=> 0,
+               'ssub_cta' => 0
+            );
+    
+            $this->cuentas->crearCuenta($datos);
+        }
     }
 }
