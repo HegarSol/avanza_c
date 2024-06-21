@@ -69,7 +69,11 @@ $this->load->view('beneficiarios/modales/TablaClientes');
         </div>
         <div class="col-sm-2">
              <label for="">Sub Cuenta</label>
-             <input type="text" class="form-control" onblur="agregarcuentas()" id="sub_cuenta">
+             <input type="text" class="form-control" id="sub_cuenta">
+        </div>
+        <div class="col-sm-2">
+             <label for="">Ssub Cuenta</label>
+             <input type="text" class="form-control" onblur="agregarcuentas()" id="ssub_cuenta">
         </div>
  
         
@@ -116,6 +120,7 @@ $this->load->view('beneficiarios/modales/TablaClientes');
                   </th>
                   <th>Cuenta</th>
                   <th>Sub Cta</th>
+                  <th>Ssub Cta</th>
                   <th>Referencia</th>
                   <th>Nombre Cuenta</th>
                   <th>Concepto</th>
@@ -131,6 +136,7 @@ $this->load->view('beneficiarios/modales/TablaClientes');
                     echo ('<tr><td align="center"><input type="checkbox"></td>');
                     echo ('<td>'.$row['cuenta'].'</td>');
                     echo ('<td>'.$row['sub_cta'].'</td>');
+                    echo ('<td>'.$row['ssub_cta'].'</td>');
                     echo ('<td>'.$row['referencia'].'</td>');
                     echo ('<td>'.$row['nombre_cuenta'].'</td>');
                     echo ('<td>'.$row['concepto'].'</td>');
@@ -171,11 +177,12 @@ $this->load->view('beneficiarios/modales/TablaClientes');
 </center>
 
 <script>
-function seleccionarcuneta(cuenta,subcta,nombre)
+function seleccionarcuneta(cuenta,subcta,nombre,ssubcta)
 {
     document.getElementById('cuenta').value = cuenta;
     document.getElementById('sub_cuenta').value = subcta;
     document.getElementById('nom_cuenta').value = nombre;
+    document.getElementById('ssub_cuenta').value = ssubcta;
     $('#myModalCuentas').modal('hide');
 }
 function abrircuentaspagar()
@@ -217,7 +224,7 @@ function recogerDatosPoliza(tableID)
                 var ren = [];       var cuenta = [];        var sub_cta = [];
                 var monto = [];     var c_a = [];           var fecha = [];
                 var concepto = [];  var referencia = [];    var nombre_cuenta = [];
-                var rowCount = table.rows.length;
+                var rowCount = table.rows.length;           var ssub_cta = [];
 
                 for(var i = 0; i < rowCount; i++)
                 {
@@ -227,12 +234,13 @@ function recogerDatosPoliza(tableID)
                     ren[i] = '';
                     cuenta[i] = table.rows[i].cells[1].innerHTML;
                     sub_cta[i] = table.rows[i].cells[2].innerHTML;
-                    monto[i] = table.rows[i].cells[6].innerHTML;
-                    c_a[i] = table.rows[i].cells[7].innerHTML;
+                    ssub_cta[i] = table.rows[i].cells[3].innerHTML;
+                    monto[i] = table.rows[i].cells[7].innerHTML;
+                    c_a[i] = table.rows[i].cells[8].innerHTML;
                     fecha[i] = '<?php echo date('Y-m-d') ?>';
-                    concepto[i] = table.rows[i].cells[5].innerHTML;
-                    referencia[i] = table.rows[i].cells[3].innerHTML;
-                    nombre_cuenta[i] = table.rows[i].cells[4].innerHTML;
+                    concepto[i] = table.rows[i].cells[6].innerHTML;
+                    referencia[i] = table.rows[i].cells[4].innerHTML;
+                    nombre_cuenta[i] = table.rows[i].cells[5].innerHTML;
                 }
                 if(rowCount==1)
                 {
@@ -246,7 +254,7 @@ function recogerDatosPoliza(tableID)
                         type:"POST",
                         url: baseurl+"catalogos/Polizasdiarias/guardarpoliza",
                         data: {id:id,tipo_movimiento:tipo_movimiento,numero_movimiento:numero_movimiento,fechapoli:fechapoli,
-                        conceptopoli:conceptopoli,tipo_mov:tipo_mov,no_banco:no_banco,no_mov:no_mov,ren:ren,
+                        conceptopoli:conceptopoli,tipo_mov:tipo_mov,no_banco:no_banco,no_mov:no_mov,ren:ren,ssub_cta:ssub_cta,
                         cuenta:cuenta,sub_cta:sub_cta,monto:monto,c_a:c_a,fecha:fecha,concepto:concepto,referencia:referencia,nombre_cuenta:nombre_cuenta},
                         dataType:"html",
                         success:function(msg)
@@ -307,17 +315,18 @@ function editRow(tableID)
         {
            x("cuenta").value = table.rows[i].cells[1].innerHTML;
            x("sub_cuenta").value = table.rows[i].cells[2].innerHTML;
-           x("referen").value = table.rows[i].cells[3].innerHTML;
-           x("nom_cuenta").value = table.rows[i].cells[4].innerHTML;
-           x("concep").value = table.rows[i].cells[5].innerHTML;
-           x("monto").value = table.rows[i].cells[6].innerHTML;
-           x("signo").value = table.rows[i].cells[7].innerHTML;
+           x("ssub_cuenta").value = table.rows[i].cells[3].innerHTML;
+           x("referen").value = table.rows[i].cells[4].innerHTML;
+           x("nom_cuenta").value = table.rows[i].cells[5].innerHTML;
+           x("concep").value = table.rows[i].cells[6].innerHTML;
+           x("monto").value = table.rows[i].cells[7].innerHTML;
+           x("signo").value = table.rows[i].cells[8].innerHTML;
            
-          var signo = row.cells[7].innerHTML;
+          var signo = row.cells[8].innerHTML;
           var posit = parseFloat(document.getElementById('positivo').value);
           var nega = parseFloat(document.getElementById('negativo').value);
           
-          var monto = parseFloat(row.cells[6].innerHTML);          
+          var monto = parseFloat(row.cells[7].innerHTML);          
           
           if(signo == '+')
           {
@@ -388,6 +397,7 @@ function agregarcuentas()
 {
     var cuen = document.getElementById('cuenta').value;
     var subcuen = document.getElementById('sub_cuenta').value;
+    var ssubcuen = document.getElementById('ssub_cuenta').value;
 
     if(cuen == '')
     {
@@ -397,12 +407,16 @@ function agregarcuentas()
     {
         var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Falto agregar la Sub cuenta.'});
     }
+    else if(ssubcuen == '')
+    {
+        var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Falto agregar la Ssub cuenta.'});
+    }
     else
     {
         jQuery.ajax({
             type:"POST",
             url: baseurl + 'catalogos/Cuentas/get_cuenta',
-            data: {cuen:cuen,subcuen:subcuen},
+            data: {cuen:cuen,subcuen:subcuen,ssubcuen:ssubcuen},
             dataType:"html",
             success:function(response)
             {
@@ -437,6 +451,8 @@ function agregarasiento()
                         td1.appendChild(document.createTextNode(document.getElementById('cuenta').value))
                         var td2 = document.createElement("TD")
                         td2.appendChild(document.createTextNode(document.getElementById('sub_cuenta').value))
+                        var td3 = document.createElement("TD")
+                        td3.appendChild(document.createTextNode(document.getElementById('ssub_cuenta').value))
                         var td4 = document.createElement("TD")
                         td4.appendChild(document.createTextNode(document.getElementById('referen').value))
                         var td5 = document.createElement("TD")
@@ -451,6 +467,7 @@ function agregarasiento()
                         row.appendChild(td0);
                         row.appendChild(td1);
                         row.appendChild(td2);
+                        row.appendChild(td3);
                         row.appendChild(td4);
                         row.appendChild(td5);
                         row.appendChild(td6);
@@ -485,6 +502,7 @@ function agregarasiento()
 
                         document.getElementById('cuenta').value = '';
                         document.getElementById('sub_cuenta').value = '';
+                        document.getElementById('ssub_cuenta').value = '';
                         document.getElementById('referen').value = '';
                         document.getElementById('nom_cuenta').value = '';
                         document.getElementById('concep').value = '';

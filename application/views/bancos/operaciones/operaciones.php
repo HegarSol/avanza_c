@@ -236,7 +236,11 @@ $this->load->view('beneficiarios/modales/TablaBancos');
         </div>
         <div class="col-sm-2">
              <label for="">Sub Cuenta</label>
-             <input type="text" class="form-control" onblur="agregarcuentas()" id="sub_cuenta">
+             <input type="text" class="form-control" id="sub_cuenta">
+        </div>
+        <div class="col-sm-2">
+             <label for="">Ssub Cuenta</label>
+             <input type="text" class="form-control" onblur="agregarcuentas()" id="ssub_cuenta">
         </div>
         <div class="col-sm-2">
             <?php
@@ -299,6 +303,7 @@ $this->load->view('beneficiarios/modales/TablaBancos');
                     </th>
                     <th>Cuenta</th>
                     <th>Sub cta</th>
+                    <th>Ssub cta</th>
                     <?php
                      if($tipo == 2 || $tipo == 1 && $bc == 'min')
                      {
@@ -329,6 +334,7 @@ $this->load->view('beneficiarios/modales/TablaBancos');
                         echo ('<tr><td align="center"><input type="checkbox"></td>');
                         echo ('<td>'.$row['cuenta'].'</td>');
                         echo ('<td>'.$row['sub_cta'].'</td>');
+                        echo ('<td>'.$row['ssub_cta'].'</td>');
                         if($tipo == 2 || $tipo == 1 && $bc == 'min')
                         {
                             echo ('<td>'.$row['no_prov'].'</td>');
@@ -523,11 +529,12 @@ $('#Beneficiarios2').DataTable({
    {
      $('#myModalCargarArchivos').modal('hide');
    }
-    function seleccionarcunetaoperaciones(cuenta,subcta,nombre)
+    function seleccionarcunetaoperaciones(cuenta,subcta,nombre,ssubcta)
     {
         document.getElementById('cuenta').value = cuenta;
         document.getElementById('sub_cuenta').value = subcta;
         document.getElementById('nom_cuenta').value = nombre;
+        document.getElementById('ssub_cuenta').value = ssubcta;
 
         document.getElementById('no_prov_factu').value = document.getElementById('noprov').value;
         document.getElementById('concep').value = document.getElementById('nombre').value;
@@ -535,14 +542,15 @@ $('#Beneficiarios2').DataTable({
         document.getElementById('no_prov_factu').focus();
         $('#myModalCuentasOperaciones').modal('hide');
     }
-  function seleccionarcuneta(cuenta,subcta,nombre)
+  function seleccionarcuneta(cuenta,subcta,nombre,ssubcta)
   {
         $('#myModalCuentas').modal('hide');
 
         var p = document.getElementById('renglon').value;
         document.getElementById('table').tBodies[0].rows[p-1].cells[1].innerHTML = cuenta;
         document.getElementById('table').tBodies[0].rows[p-1].cells[2].innerHTML = subcta;
-        document.getElementById('table').tBodies[0].rows[p-1].cells[3].innerHTML = nombre;  
+        document.getElementById('table').tBodies[0].rows[p-1].cells[4].innerHTML = nombre;  
+        document.getElementById('table').tBodies[0].rows[p-1].cells[3].innerHTML = ssubcta;
 
         $('#myModalxml').modal('show');
   }
@@ -605,6 +613,7 @@ function agregarcuentas()
 {
     var cuen = document.getElementById('cuenta').value;
     var subcuen = document.getElementById('sub_cuenta').value;
+    var ssubcuen = document.getElementById('ssub_cuenta').value;
 
     if(cuen == '')
     {
@@ -614,12 +623,16 @@ function agregarcuentas()
     {
         var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Falto agregar la Sub cuenta.'});
     }
+    else if(ssubcuen == '')
+    {
+        var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Falto agregar la Ssub cuenta.'});
+    }
     else
     {
         jQuery.ajax({
             type:"POST",
             url: baseurl + 'catalogos/Cuentas/get_cuenta',
-            data: {cuen:cuen,subcuen:subcuen},
+            data: {cuen:cuen,subcuen:subcuen,ssubcuen:ssubcuen},
             dataType:"html",
             success:function(response)
             {
@@ -816,7 +829,7 @@ function recogerDatosPoliza(tableID)
             // detalle poliza
             var xyz = false;   var table = x(tableID);  
             var tipo_mov = []; var no_banco = [];      var no_mov = [];
-            var ren = [];      var cuenta = [];        var sub_cta = [];
+            var ren = [];      var cuenta = [];        var sub_cta = []; var ssub_cta = [];
             var monto = [];    var c_a = [];           var fecha = [];
             var concepto = []; var referencia = [];    var no_prov = [];
             var factrefe = []; var nombre_cuenta = [];
@@ -830,22 +843,23 @@ function recogerDatosPoliza(tableID)
                 ren[i] = 0;
                 cuenta[i] = table.rows[i].cells[1].innerHTML;
                 sub_cta[i] = table.rows[i].cells[2].innerHTML;
-                monto[i] = table.rows[i].cells[7].innerHTML;
-                c_a[i] = table.rows[i].cells[8].innerHTML;
+                ssub_cta[i] = table.rows[i].cells[3].innerHTML;
+                monto[i] = table.rows[i].cells[8].innerHTML;
+                c_a[i] = table.rows[i].cells[9].innerHTML;
                 fecha[i] = document.getElementById('fecha').value;
-                concepto[i] = table.rows[i].cells[6].innerHTML;
-                referencia[i] = table.rows[i].cells[4].innerHTML;
+                concepto[i] = table.rows[i].cells[7].innerHTML;
+                referencia[i] = table.rows[i].cells[5].innerHTML;
                 if(('<?php echo $tipo;?>' == 1 && '<?php echo $bc;?>' == 'plu') || '<?php echo $tipo;?>' == 3)
                 {
-                    factrefe[i] = table.rows[i].cells[3].innerHTML;
+                    factrefe[i] = table.rows[i].cells[4].innerHTML;
                     no_prov[i] = 0;
                 }
                 else if('<?php echo $tipo;?>' == 2 || '<?php echo $tipo;?>' == 1 && '<?php echo $bc;?>' == 'min')
                 {
                     factrefe[i] = 0;  
-                    no_prov[i] = table.rows[i].cells[3].innerHTML;
+                    no_prov[i] = table.rows[i].cells[4].innerHTML;
                 }
-                nombre_cuenta[i] = table.rows[i].cells[5].innerHTML;
+                nombre_cuenta[i] = table.rows[i].cells[6].innerHTML;
             }
             if(rowCount==2) 
             {
@@ -861,7 +875,7 @@ function recogerDatosPoliza(tableID)
                 var mon = JSON.stringify(monto);        var ca = JSON.stringify(c_a);
                 var fec = JSON.stringify(fecha);        var conce = JSON.stringify(concepto);
                 var refe = JSON.stringify(referencia);  var factre = JSON.stringify(factrefe);
-                var nopro = JSON.stringify(no_prov);
+                var nopro = JSON.stringify(no_prov);    var ssu_cta = JSON.stringify(ssub_cta);
 
                 $.ajax({
                     type: "POST",
@@ -870,7 +884,7 @@ function recogerDatosPoliza(tableID)
                     fechapoli:fechapoli,beneficiariopoli:beneficiariopoli,conceptopoli:conceptopoli,montopoli:montopoli,ca_poli:ca_poli,
                     cobrado_poli:cobrado_poli,cerrado_poli:cerrado_poli,no_prove:no_prove,fechaCobro:fechaCobro,cobro:cobro,impresopoli:impresopoli,
                     afectar:afectar,bancosat:bancosat,bene_ctaban:bene_ctaban,cta_banco:cta_banco,tieneCxP_pagos:tieneCxP_pagos,
-                    tipo_mov:tipo_mov,no_banco:no_banco,no_mov:no_mov,ren:ren,cuenta:cuenta,sub_cta:sub_cta,monto:monto,
+                    tipo_mov:tipo_mov,no_banco:no_banco,no_mov:no_mov,ren:ren,cuenta:cuenta,sub_cta:sub_cta,monto:monto,ssub_cta:ssub_cta,
                     c_a:c_a,fecha:fecha,concepto:concepto,referencia:referencia,factrefe:factrefe,no_prov:no_prov,nombre_cuenta:nombre_cuenta,uuidpoliza:uuidpoliza},
                     success:function(msg)
                     {
@@ -933,18 +947,19 @@ function recogerDatosPoliza(tableID)
         {
            x("cuenta").value = table.rows[i].cells[1].innerHTML;
            x("sub_cuenta").value = table.rows[i].cells[2].innerHTML;
-           x("no_prov_factu").value = table.rows[i].cells[3].innerHTML;
-           x("referen").value = table.rows[i].cells[4].innerHTML;
-           x("nom_cuenta").value = table.rows[i].cells[5].innerHTML;
-           x("concep").value = table.rows[i].cells[6].innerHTML;
-           x("monto").value = table.rows[i].cells[7].innerHTML;
-           x("signo").value = table.rows[i].cells[8].innerHTML;
+           x("ssub_cuenta").value = table.rows[i].cells[3].innerHTML;
+           x("no_prov_factu").value = table.rows[i].cells[4].innerHTML;
+           x("referen").value = table.rows[i].cells[5].innerHTML;
+           x("nom_cuenta").value = table.rows[i].cells[6].innerHTML;
+           x("concep").value = table.rows[i].cells[7].innerHTML;
+           x("monto").value = table.rows[i].cells[8].innerHTML;
+           x("signo").value = table.rows[i].cells[9].innerHTML;
            
-          var signo = row.cells[8].innerHTML;
+          var signo = row.cells[9].innerHTML;
           var posit = parseFloat(document.getElementById('positivo').value);
           var nega = parseFloat(document.getElementById('negativo').value);
           
-          var monto = parseFloat(row.cells[7].innerHTML);          
+          var monto = parseFloat(row.cells[8].innerHTML);          
           
           if(signo == '+')
           {
@@ -1118,6 +1133,8 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
                             td1.appendChild(document.createTextNode(response[0].cta))
                             var td2 = document.createElement("TD")
                             td2.appendChild(document.createTextNode(response[0].sub_cta))
+                            var td9 = document.createElement("TD")
+                            td9.appendChild(document.createTextNode(response[0].ssub_cta))
                             var td3 = document.createElement("TD")
                             td3.appendChild(document.createTextNode(no_prove))
                             var td4 = document.createElement("TD")
@@ -1149,6 +1166,7 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
                             row.appendChild(td0);
                             row.appendChild(td1);
                             row.appendChild(td2);
+                            row.appendChild(td9);
                             row.appendChild(td3);
                             row.appendChild(td4);
                             row.appendChild(td5);
@@ -1248,9 +1266,10 @@ function agregarasiento()
 
     var monto = document.getElementById('cuenta').value;
     var sub_cue = document.getElementById('sub_cuenta').value;
-    if(monto == '' || sub_cue == '')
+    var ssub_cue = document.getElementById('ssub_cuenta').value;
+    if(monto == '' || sub_cue == '' || ssub_cue == '')
     {
-        swal('Advertencia','Agregue la cuenta y sub cuenta','warning');
+        swal('Advertencia','Agregue la cuenta, sub cuenta y ssub cuenta','warning');
     }
     else
     {
@@ -1284,6 +1303,8 @@ function agregarasiento()
                         td1.appendChild(document.createTextNode(document.getElementById('cuenta').value))
                         var td2 = document.createElement("TD")
                         td2.appendChild(document.createTextNode(document.getElementById('sub_cuenta').value))
+                        var td9 = document.createElement("TD")
+                        td9.appendChild(document.createTextNode(document.getElementById('ssub_cuenta').value))
                         var td3 = document.createElement("TD")
                         td3.appendChild(document.createTextNode(document.getElementById('no_prov_factu').value))
                         var td4 = document.createElement("TD")
@@ -1301,6 +1322,7 @@ function agregarasiento()
                         row.appendChild(td0);
                         row.appendChild(td1);
                         row.appendChild(td2);
+                        row.appendChild(td9);
                         row.appendChild(td3);
                         row.appendChild(td4);
                         row.appendChild(td5);
@@ -1336,6 +1358,7 @@ function agregarasiento()
 
                         document.getElementById('cuenta').value = '';
                         document.getElementById('sub_cuenta').value = '';
+                        document.getElementById('ssub_cuenta').value = '';
                         document.getElementById('no_prov_factu').value = '0';
                         document.getElementById('referen').value = '';
                         document.getElementById('nom_cuenta').value = '';

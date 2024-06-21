@@ -381,6 +381,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                   <thead style="background-color:#222222; color:white;">
                      <th>Cuenta</th>
                      <th>Sub cuenta</th>
+                     <th>Ssub cuenta</th>
                      <th>Nombre cuenta</th>
                      <th>Concepto</th>
                      <th>Monto</th>
@@ -552,6 +553,7 @@ function aceptarasiento(tableID)
 
       var cuenta = [];
       var sub_cta = [];
+      var ssub_cta = [];
       var nom = [];
       var conce = [];
       var mon = [];
@@ -563,10 +565,11 @@ function aceptarasiento(tableID)
       {
          cuenta[i] = table.rows[i].cells[0].innerHTML;
          sub_cta[i] = table.rows[i].cells[1].innerHTML;
-         nom[i] = table.rows[i].cells[2].innerHTML;
-         conce[i] = table.rows[i].cells[3].innerHTML;
-         mon[i] = table.rows[i].cells[4].innerHTML;
-         c_a[i] = table.rows[i].cells[5].innerHTML;
+         ssub_cta[i] = table.rows[i].cells[2].innerHTML;
+         nom[i] = table.rows[i].cells[3].innerHTML;
+         conce[i] = table.rows[i].cells[4].innerHTML;
+         mon[i] = table.rows[i].cells[5].innerHTML;
+         c_a[i] = table.rows[i].cells[6].innerHTML;
       }
 
       var fechadivi = fecha_pro.split('-');
@@ -580,7 +583,7 @@ function aceptarasiento(tableID)
               jQuery.ajax({
                     type:"POST",
                     url: baseurl + "catalogos/Beneficiarios/insert_poliza_provision",
-                    data: {tipo:tipo_pro,mov:mov_pro,uuid:uuid_pro,fecha:fecha_pro,provee:prove_provi,pago:pago_provi,
+                    data: {tipo:tipo_pro,mov:mov_pro,uuid:uuid_pro,fecha:fecha_pro,provee:prove_provi,pago:pago_provi,ssub_cta:ssub_cta,
                     num_fact:num_fact_pro,serie_provisi:serie_provisi,total:tol,cuenta:cuenta,sub_cta:sub_cta,nom:nom,conce:conce,
                     mon:mon,c_a:c_a},
                     dataType:"html",
@@ -709,8 +712,9 @@ function aceptarasiento(tableID)
                   var this_row = $(this);
                   var c = $.trim(this_row.find('td:eq(1)').html());
                   var sb = $.trim(this_row.find('td:eq(2)').html());
-                  var desc = $.trim(this_row.find('td:eq(3)').html());
-                  var clave = $.trim(this_row.find('td:eq(4)').html());
+                  var ssb = $.trim(this_row.find('td:eq(3)').html());
+                  var desc = $.trim(this_row.find('td:eq(4)').html());
+                  var clave = $.trim(this_row.find('td:eq(5)').html());
                   if(c == '')
                   {
 
@@ -720,7 +724,7 @@ function aceptarasiento(tableID)
                   }
                   else
                   {
-                     detalle = [c,sb,desc,clave];
+                     detalle = [c,sb,ssb,desc,clave];
                      cajadeta.push(detalle);
                   }
                });
@@ -769,7 +773,7 @@ function aceptarasiento(tableID)
                   response2=JSON.parse(response2);
                    
                
-                        var nom_prov = response2.no_prov;
+                        var nom_prov = response2[0].no_prov;
 
                         jQuery.ajax({
                            type:"POST",
@@ -801,6 +805,7 @@ function aceptarasiento(tableID)
                                     var cta = response.data[i].cuenta;
                                     var sub_cta = response.data[i].sub_cta;
                                     var nom_cta = response.data[i].nombre_cta;
+                                    var ssub_cta = response.data[i].ssub_cta;
 
                                     if(c_a == '-')
                                     {
@@ -821,6 +826,8 @@ function aceptarasiento(tableID)
                                     td3.appendChild(document.createTextNode(cta))
                                     var td4 = document.createElement("TD")
                                     td4.appendChild(document.createTextNode(sub_cta))
+                                    var td10 = document.createElement("TD")
+                                    td10.appendChild(document.createTextNode(ssub_cta))
                                     var td6 = document.createElement("TD")
                                     td6.appendChild(document.createTextNode(nom_cta))
                                     var td7 = document.createElement("TD")
@@ -833,10 +840,12 @@ function aceptarasiento(tableID)
 
                                  row.appendChild(td3);
                                  row.appendChild(td4);
+                                 row.appendChild(td10);
                                  row.appendChild(td6);
                                  row.appendChild(td7);
                                  row.appendChild(td8);
                                  row.appendChild(td9);
+
 
                                  tbody.appendChild(row);
 
@@ -1038,6 +1047,7 @@ function aceptarasiento(tableID)
                   {
                      month = '0'+month;
                   }
+                
                   jQuery.ajax({
                   url : baseurl + "catalogos/Beneficiarios/getbeneficirfc",
                   type:"POST",
@@ -1048,7 +1058,6 @@ function aceptarasiento(tableID)
                      response=JSON.parse(response);
                     // var idpros = response[0].no_prov;
                      
-                  
                document.getElementById('uuid_provision').value = aData2[0][1];
                document.getElementById('provee_provisi').value = response[0].no_prov;
                document.getElementById('pago_provision').value = aData2[0][26];
@@ -1110,9 +1119,11 @@ function aceptarasiento(tableID)
                                                             var td5 = document.createElement("TD")
                                                             td5.appendChild(document.createTextNode(''))
                                                             var td6 = document.createElement("TD")
-                                                            td6.appendChild(document.createTextNode(clave))
+                                                            td6.appendChild(document.createTextNode(''))
                                                             var td7 = document.createElement("TD")
-                                                            td7.appendChild(document.createTextNode(descrip))
+                                                            td7.appendChild(document.createTextNode(clave))
+                                                            var td8 = document.createElement("TD")
+                                                            td8.appendChild(document.createTextNode(descrip))
                                                             // var td8 = document.createElement("TD")
                                                             // td8.appendChild(document.createTextNode(descripxml))
 
@@ -1122,6 +1133,7 @@ function aceptarasiento(tableID)
                                                             row.appendChild(td5);
                                                             row.appendChild(td6);
                                                             row.appendChild(td7);
+                                                            row.appendChild(td8);
                                                             // row.appendChild(td8);
 
                                                             tbody.appendChild(row);
@@ -1182,7 +1194,7 @@ function aceptarasiento(tableID)
        $('#myModalCuentas').modal('show');
   }
 
-  function seleccionarcuneta(cuenta,subcta,nombre)
+  function seleccionarcuneta(cuenta,subcta,nombre,ssubcta)
   {
 
        $('#myModalCuentas').modal('hide');
@@ -1190,7 +1202,8 @@ function aceptarasiento(tableID)
         var p = document.getElementById('renglon').value;
         document.getElementById('table').tBodies[0].rows[p-1].cells[1].innerHTML = cuenta;
         document.getElementById('table').tBodies[0].rows[p-1].cells[2].innerHTML = subcta;
-        document.getElementById('table').tBodies[0].rows[p-1].cells[3].innerHTML = nombre;  
+        document.getElementById('table').tBodies[0].rows[p-1].cells[3].innerHTML = ssubcta;
+        document.getElementById('table').tBodies[0].rows[p-1].cells[4].innerHTML = nombre;  
 
         $('#myModalxml').modal('show');
   }

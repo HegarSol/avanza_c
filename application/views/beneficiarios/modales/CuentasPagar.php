@@ -767,7 +767,6 @@ function recorrercuentas()
       let uuid = document.getElementById('tableclasifica').tBodies[0].rows[p-1].cells[0].innerHTML;
       let prov = document.getElementById('tableclasifica').tBodies[0].rows[p-1].cells[2].innerHTML;
 
-      console.log(2);
       if ($('#btnbuscar').length) 
          {
 
@@ -776,8 +775,9 @@ function recorrercuentas()
                   var this_row = $(this);
                   var c = $.trim(this_row.find('td:eq(1)').html());
                   var sb = $.trim(this_row.find('td:eq(2)').html());
-                  var desc = $.trim(this_row.find('td:eq(3)').html());
-                  var clave = $.trim(this_row.find('td:eq(4)').html());
+                  var ssb = $.trim(this_row.find('td:eq(3)').html());
+                  var desc = $.trim(this_row.find('td:eq(4)').html());
+                  var clave = $.trim(this_row.find('td:eq(5)').html());
                   if(c == '')
                   {
                      cajadeta.length=0;
@@ -785,7 +785,7 @@ function recorrercuentas()
                   }
                   else
                   {
-                     detalle = [c,sb,desc,clave];
+                     detalle = [c,sb,ssb,desc,clave];
                      cajadeta.push(detalle);
                   }
                });
@@ -821,6 +821,7 @@ function recorrercuentas()
                                              element1.type = "checkbox";
                                              element1.name="chkbox[]"; 
                                              
+                                             console.log(response.data[i].nombre_cta);
                                              
                                              var td0 = document.createElement("TD")
                                              td0.style.textAlign = 'center';
@@ -829,6 +830,8 @@ function recorrercuentas()
                                              td1.appendChild(document.createTextNode(response.data[i].cuenta))
                                              var td2 = document.createElement("TD")
                                              td2.appendChild(document.createTextNode(response.data[i].sub_cta))
+                                             var td9 = document.createElement("TD")
+                                             td9.appendChild(document.createTextNode(response.data[i].ssub_cta))
                                              var td3 = document.createElement("TD")
                                              td3.appendChild(document.createTextNode(0))
                                              var td4 = document.createElement("TD")
@@ -855,6 +858,7 @@ function recorrercuentas()
                                              row.appendChild(td0);
                                              row.appendChild(td1);
                                              row.appendChild(td2);
+                                             row.appendChild(td9);
                                              row.appendChild(td3);
                                              row.appendChild(td4);
                                              row.appendChild(td5);
@@ -1154,6 +1158,8 @@ console.log(1);
                                                             td3.appendChild(document.createTextNode(''))
                                                             var td4 = document.createElement("TD")
                                                             td4.appendChild(document.createTextNode(''))
+                                                            var td8 = document.createElement("TD")
+                                                            td8.appendChild(document.createTextNode(''))
                                                             var td5 = document.createElement("TD")
                                                             td5.appendChild(document.createTextNode(''))
                                                             var td6 = document.createElement("TD")
@@ -1166,6 +1172,7 @@ console.log(1);
                                                             row.appendChild(td2);
                                                             row.appendChild(td3);
                                                             row.appendChild(td4);
+                                                            row.appendChild(td8);
                                                             row.appendChild(td5);
                                                             row.appendChild(td6);
                                                             row.appendChild(td7);

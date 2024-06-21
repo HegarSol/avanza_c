@@ -110,7 +110,8 @@ class Servicio extends CI_Controller
                     'monto' => $poliza->monto,
                     'c_a' => $poliza->c_a,
                     'fecha' => $inserpo->fecha,
-                    'concepto' => $inserpo->nombreC
+                    'concepto' => $inserpo->nombreC,
+                    'ssub_cta' => 0,
                 );
 
                 $this->db2->trans_begin();

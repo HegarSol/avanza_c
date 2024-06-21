@@ -242,6 +242,7 @@ class OperacionesModel extends MY_Model
                 $data = array(
                     'cuenta' => $data['cuenta'],
                     'sub_cta' => $data['sub_cta'],
+                    'ssub_cta' => $data['ssub_cta'],
                     'nombre_cta' => $data['nombre_cta'],
                     'importe' => $data['importe'],
                     'c_a' => $data['c_a']
@@ -255,6 +256,7 @@ class OperacionesModel extends MY_Model
             `id` int(11) NOT NULL AUTO_INCREMENT,
                 `cuenta` smallint(6) DEFAULT NULL,
                 `sub_cta` smallint(6) DEFAULT NULL,
+                `ssub_cta` smallint(6) DEFAULT NULL,
                 `nombre_cta` varchar(90) DEFAULT NULL,
                 `importe` decimal(11,2) DEFAULT NULL,
                 `c_a` char(3) DEFAULT NULL,
@@ -266,6 +268,7 @@ class OperacionesModel extends MY_Model
                 $data = array(
                     'cuenta' => $data['cuenta'],
                     'sub_cta' => $data['sub_cta'],
+                    'ssub_cta' => $data['ssub_cta'],
                     'nombre_cta' => $data['nombre_cta'],
                     'importe' => $data['importe'],
                     'c_a' => $data['c_a']

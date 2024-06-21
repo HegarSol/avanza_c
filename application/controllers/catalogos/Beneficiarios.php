@@ -203,6 +203,7 @@ class Beneficiarios extends MY_Controller
 
              $cuenta = $this->input->post('cuenta');
              $sub_cta = $this->input->post('sub_cta');
+             $ssub_cta = $this->input->post('ssub_cta');
              $nom = $this->input->post('nom');
              $conce = $this->input->post('conce');
              $mon = $this->input->post('mon');
@@ -256,7 +257,8 @@ class Beneficiarios extends MY_Controller
                             'referencia' => NULL,
                             'no_prov' => $provee,
                             'factrefe' => 0,
-                            'nombre_cuenta' => $nom[$i]
+                            'nombre_cuenta' => $nom[$i],
+                            'ssub_cta' => $ssub_cta[$i]
                         );
                         
                         $detalle = $this->operaciones->guardarDetalle($detalle);
@@ -315,12 +317,11 @@ class Beneficiarios extends MY_Controller
          if(ENVIRONMENT == 'development')
          {
              $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
-
          }
          else
          {
             $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
-        }
+         }
 
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -421,7 +422,8 @@ class Beneficiarios extends MY_Controller
 
         for ($i=0; $i < count($datos) ; $i++) 
         {
-            $data = array('codigoSAT' => $datos[$i][3],'cuenta' => $datos[$i][0],'sub_cta' => $datos[$i][1],'ssub_cta' => 0); 
+            var_dump($datos[$i]);
+            $data = array('codigoSAT' => $datos[$i][4],'cuenta' => $datos[$i][0],'sub_cta' => $datos[$i][1],'ssub_cta' => $datos[$i][2]); 
             $this->dicuentas->insertdiccionario($data);
         }
 
