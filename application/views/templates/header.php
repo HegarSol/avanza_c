@@ -89,6 +89,74 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
 </div>
 
 <script>
+  $(document).ready(function() {
+    const fecha = new Date();
+    const mesActual = fecha.getMonth() + 1; 
+    
+    if (mesActual == 1)
+    {
+       document.getElementById('mes').value = '01';
+       cambiofecha();
+    }
+    else if (mesActual == 2)
+    {
+       document.getElementById('mes').value = '02';
+       cambiofecha();
+    }
+    else if (mesActual == 3)
+    {
+       document.getElementById('mes').value = '03';
+       cambiofecha();
+    }
+    else if (mesActual == 4)
+    {
+       document.getElementById('mes').value = '04';
+       cambiofecha();
+    }
+    else if (mesActual == 5)
+    {
+       document.getElementById('mes').value = '05';
+       cambiofecha();
+    }
+    else if (mesActual == 6)
+    {
+       document.getElementById('mes').value = '06';
+       cambiofecha();
+    }
+    else if (mesActual == 7)
+    {
+       document.getElementById('mes').value = '07';
+       cambiofecha();
+    }
+    else if (mesActual == 8)
+    {
+       document.getElementById('mes').value = '08';
+       cambiofecha();
+    }
+    else if (mesActual == 9)
+    {
+       document.getElementById('mes').value = '09';
+       cambiofecha();
+    }
+    else if (mesActual == 10)
+    {
+       document.getElementById('mes').value = '10';
+       cambiofecha();
+    }
+    else if (mesActual == 11)
+    {
+       document.getElementById('mes').value = '11';
+       cambiofecha();
+    }
+    else if (mesActual == 12)
+    {
+       document.getElementById('mes').value = '12';
+       cambiofecha();
+    }
+  });
+</script>
+
+<script>
 function cambiotrabajo()
 {
     var mes = document.getElementById('mes').value;
@@ -190,6 +258,9 @@ function cambiofecha()
             break;
         }
 }
+
+
+
 $(document).ready(function(){
   populateMonth();
   populateYear();

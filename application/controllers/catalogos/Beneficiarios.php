@@ -760,6 +760,33 @@ class Beneficiarios extends MY_Controller
          );
          $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
+    public function ajax_list_beneficiarios2()
+    {
+        $list = $this->benefi->get_datatables();
+
+        $data = array();
+
+        foreach($list as $banc)
+        {
+            $row = array();
+            $row[] = '<button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-primary" onclick="selectbenefi2(\''.$banc->no_prov.'\',\''.$banc->nombre.'\')">Seleccione</button>';
+            $row[] = $banc->no_prov;
+            $row[] = $banc->nombre;
+            $row[] = $banc->rfc;
+            $row[] = $banc->direccion;
+            $row[] = $banc->telefono;
+            $row[] = $banc->tipo_prov;
+            $data[] = $row;
+        }
+
+        $output =  array(
+            'draw' => $this->input->post('draw'),
+            'recordsTotal' => $this->benefi->count_all(),
+            'recordsFiltered' => $this->benefi->count_filtered(),
+            'data' => $data
+         );
+         $this->output->set_content_type('application/json')->set_output(json_encode($output));
+    }
     public function ajax_list_beneficiarios()
     {
         $list = $this->benefi->get_datatables();
