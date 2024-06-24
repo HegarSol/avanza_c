@@ -247,7 +247,7 @@ $this->load->view('beneficiarios/modales/TablaBancos');
             if($tipo == 2 || $tipo == 1 && $bc == 'min')
             {
             ?>
-             <label for="">No prov</label>
+             <label for="">No prov</label>&nbsp;&nbsp;<a class="glyphicon glyphicon-search" data-toggle="modal" data-target="#myModalBenefi3"></a>
              <input type="text" class="form-control" id="no_prov_factu">
              <?php
             }
@@ -405,6 +405,31 @@ $this->load->view('beneficiarios/modales/TablaBancos');
 </div>
 </div>
 
+<div class="modal fade" id="myModalBenefi3" role="dialog" >
+<div class="modal-dialog modal-lg" >
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h1 class="modal-title">Busqueda Beneficiario</h1>
+        </div>
+        <div class="modal-body" >
+          <table id="Beneficiarios3" class="stripe row-border responsive nowrap" cellspacing="0" width="90%">
+              <thead style="background-color:#5a5a5a; color:white;">
+                    <th>Accion</th>
+                    <th>No Prov</th>
+                    <th>Nombre</th>
+                    <th>RFC</th>
+                    <th>Direccion</th>
+                    <th>Telefono</th>
+                    <th>tipo_proveedor</th>
+              </thead>
+          </table>
+            <!-- <button class="btn btn-success" aria-hidden="true" onclick="selectbenefi()" ><span class="glyphicon glyphicon-ok"></span> Seleccionar</button> -->
+        </div>
+    </div>
+</div>
+</div>
+
 <div class="modal fade" id="myModalBenefi" role="dialog" >
 <div class="modal-dialog modal-lg" >
     <div class="modal-content">
@@ -461,6 +486,22 @@ $this->load->view('beneficiarios/modales/TablaBancos');
 </div>
 </div>
 <script>
+
+$('#Beneficiarios3').DataTable({
+    responsive: true, 
+    filter:true, 
+    processing: true, 
+    serverSide: true,
+      ajax: {
+          url : baseurl + "catalogos/Beneficiarios/ajax_list_beneficiarios2",
+          type : "POST"
+          },
+          "language" : {"url":"//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"}
+         ,"sDom": 'T<"clear">lfrtip', "oTableTools": {  "sRowSelect": "single","aButtons": ""},
+         columnDefs: [ 
+             { responsivePriority: 1, targets: 1, name : 'no_prov' }, 
+        ]
+   })
 
 $('#Beneficiarios2').DataTable({
     responsive: true, 
@@ -1064,6 +1105,12 @@ function buscarprov()
          }
     });
 }
+function selectbenefi2(no_prov,nombre)
+        {
+               $("#no_prov_factu").val(no_prov);
+               $("#concep").val(nombre);
+               $('#myModalBenefi2').modal('hide');
+        }
 function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
         {
                $("#noprov").val(no_prov);
