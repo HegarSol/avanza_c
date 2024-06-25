@@ -30,6 +30,25 @@ class Archivo extends REST_Controller
 
         $this->response(array('status' => true, 'data' => $datos));  
     }
+    public function tienecontabilidad_post()
+    {
+        $idempre = $_POST['idempre'];
+
+       //  $this->cuentas->set_database($idempre);
+
+        $valor = $this->cuentas->datosEmpresa2($idempre);
+
+        if(count($valor) > 0)
+        {
+            $resul = 1;
+        }
+        else
+        {
+            $resul = 0;
+        }
+
+        $this->response($resul);  
+    }
     public function insertclientecuenta_post()
     {
         $idempre = $_POST['idempre'];

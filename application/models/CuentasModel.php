@@ -22,6 +22,14 @@
             $this->dbEmpresa->insert('catalogocta',$datos);
             return $this->dbEmpresa->insert_id();
         }
+        public function datosEmpresa2($id)
+        {
+            $this->db->select('*');
+            $this->db->from('empresas');
+            $this->db->where('idEmpresa',$id);
+            $query=$this->db->get();
+            return $query->result_array();
+        }
         public function get_cuenta_existe_empresa($cuenta,$dessubcuenta)
         {
             $row = $this->dbEmpresa->select('*')->from('catalogocta')->where('cuenta',$cuenta)->where('sub_cta',$dessubcuenta)->get();
