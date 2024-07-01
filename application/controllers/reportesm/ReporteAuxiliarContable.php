@@ -361,7 +361,7 @@ class ReporteAuxiliarContable extends MY_Controller
         $objsheet->setCellValue('G5','Saldo');
 
         $objsheet->setCellValue('A6','Cuenta: '.$this->datosbanco[0]['cuenta'].' - '.$this->datosbanco[0]['sub_cta'].''.$this->datosbanco[0]['nombre']);
-        $objsheet->setCellValue('D6','Saldo Inicial: '.number_format($saldo,2,'.',''));
+        $objsheet->setCellValue('D6','Saldo Inicial: '.number_format($saldo,2,'.',','));
 
         $totalcargo = 0;
         $totalabono = 0;
@@ -388,9 +388,9 @@ class ReporteAuxiliarContable extends MY_Controller
                             $objsheet->setCellValue('B'.$numero,$this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov);
                             $objsheet->setCellValue('C'.$numero,$this->datosdetalle[$i]->rece);
                             $objsheet->setCellValue('D'.$numero,$this->datosdetalle[$i]->concedeta);
-                            $objsheet->setCellValue('E'.$numero,number_format($this->datosdetalle[$i]->monto,2,'.',''));
+                            $objsheet->setCellValue('E'.$numero,number_format($this->datosdetalle[$i]->monto,2,'.',','));
                             $objsheet->setCellValue('F'.$numero,'');
-                            $objsheet->setCellValue('G'.$numero,number_format($totalsaldo,2,'.',''));
+                            $objsheet->setCellValue('G'.$numero,number_format($totalsaldo,2,'.',','));
 
                             $totalcargo = $totalcargo + $this->datosdetalle[$i]->monto;
                     }
@@ -402,8 +402,8 @@ class ReporteAuxiliarContable extends MY_Controller
                             $objsheet->setCellValue('C'.$numero,$this->datosdetalle[$i]->rece);
                             $objsheet->setCellValue('D'.$numero,$this->datosdetalle[$i]->concedeta);
                             $objsheet->setCellValue('E'.$numero,'');
-                            $objsheet->setCellValue('F'.$numero,'-'.number_format($this->datosdetalle[$i]->monto,2,'.',''));
-                            $objsheet->setCellValue('G'.$numero,number_format($totalsaldo,2,'.',''));
+                            $objsheet->setCellValue('F'.$numero,number_format($this->datosdetalle[$i]->monto,2,'.',','));
+                            $objsheet->setCellValue('G'.$numero,number_format($totalsaldo,2,'.',','));
 
                             $totalabono = $totalabono + $this->datosdetalle[$i]->monto;
                     }
@@ -417,9 +417,9 @@ class ReporteAuxiliarContable extends MY_Controller
                             $objsheet->setCellValue('B'.$numero,$this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov);
                             $objsheet->setCellValue('C'.$numero,$this->datosdetalle[$i]->rece);
                             $objsheet->setCellValue('D'.$numero,$this->datosdetalle[$i]->concedeta);
-                            $objsheet->setCellValue('E'.$numero,number_format($this->datosdetalle[$i]->monto,2,'.',''));
+                            $objsheet->setCellValue('E'.$numero,number_format($this->datosdetalle[$i]->monto,2,'.',','));
                             $objsheet->setCellValue('F'.$numero,'');
-                            $objsheet->setCellValue('G'.$numero,number_format($totalsaldo,2,'.',''));
+                            $objsheet->setCellValue('G'.$numero,number_format($totalsaldo,2,'.',','));
 
                             $totalcargo = $totalcargo + $this->datosdetalle[$i]->monto;
                     }
@@ -431,8 +431,8 @@ class ReporteAuxiliarContable extends MY_Controller
                             $objsheet->setCellValue('C'.$numero,$this->datosdetalle[$i]->rece);
                             $objsheet->setCellValue('D'.$numero,$this->datosdetalle[$i]->concedeta);
                             $objsheet->setCellValue('E'.$numero,'');
-                            $objsheet->setCellValue('F'.$numero,'-'.number_format($this->datosdetalle[$i]->monto,2,'.',''));
-                            $objsheet->setCellValue('G'.$numero,number_format($totalsaldo,2,'.',''));
+                            $objsheet->setCellValue('F'.$numero,number_format($this->datosdetalle[$i]->monto,2,'.',','));
+                            $objsheet->setCellValue('G'.$numero,number_format($totalsaldo,2,'.',','));
 
                             $totalabono = $totalabono + $this->datosdetalle[$i]->monto;
                     }
@@ -462,6 +462,26 @@ class ReporteAuxiliarContable extends MY_Controller
                 'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
             )
         );
+
+        $styleleft = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            )
+        );
+
+        $styleright = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+            )
+        );
+
+        $lastrow = $objPHPExcel->getActiveSheet()->getHighestRow();
+
+        $objPHPExcel->getActiveSheet()->getStyle('D1:D'.$lastrow)->applyFromArray($styleleft);
+
+        $objPHPExcel->getActiveSheet()->getStyle('E1:E'.$lastrow)->applyFromArray($styleright);
+        $objPHPExcel->getActiveSheet()->getStyle('F1:F'.$lastrow)->applyFromArray($styleright);
+        $objPHPExcel->getActiveSheet()->getStyle('G1:G'.$lastrow)->applyFromArray($styleright);
 
         $objPHPExcel->getDefaultStyle()->applyFromArray($style);
         $objWriter=PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel5');
