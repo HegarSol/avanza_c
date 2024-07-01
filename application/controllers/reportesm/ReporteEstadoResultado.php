@@ -199,7 +199,7 @@ class ReporteEstadoResultado extends MY_Controller
                 case 1:
 
                     $objsheet->setCellValue('A'.$numero3,$data[$i]->cuenta);
-                    $objsheet->setCellValue('A'.$numero4,'TOTAL TIPO 1');
+                    $objsheet->setCellValue('A'.$numero4,'TOTAL INGRESOS');
     
                     $objsheet->setCellValue('B'.$numero3,$data[$i]->sub_cta);
                     $objsheet->setCellValue('C'.$numero3,$data[$i]->nombre);
@@ -232,11 +232,11 @@ class ReporteEstadoResultado extends MY_Controller
                 case 2:
 
                     $objsheet->setCellValue('A'.$numero5,$data[$i]->cuenta);
-                    $objsheet->setCellValue('A'.$numero6,'TIPO 1 - TIPO 2');
+                    $objsheet->setCellValue('A'.$numero6,'UTILIDAD BRUTA');
     
                     $objsheet->setCellValue('B'.$numero5,$data[$i]->sub_cta);
                     $objsheet->setCellValue('C'.$numero5,$data[$i]->nombre);
-                    $objsheet->setCellValue('C'.$numero6,'UTILIDAD BRUTA');
+                    $objsheet->setCellValue('C'.$numero6,'');
                     $objsheet->setCellValue('D'.$numero5,number_format($data[$i]->sini,2,'.',','));
     
                     $incialtotal2 = $incialtotal2 + $data[$i]->sini;
@@ -266,7 +266,7 @@ class ReporteEstadoResultado extends MY_Controller
                 case 3:
 
                     $objsheet->setCellValue('A'.$numero7,$data[$i]->cuenta);
-                    $objsheet->setCellValue('A'.$numero8,'TOTAL TIPO 3');
+                    $objsheet->setCellValue('A'.$numero8,'TOTAL GASTOS');
     
                     $objsheet->setCellValue('B'.$numero7,$data[$i]->sub_cta);
                     $objsheet->setCellValue('C'.$numero7,$data[$i]->nombre);
@@ -299,7 +299,7 @@ class ReporteEstadoResultado extends MY_Controller
                 case 4:
 
                     $objsheet->setCellValue('A'.$numero9,$data[$i]->cuenta);
-                    $objsheet->setCellValue('A'.$numero10,'TOTAL TIPO 4');
+                    $objsheet->setCellValue('A'.$numero10,'GASTOS FINANCIEROS');
     
                     $objsheet->setCellValue('B'.$numero9,$data[$i]->sub_cta);
                     $objsheet->setCellValue('C'.$numero9,$data[$i]->nombre);
