@@ -203,28 +203,28 @@ class ReporteEstadoResultado extends MY_Controller
     
                     $objsheet->setCellValue('B'.$numero3,$data[$i]->sub_cta);
                     $objsheet->setCellValue('C'.$numero3,$data[$i]->nombre);
-                    $objsheet->setCellValue('D'.$numero3,number_format($data[$i]->sini,2,'.',','));
+                    $objsheet->setCellValue('D'.$numero3,number_format(abs($data[$i]->sini),2,'.',','));
     
-                    $incialtotal1 = $incialtotal1 + $data[$i]->sini;
-                    $objsheet->setCellValue('D'.$numero4,number_format($incialtotal1,2,'.',','));
+                    $incialtotal1 = $incialtotal1 + abs($data[$i]->sini);
+                    $objsheet->setCellValue('D'.$numero4,number_format(abs($incialtotal1),2,'.',','));
 
                     $objsheet->setCellValue('E'.$numero3,'');
     
-                    $objsheet->setCellValue('F'.$numero3,number_format($data[$i]->cargos,2,'.',','));
-                    $objsheet->setCellValue('G'.$numero3,number_format($data[$i]->abonos,2,'.',','));
+                    $objsheet->setCellValue('F'.$numero3,number_format(abs($data[$i]->cargos),2,'.',','));
+                    $objsheet->setCellValue('G'.$numero3,number_format(abs($data[$i]->abonos),2,'.',','));
 
-                    $debetotal1=$debetotal1+$data[$i]->cargos;
-                    $habertotal1=$habertotal1+$data[$i]->abonos;
-                    $totalhaberdebe1=$debetotal1-$habertotal1;
+                    $debetotal1=$debetotal1+abs($data[$i]->cargos);
+                    $habertotal1=$habertotal1+abs($data[$i]->abonos);
+                    $totalhaberdebe1=$debetotal1-abs($habertotal1);
 
-                    $objsheet->setCellValue('G'.$numero4,number_format($totalhaberdebe1,2,'.',','));
+                    $objsheet->setCellValue('G'.$numero4,number_format(abs($totalhaberdebe1),2,'.',','));
 
                     $objsheet->setCellValue('H'.$numero3,'');
 
-                    $objsheet->setCellValue('I'.$numero3,number_format($data[$i]->ejercicio,2,'.',','));
+                    $objsheet->setCellValue('I'.$numero3,number_format(abs($data[$i]->ejercicio),2,'.',','));
     
-                    $totalejercicio1=$totalejercicio1+$data[$i]->ejercicio;
-                    $objsheet->setCellValue('I'.$numero4,number_format($totalejercicio1,2,'.',','));
+                    $totalejercicio1=$totalejercicio1+abs($data[$i]->ejercicio);
+                    $objsheet->setCellValue('I'.$numero4,number_format(abs($totalejercicio1),2,'.',','));
 
                 //    $objsheet->setCellValue('C'.$numero11,'UTILIDAD ENTA DEL EJERCICIO');
 
@@ -338,6 +338,27 @@ class ReporteEstadoResultado extends MY_Controller
         $objsheet->setCellValue('D'.$numero12,number_format($incialtotal1-$incialtotal2-$incialtotal3,2,'.',','));
         $objsheet->setCellValue('G'.$numero12,number_format(((($totalhaberdebe1-$totalhaberdebe2)-$totalhaberdebe3)-$totalhaberdebe4),2,'.',','));
         $objsheet->setCellValue('I'.$numero12,number_format(((($totalejercicio1-$totalejercicio2)-$totalejercicio3)-$totalejercicio4),2,'.',','));
+
+        $styleleft = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            )
+        );
+
+        $styleright = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+            )
+        );
+
+        $lastrow = $objPHPExcel->getActiveSheet()->getHighestRow();
+
+        $objPHPExcel->getActiveSheet()->getStyle('C1:C'.$lastrow)->applyFromArray($styleleft);
+
+        $objPHPExcel->getActiveSheet()->getStyle('D6:D'.$lastrow)->applyFromArray($styleright);
+        $objPHPExcel->getActiveSheet()->getStyle('F6:F'.$lastrow)->applyFromArray($styleright);
+        $objPHPExcel->getActiveSheet()->getStyle('G6:G'.$lastrow)->applyFromArray($styleright);
+        $objPHPExcel->getActiveSheet()->getStyle('I6:I'.$lastrow)->applyFromArray($styleright);
 
         $style = array(
             'alignment' => array(
