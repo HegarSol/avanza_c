@@ -78,6 +78,58 @@ class Beneficiarios extends MY_Controller
             redirect('inicio/login','refresh');
         }
     }
+    public function getAutorizacion()
+    {
+        $rfc = $this->input->post('rfc');
+        $autoriza = 1;
+
+        if(ENVIRONMENT == 'development')
+        {
+          $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/list_autorizacion?empresa=".$rfc."&autoriza=".$autoriza);
+        }
+        else
+        {
+          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/list_autorizacion?empresa=".$rfc."&autoriza=".$autoriza);
+        }
+
+       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+       curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+       $resu = curl_exec($ch);
+       $response = json_decode($resu);
+
+       $arr = [];
+       $date2 = new DateTime(date('d-m-Y'));
+
+       foreach($response->data as $datos)
+       {
+          $date1 = new DateTime(date('d-m-Y',strtotime($datos->fecha)));
+          $diff = $date1->diff($date2);
+
+          $arr[] = [
+            'version' => $datos->version,
+            'folio' => $datos->folio,
+            'fecha' => $datos->fecha,
+            'fecha_pago' => $datos->fecha_pago,
+            'total' => $datos->total,
+            'metodo_pago' => $datos->metodo_pago,
+            'uuid' => $datos->uuid,
+            'antiguedad' => $diff->days
+          ];
+
+       }
+   
+      if($response->status == true)
+      {
+        $data = $arr;
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+      }
+      else
+      {
+        $data = $response->error;
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+      }
+    }
     public function getpendientesPagar()
     {
         $rfc = $this->input->post('rfc');
