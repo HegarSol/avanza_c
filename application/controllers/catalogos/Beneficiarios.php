@@ -15,6 +15,7 @@ class Beneficiarios extends MY_Controller
         $this->load->model('OperacionesModel','operaciones');
         $this->load->model('DicCuentasModel','dicuentas');
         $this->load->model('CatalogosModel','catalogos');
+        $this->load->model('EmpresasModel','empresas');
     }
     public function index()
     {
@@ -23,11 +24,13 @@ class Beneficiarios extends MY_Controller
         {
            if($this->aauth->is_loggedin())
            {
+
                $errores=array();
                $rfc = $this->configModel->getConfig();
                $CXP = 'bene';
+               $tipopermiso = $_SESSION['tipo'];
                $permisos=$this->permisosforma($_SESSION['id'],8);
-               $data = array('titulo' => 'Beneficiario','tipo_letra' => 'T','CXP' => $CXP,'rfc' => $rfc[0]['rfc'], 'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores' => $errores, 'permisosGrupo' => $permisos);
+               $data = array('titulo' => 'Beneficiario','tipo_letra' => 'T','permisotipo' => $tipopermiso,'CXP' => $CXP,'rfc' => $rfc[0]['rfc'], 'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores' => $errores, 'permisosGrupo' => $permisos);
                $items=$this->menuModel->menus($_SESSION['tipo']);
                $this->multi_menu->set_items($items);
                $this->load->view('templates/header');
@@ -78,6 +81,33 @@ class Beneficiarios extends MY_Controller
             redirect('inicio/login','refresh');
         }
     }
+    public function getupdateAutorizacion()
+    {
+        $rfc = $this->input->post('rfc');
+        $check = $this->input->post('chek');
+
+         foreach($check as $uuid)
+         {
+            if(ENVIRONMENT == 'development')
+            {
+            $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/update_autorizacion");
+            }
+            else
+            {
+            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/update_autorizacion");
+            }
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                                curl_setopt($ch, CURLOPT_POSTFIELDS, "empresa=".$rfc."&uuid=".$uuid[0].'&id_usu='.$_SESSION['id']);
+                                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                                $resu = curl_exec($ch);
+                                $response = json_decode($resu);
+                                var_dump($resu);
+         }
+
+        
+    }
     public function getAutorizacion()
     {
         $rfc = $this->input->post('rfc');
@@ -85,11 +115,11 @@ class Beneficiarios extends MY_Controller
 
         if(ENVIRONMENT == 'development')
         {
-          $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/list_autorizacion?empresa=".$rfc."&autoriza=".$autoriza);
+          $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/reporte_autorizacion?empresa=".$rfc."&autoriza=".$autoriza);
         }
         else
         {
-          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/list_autorizacion?empresa=".$rfc."&autoriza=".$autoriza);
+          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/reporte_autorizacion?empresa=".$rfc."&autoriza=".$autoriza);
         }
 
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -101,23 +131,71 @@ class Beneficiarios extends MY_Controller
        $arr = [];
        $date2 = new DateTime(date('d-m-Y'));
 
-       foreach($response->data as $datos)
-       {
-          $date1 = new DateTime(date('d-m-Y',strtotime($datos->fecha)));
-          $diff = $date1->diff($date2);
+       $datos = $response->data;
 
-          $arr[] = [
-            'version' => $datos->version,
-            'folio' => $datos->folio,
-            'fecha' => $datos->fecha,
-            'fecha_pago' => $datos->fecha_pago,
-            'total' => $datos->total,
-            'metodo_pago' => $datos->metodo_pago,
-            'uuid' => $datos->uuid,
-            'antiguedad' => $diff->days
-          ];
+       $tajos = [];
+       $ordenado = [];
 
-       }
+       for($j=0;$j<count($datos); $j++)
+                        {
+                             $tajos[] = [
+                                 'rfc_emisor' => $datos[$j]->rfc_emisor,
+                                 'nombre_emisor' => $datos[$j]->nombre_emisor
+                             ];
+                        }
+    
+                        foreach($tajos as $key => $row)
+                        {
+                            $aux[$key] = $row['rfc_emisor'];
+                        }
+    
+                        array_multisort($aux,SORT_ASC,$tajos);
+    
+                        foreach($tajos as $key => $row)
+                        {
+                            $ordenado[] = ['rfc_emisor' => $row['rfc_emisor'],'nombre_emisor' => $row['nombre_emisor']];
+                        }
+    
+    
+                        $datosr = array_unique($ordenado, SORT_REGULAR);
+
+                        foreach($datosr as $lai)
+                        {
+
+                            $arr[] = [
+                                'rfcpro' => $lai['rfc_emisor'].' - '.$lai['nombre_emisor'],
+                                'folio' => '',
+                                'fecha' => '',
+                                'fecha_pago' => '',
+                                'total' => '',
+                                'metodo_pago' => '',
+                                'uuid' => '',
+                                'antiguedad' => '',
+                                'marca' => 1
+                              ];
+
+                            for($i=0; $i<count($datos); $i++)
+                            {    
+                                if($lai['rfc_emisor'] == $datos[$i]->rfc_emisor)
+                                {
+
+                                          $date1 = new DateTime(date('d-m-Y',strtotime($datos[$i]->fecha)));
+                                          $diff = $date1->diff($date2);
+
+                                          $arr[] = [
+                                            'rfcpro' => '',
+                                            'folio' => $datos[$i]->folio,
+                                            'fecha' => $datos[$i]->fecha,
+                                            'fecha_pago' => $datos[$i]->fecha_pago,
+                                            'total' => $datos[$i]->total,
+                                            'metodo_pago' => $datos[$i]->metodo_pago,
+                                            'uuid' => $datos[$i]->uuid,
+                                            'antiguedad' => $diff->days,
+                                            'marca' => 0
+                                          ];
+                                }
+                            }
+                        }
    
       if($response->status == true)
       {
@@ -132,19 +210,23 @@ class Beneficiarios extends MY_Controller
     }
     public function getpendientesPagar()
     {
+        $conf = $this->empresas->datosEmpresa($_SESSION['idEmpresa']);
         $rfc = $this->input->post('rfc');
         $rfcemisor = $this->input->post('rfcemisor');
         $poliza = '';
         $historico = $this->input->post('historico');
         $formaDePago = $this->input->post('formapago');
+        $autorizado = $conf[0]['autorizacion'];
+
+      //  var_dump($autorizado);
 
         if(ENVIRONMENT == 'development')
         {
-          $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago);
+          $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago."&autorizado=".$autorizado);
         }
         else
         {
-          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago);
+          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago."&autorizado=".$autorizado);
         }
 
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
