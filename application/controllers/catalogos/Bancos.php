@@ -402,7 +402,7 @@ class Bancos extends MY_Controller
                   }
               }
 
-              $totalmontopoliza = $montoposito - $montonegati;
+              $totalmontopoliza = number_format($montoposito,2,'.','') - number_format($montonegati,2,'.','');
               if($datospoliza[0]['c_a'] == '+')
               {
                   $bc = 'plu';
