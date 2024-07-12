@@ -105,11 +105,17 @@ class OperacionesModel extends MY_Model
     }
     public function maxid()
     {
-        $row = $this->db2->select_max('id')->from('opera_banco_encabe')->where('tipo_mov','O')->get();
-        $valor = $row->result_array();
 
-        $row2 = $this->db2->select('*')->from('opera_banco_encabe')->where('id',$valor[0]['id'])->get();
-        return $row2->result_array();
+        $con = '0001';
+        $tipo = 'O';
+
+        $año = substr($_SESSION['ano'], -2);
+        $mes = $_SESSION['mes'];
+
+        $query = $this->db2->select('IF(MAX(no_mov) > 0,MAX(no_mov)+1,CONCAT("'.$año.'","'.$mes.'","'.$con.'")) AS maxmov') 
+        ->from('opera_banco_encabe') 
+        ->where('tipo_mov = "'.$tipo.'" AND LEFT(no_mov,2) = "'.$año.'" AND SUBSTR(no_mov,3,2) = "'.$mes.'"');
+        return $this->db2->get()->result_array();
     }
     public function maxidPro()
     {

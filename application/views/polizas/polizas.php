@@ -237,7 +237,7 @@ function recogerDatosPoliza(tableID)
                     ssub_cta[i] = table.rows[i].cells[3].innerHTML;
                     monto[i] = table.rows[i].cells[7].innerHTML;
                     c_a[i] = table.rows[i].cells[8].innerHTML;
-                    fecha[i] = '<?php echo date('Y-m-d') ?>';
+                    fecha[i] = fechapoli;
                     concepto[i] = table.rows[i].cells[6].innerHTML;
                     referencia[i] = table.rows[i].cells[4].innerHTML;
                     nombre_cuenta[i] = table.rows[i].cells[5].innerHTML;

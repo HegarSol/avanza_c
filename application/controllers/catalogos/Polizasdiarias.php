@@ -73,7 +73,11 @@ class Polizasdiarias extends MY_Controller
                 $formapago = $this->cat->selectformapago();
                 $monedas = $this->cat->selectmoneda();
                 $max = $this->opera->maxid();
-                $count = $this->opera->existemesdiaria();
+                //$count = $this->opera->existemesdiaria();
+
+                $concecutivo = $max[0]['maxmov'];
+
+              //  var_dump($count);
 
                 $tipo = '4';
                 $tipo_letra = 'O';
@@ -81,14 +85,14 @@ class Polizasdiarias extends MY_Controller
 
                 $CXP = 'BAN';
 
-                if(count($count) > 0)
-                {
-                    $concecutivo = $max[0]['no_mov'] + 1;
-                }
-                else
-                {
-                    $concecutivo = date('y').date('m').'0001';
-                }
+                // if(count($count) > 0)
+                // {
+                //     $concecutivo = $max[0]['no_mov'] + 1;
+                // }
+                // else
+                // {
+                //     $concecutivo = date('y').date('m').'0001';
+                // }
 
 
                 $data = array('titulo' => 'Nueva póliza diaria','tipo_letra' => $tipo_letra,'concecutivo' => $concecutivo,'CXP' => $CXP,'monedas' => $monedas,'formapago' => $formapago,'id' => $no_banco,'tipo' => $tipo,'accion' => 'catalogos/Polizasdiarias/guardarpolizadiaria','permisosGrupo'=> $permisos,'rfc' => $rfc[0]['rfc']);
