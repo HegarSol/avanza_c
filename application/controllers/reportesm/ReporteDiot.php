@@ -37,6 +37,48 @@ class ReporteDiot extends MY_Controller
             redirect('inicio/login','refresh');
         }
     }
+    public function Txtexport()
+    {
+
+        $fechaini = $this->input->post('fechaini');
+        $fechafin = $this->input->post('fechafin');
+
+        $data = $this->cuentas->getdiot($fechaini,$fechafin);
+       
+        $texto = '';
+
+        $fh = fopen("diot.txt", 'w') or die("Se produjo un error al crear el archivo");
+  
+        foreach($data as $dat)
+        {
+           $texto .= "04|85|".$dat->rfc."|||||".$dat->gasto_tg."|||||||".$dat->gasto_estim."||||||||".$dat->ret_iva."\n";
+        }     
+        
+        fwrite($fh, $texto) or die("No se pudo escribir en el archivo");
+
+        fclose($fh);
+
+        $file_example = "diot.txt";
+        if (file_exists($file_example)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: text');
+            header('Content-Disposition: attachment; filename='."diot.txt");
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file_example));
+            ob_clean();
+            flush();
+            readfile($file_example);
+            unlink('diot.txt');
+            exit;
+        }
+        else {
+            echo 'Archivo no disponible.';
+        }
+        
+    }
     public function Excelexport()
     {
         $objPHPExcel = new PHPExcel();

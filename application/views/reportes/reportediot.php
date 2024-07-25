@@ -29,6 +29,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
           <div class="col-md-3">
              <!-- <button type="button" class="btn btn-info" onclick="buscarlibro()" ><span class="glyphicon glyphicon-check"></span> Aceptar</button> -->
              <button type="button" class="btn btn-success" onclick="document.form1.action='<?php echo base_url();?>reportesm/ReporteDiot/Excelexport'; document.form1.submit()"; ><span class="glyphicon glyphicon-file"></span> Exportar excel</button>
+             <button type="button" class="btn btn-primary" onclick="document.form1.action='<?php echo base_url();?>reportesm/ReporteDiot/Txtexport'; document.form1.submit()";> <span class="glyphicon glyphicon-file"></span> Exportar Txt</button>
           </div>
         </div>
 </form>
