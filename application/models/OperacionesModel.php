@@ -125,6 +125,29 @@ class OperacionesModel extends MY_Model
         $row2 = $this->db2->select('*')->from('opera_banco_encabe')->where('id',$valor[0]['id'])->get();
         return $row2->result_array();
     }
+    public function estadocomparativo($mes,$ano)
+    {
+        
+
+        $fechaini = date($ano.'-'.$mes.'-01 00:00:00');
+        if($mes == '02')
+        {
+            $fechafin = date($ano.'-'.$mes.'-28 23:59:59');
+        }
+        else if($mes == '04' || $mes == '06' || $mes == '09' || $mes == '11')
+        {
+            $fechafin = date($ano.'-'.$mes.'-30 23:59:59');
+        }
+        else
+        {
+            $fechafin = date($ano.'-'.$mes.'-t 23:59:59');
+        }
+
+
+
+        $query = $this->db2->query('CALL getEstadoResultadoComparativo(\''.$fechaini.'\',\''.$fechafin.'\')');
+        return $query->result();
+    }
     public function getprovicion($folio,$seri,$uuid)
     {
         $row = $this->db2->select('*')

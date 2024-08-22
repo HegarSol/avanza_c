@@ -197,10 +197,15 @@ class LibroElectronico extends MY_Controller
         $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
 
         $numero3=5;
+        $numero4=6;
+
+        $totalcargo = 0;
+        $totalabono = 0;
 
         for($i=0;$i<count($this->datos); $i++)
         {
             $numero3++;
+            $numero4++;
 
             if($this->datos[$i]['c_a'] == '+')
             {
@@ -209,8 +214,10 @@ class LibroElectronico extends MY_Controller
                 $objsheet->setCellValue('C'.$numero3,$this->datos[$i]['beneficia']);
                 $objsheet->setCellValue('D'.$numero3,$this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta']);
                 $objsheet->setCellValue('E'.$numero3,$this->datos[$i]['nombre_cuenta']);
-                $objsheet->setCellValue('F'.$numero3,number_format($this->datos[$i]['monto'],2,'.',''));
+                $objsheet->setCellValue('F'.$numero3,number_format($this->datos[$i]['monto'],2,'.',','));
                 $objsheet->setCellValue('G'.$numero3,'');
+
+                $totalcargo += $this->datos[$i]['monto'];
             }
             else
             {
@@ -220,10 +227,16 @@ class LibroElectronico extends MY_Controller
                 $objsheet->setCellValue('D'.$numero3,$this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta']);
                 $objsheet->setCellValue('E'.$numero3,$this->datos[$i]['nombre_cuenta']);
                 $objsheet->setCellValue('F'.$numero3,'');
-                $objsheet->setCellValue('G'.$numero3,number_format($this->datos[$i]['monto'],2,'.',''));
+                $objsheet->setCellValue('G'.$numero3,number_format($this->datos[$i]['monto'],2,'.',','));
+
+                $totalabono += $this->datos[$i]['monto'];
             }
 
         }
+
+        $objsheet->setCellValue('E'.$numero4,'TOTALES');
+        $objsheet->setCellValue('F'.$numero4,number_format($totalcargo,2,'.',','));
+        $objsheet->setCellValue('G'.$numero4,number_format($totalabono,2,'.',','));
 
         $style = array(
             'alignment' => array(

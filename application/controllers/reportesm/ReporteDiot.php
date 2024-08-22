@@ -51,7 +51,7 @@ class ReporteDiot extends MY_Controller
   
         foreach($data as $dat)
         {
-           $texto .= "04|85|".$dat->rfc."|||||".$dat->gasto_tg."|||||||".$dat->gasto_estim."||||||||".$dat->ret_iva."\n";
+           $texto .= "04|85|".$dat->rfc."|||||".round($dat->gasto_tg)."|||||||".round($dat->gasto_estim)."||||||||".round($dat->ret_iva)."\n";
         }     
         
         fwrite($fh, $texto) or die("No se pudo escribir en el archivo");

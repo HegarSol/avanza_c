@@ -87,21 +87,48 @@ class ReportePagado extends MY_Controller
         $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
 
         $numero3=5;
+        $numero4=6;
+
+        $totalventas = 0;
+        $totaliva8 = 0;
+        $totaliva16 = 0;
+        $totalretiva = 0;
+        $totalretisr = 0;
+        $totaltotal = 0;
+        $totalpago = 0;
 
         for($i=0;$i<count($data); $i++)
         {
             $numero3++;
+            $numero4++;
 
                 $objsheet->setCellValue('A'.$numero3,$data[$i]->referencia);
                 $objsheet->setCellValue('B'.$numero3,$data[$i]->cliente);
-                $objsheet->setCellValue('C'.$numero3,number_format($data[$i]->ventas,2,'.',''));
+                $objsheet->setCellValue('C'.$numero3,number_format($data[$i]->ventas,2,'.',','));
                 $objsheet->setCellValue('D'.$numero3,number_format($data[$i]->IVA_8,2,'.',','));
                 $objsheet->setCellValue('E'.$numero3,number_format($data[$i]->IVA_16,2,'.',','));
                 $objsheet->setCellValue('F'.$numero3,number_format($data[$i]->Ret_IVA,2,'.',','));
                 $objsheet->setCellValue('G'.$numero3,number_format($data[$i]->Ret_ISR,2,'.',','));
                 $objsheet->setCellValue('H'.$numero3,number_format($data[$i]->Total,2,'.',','));
                 $objsheet->setCellValue('I'.$numero3,number_format($data[$i]->Pago,2,'.',','));
+
+                $totalventas += $data[$i]->ventas;
+                $totaliva8 += $data[$i]->IVA_8;
+                $totaliva16 += $data[$i]->IVA_16;
+                $totalretiva += $data[$i]->Ret_IVA;
+                $totalretisr += $data[$i]->Ret_ISR;
+                $totaltotal += $data[$i]->Total;
+                $totalpago += $data[$i]->Pago;
         }
+
+        $objsheet->setCellValue('B'.$numero4,'TOTALES');
+        $objsheet->setCellValue('C'.$numero4,number_format($totalventas,2,'.',','));
+        $objsheet->setCellValue('D'.$numero4,number_format($totaliva8,2,'.',','));
+        $objsheet->setCellValue('E'.$numero4,number_format($totaliva16,2,'.',','));
+        $objsheet->setCellValue('F'.$numero4,number_format($totalretiva,2,'.',','));
+        $objsheet->setCellValue('G'.$numero4,number_format($totalretisr,2,'.',','));
+        $objsheet->setCellValue('H'.$numero4,number_format($totaltotal,2,'.',','));
+        $objsheet->setCellValue('I'.$numero4,number_format($totalpago,2,'.',','));
 
         $style = array(
             'alignment' => array(
