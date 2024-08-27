@@ -146,6 +146,8 @@ class OperacionesModel extends MY_Model
 
 
         $query = $this->db2->query('CALL getEstadoResultadoComparativo(\''.$fechaini.'\',\''.$fechafin.'\')');
+
+     //   var_dump($query->result());
         return $query->result();
     }
     public function getprovicion($folio,$seri,$uuid)

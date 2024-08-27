@@ -166,6 +166,14 @@ class Cuentas extends MY_Controller
             );
             $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
+    public function getSubCuentas()
+    {
+        $cta = $this->input->post('cta');
+
+        $valor = $this->conficuentas->getniveles($cta);
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($valor));
+    }
     public function ajax_cuentasconfig()
     {
       $list = $this->conficuentas->get_datatables();
