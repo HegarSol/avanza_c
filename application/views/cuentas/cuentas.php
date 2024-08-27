@@ -29,7 +29,7 @@ if(isset($mensaje))
     <div class="row">
     <label class="control-label col-sm-1" for="cuenta">Cuenta:</label>
         <div class="col-sm-2">
-            <input type="text" class="form-control" id="cuenta" name="cuenta" <?php echo isset($datos[0]['cuenta']) ? 'readonly' : '' ?> value="<?php echo isset($datos[0]['cuenta']) ? $datos[0]['cuenta'] : '' ?>">
+            <input type="text" class="form-control" id="cuenta" onblur="elegirTipo()" name="cuenta" <?php echo isset($datos[0]['cuenta']) ? 'readonly' : '' ?> value="<?php echo isset($datos[0]['cuenta']) ? $datos[0]['cuenta'] : '' ?>">
         </div>
     <label class="control-label col-sm-1" for="sub_cta">Sub Cuenta:</label>
         <div class="col-sm-2">
@@ -116,7 +116,7 @@ if(isset($mensaje))
          </div>
          <label class="control-label col-sm-1" for="tipo">Tipo:</label>
         <div class="col-sm-2">
-            <select name="tipo" id="tipo" class="form-control">
+            <select name="tipo" id="tipo" disabled class="form-control">
                 <?php
                 if($datos[0]['tipo'] == 1)
                 {
@@ -195,3 +195,22 @@ if(isset($mensaje))
  </div>
 
 </form>
+
+
+<script>
+    function elegirTipo()
+    {
+        var cta = document.getElementById('cuenta').value;
+
+        jQuery.ajax({
+              type:"POST",
+              url: '<?php echo base_url() ?>catalogos/Cuentas/getSubCuentas',
+              data:{cta:cta},
+              dataType:"html",
+              success:function(data)
+              {
+                document.getElementById('tipo').value = data;
+              }
+        });
+    }
+</script>

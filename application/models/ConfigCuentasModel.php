@@ -35,4 +35,27 @@ class ConfigCuentasModel extends MY_Model
         ->get();
         return $row->result_array();
     }
+    public function getniveles($cta)
+    {
+        if($cta >= 400 && $cta <= 498)
+        {
+             return 1;
+        }
+        else if($cta >= 501 && $cta <= 501)
+        {
+             return 2;
+        }
+        else if($cta >= 502 && $cta <= 531)
+        {
+             return 3;
+        }
+        else if($cta >= 532 && $cta <= 532)
+        {
+            return 4;
+        }
+        else
+        {
+             return 0;
+        }
+    }
 }
