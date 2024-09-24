@@ -218,6 +218,11 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                         </div>
                      </div>
                      <div class="col-sm-3">
+                     <form enctype="multipart/form-data" action="#" id="formularioComprobantepdf">
+                          <label for="pdf">Archivo PDF</label>
+                           <input id="pdf" class="form-control" type="file" name="pdf">
+                           <p class="help-block">Seleccione el archivo PDF a almacenar</p>
+                     </form>
                      </div>
                      <div class="col-sm-3">
                      </div>
@@ -1261,6 +1266,10 @@ function aceptarasiento(tableID)
    });
 function agregarregistro()
 {
+
+   var formElement = document.getElementById("formularioComprobantepdf");
+   var formData = new FormData(formElement);
+
                var tip_com = document.getElementById('tipo_comprobante').value;
                var vers = document.getElementById('version').value;
                var uuid = document.getElementById('uuid').value;
@@ -1286,13 +1295,37 @@ function agregarregistro()
                var ieps = document.getElementById('ieps').value;
                var total = document.getElementById( 'total').value;
 
+               formData.append('empresa',recep);
+               formData.append('tipo_com',tip_com);               
+               formData.append('versio',vers);
+               formData.append('foli',foli);
+               formData.append('seri',seri);
+               formData.append('fecha',fecha);               
+               formData.append('fom_pa',fom_pa);
+               formData.append('met_pa',met_pa);
+               formData.append('cta',cta);
+               formData.append('est',est);               
+               formData.append('cod_sat',cod_sat);
+               formData.append('mone',mone);
+               formData.append('tipo_cam',tipo_cam);
+               formData.append('rfc',rfc);               
+               formData.append('nom',nom);
+               formData.append('recep',recep);
+               formData.append('subto',subto);               
+               formData.append('tasaiva',tasaiva);
+               formData.append('iva',iva);
+               formData.append('retiva',retiva);               
+               formData.append('reisar',reisar);
+               formData.append('tasaiep',tasaiep);
+               formData.append('ieps',ieps);               
+               formData.append('total',total);
+
                jQuery.ajax({
                   type:"POST",
-                  url:baseurl+"catalogos/Beneficiarios/insertardatoscorreo",
-                  data:{tip_com:tip_com,vers:vers,uuid:uuid,foli:foli,seri:seri,fecha:fecha,fom_pa:fom_pa,met_pa:met_pa,
-                  cta:cta,est:est,cod_sat:cod_sat,mone:mone,tipo_cam:tipo_cam,rfc:rfc,nom:nom,recep:recep,subto:subto,
-                  tasaiva:tasaiva,iva:iva,retiva:retiva,reisar:reisar,tasaiep:tasaiep,ieps:ieps,total:total},
-                  dataType:"html",
+                  url:"https://avanzab.hegarss.com/api/Comprobantes/uploadpdf",
+                  data:formData,
+                  processData : false,
+                  contentType : false,
                   success:function(response)
                   {
                      response=JSON.parse(response);
