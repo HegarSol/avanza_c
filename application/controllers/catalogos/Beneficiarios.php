@@ -663,68 +663,88 @@ class Beneficiarios extends MY_Controller
     }
     public function insertardatoscorreo()
     {
-        date_default_timezone_set("America/Mexico_City");
+        // date_default_timezone_set("America/Mexico_City");
 
-        $tipo_com = $this->input->post('tip_com');
-        $versio = $this->input->post('vers');
-        $uuid = $this->input->post('uuid');
-        $foli = $this->input->post('foli');
-        $seri = $this->input->post('seri');
-        $fecha = $this->input->post('fecha');
-        $fom_pa = $this->input->post('fom_pa');
-        $met_pa = $this->input->post('met_pa');
-        $cta = $this->input->post('cta');
-        $est = $this->input->post('est');
-        $cod_sat = $this->input->post('cod_sat');
-        $mone = $this->input->post('mone');
-        $tipo_cam = $this->input->post('tipo_cam');
-        $rfc = $this->input->post('rfc');
-        $nom = $this->input->post('nom');
-        $recep = $this->input->post('recep');
-        $subto = $this->input->post('subto');
-        $tasaiva = $this->input->post('tasaiva');
-        $iva = $this->input->post('iva');
-        $retiva = $this->input->post('retiva');
-        $reisar = $this->input->post('reisar');
-        $tasaiep = $this->input->post('tasaiep');
-        $ieps = $this->input->post('ieps');
-        $total = $this->input->post('total');
+        // $tipo_com = $this->input->post('tip_com');
+        // $versio = $this->input->post('vers');
+        // $uuid = $this->input->post('uuid');
+        // $foli = $this->input->post('foli');
+        // $seri = $this->input->post('seri');
+        // $fecha = $this->input->post('fecha');
+        // $fom_pa = $this->input->post('fom_pa');
+        // $met_pa = $this->input->post('met_pa');
+        // $cta = $this->input->post('cta');
+        // $est = $this->input->post('est');
+        // $cod_sat = $this->input->post('cod_sat');
+        // $mone = $this->input->post('mone');
+        // $tipo_cam = $this->input->post('tipo_cam');
+        // $rfc = $this->input->post('rfc');
+        // $nom = $this->input->post('nom');
+        // $recep = $this->input->post('recep');
+        // $subto = $this->input->post('subto');
+        // $tasaiva = $this->input->post('tasaiva');
+        // $iva = $this->input->post('iva');
+        // $retiva = $this->input->post('retiva');
+        // $reisar = $this->input->post('reisar');
+        // $tasaiep = $this->input->post('tasaiep');
+        // $ieps = $this->input->post('ieps');
+        // $total = $this->input->post('total');
 
-        if(ENVIRONMENT == 'development')
-        {
-                    $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/uploadpdf");
-        }
-        else
-        {
-            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/uploadpdf");
-        }
+        // if(ENVIRONMENT == 'development')
+        // {
+        //             $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/uploadpdf");
+        // }
+        // else
+        // {
+        //     $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/uploadpdf");
+        // }
 
 
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, "empresa=".$recep."&tipo_com=".$tipo_com."&versio=".$versio."&foli=".$foli."&seri=".$seri."&fecha=".$fecha.
-                  "&fom_pa=".$fom_pa."&met_pa=".$met_pa."&cta=".$cta."&est=".$est."&cod_sat=".$cod_sat."&mone=".$mone."&tipo_cam=".$tipo_cam."&rfc=".$rfc.
-                  "&nom=".$nom."&recep=".$recep."&subto=".$subto."&tasaiva=".$tasaiva."&iva=".$iva."&retiva=".$retiva."&reisar=".$reisar."&tasaiep=".$tasaiep.
-                  "&ieps=".$ieps."&total=".$total);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        $resu = curl_exec($ch);
-        $response = json_decode($resu);
+        // curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        // curl_setopt($ch, CURLOPT_POSTFIELDS, "empresa=".$recep.
+        // "&tipo_com=".$tipo_com.
+        // "&versio=".$versio.
+        // "&foli=".$foli.
+        // "&seri=".$seri.
+        // "&fecha=".$fecha.
+        // "&fom_pa=".$fom_pa.
+        // "&met_pa=".$met_pa.
+        // "&cta=".$cta.
+        // "&est=".$est.
+        // "&cod_sat=".$cod_sat.
+        // "&mone=".$mone.
+        // "&tipo_cam=".$tipo_cam.
+        // "&rfc=".$rfc.
+        // "&nom=".$nom.
+        // "&recep=".$recep.
+        // "&subto=".$subto.
+        // "&tasaiva=".$tasaiva.
+        // "&iva=".$iva.
+        // "&retiva=".$retiva.
+        // "&reisar=".$reisar.
+        // "&tasaiep=".$tasaiep.
+        // "&ieps=".$ieps.
+        // "&total=".$total);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        // $resu = curl_exec($ch);
+        // $response = json_decode($resu);
 
-        if($response->status == true)
-        {
-            $opera = array('usuario' => $_SESSION['nombreU'],
-            'tipo_mov' => '',
-            'no_banco' => '',
-            'no_mov' => '',
-            'accion' => 'Agregar',
-            'cuando' => date('Y-m-d H:i:s'),
-            'comentario' => 'Agrego el registro manualmente con UUID: '.$uuid,
-            'modulo' => 'Catalogos -> Beneficiario -> Estafeta');
-             $this->bitacora->operacion($opera);
-        }
+        // if($response->status == true)
+        // {
+        //     $opera = array('usuario' => $_SESSION['nombreU'],
+        //     'tipo_mov' => '',
+        //     'no_banco' => '',
+        //     'no_mov' => '',
+        //     'accion' => 'Agregar',
+        //     'cuando' => date('Y-m-d H:i:s'),
+        //     'comentario' => 'Agrego el registro manualmente con UUID: '.$uuid,
+        //     'modulo' => 'Catalogos -> Beneficiario -> Estafeta');
+        //      $this->bitacora->operacion($opera);
+        // }
 
-        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+      //  $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
     public function getrechazo()
     {

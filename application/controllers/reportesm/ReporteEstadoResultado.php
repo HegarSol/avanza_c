@@ -251,7 +251,7 @@ class ReporteEstadoResultado extends MY_Controller
                     $habertotal2=$habertotal2+$data[$i]->abonos;
                     $totalhaberdebe2=$debetotal2-$habertotal2;
 
-                    $objsheet->setCellValue('G'.$numero6,number_format($totalhaberdebe1-$totalhaberdebe2,2,'.',','));
+                    $objsheet->setCellValue('G'.$numero6,number_format(abs($totalhaberdebe1)-abs($totalhaberdebe2),2,'.',','));
 
                     $objsheet->setCellValue('H'.$numero5,'');
 
@@ -335,8 +335,8 @@ class ReporteEstadoResultado extends MY_Controller
 
         $objsheet->setCellValue('C'.$numero11,'');
         $objsheet->setCellValue('C'.$numero12,'UTILIDAD NETA DEL EJERCICIO');
-        $objsheet->setCellValue('D'.$numero12,number_format($incialtotal1-$incialtotal2-$incialtotal3,2,'.',','));
-        $objsheet->setCellValue('G'.$numero12,number_format(((($totalhaberdebe1-$totalhaberdebe2)-$totalhaberdebe3)-$totalhaberdebe4),2,'.',','));
+        $objsheet->setCellValue('D'.$numero12,number_format($incialtotal1-$incialtotal2-$incialtotal3-$incialtotal4,2,'.',','));
+        $objsheet->setCellValue('G'.$numero12,number_format((((abs($totalhaberdebe1)-abs($totalhaberdebe2))-abs($totalhaberdebe3))-abs($totalhaberdebe4)),2,'.',','));
         $objsheet->setCellValue('I'.$numero12,number_format(((($totalejercicio1-$totalejercicio2)-$totalejercicio3)-$totalejercicio4),2,'.',','));
 
         $styleleft = array(

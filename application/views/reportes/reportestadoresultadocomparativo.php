@@ -14,7 +14,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
          <div class="col-md-4">
          </div>
          <div class="col-md-1" >
-                   <!-- <div id="meses">
+                   <div id="meses">
                     <label for="">Mes:</label>
                     <select name="mese" id="mese" class="form-control">
                             <option value="" selected> -Seleccione- </option>
@@ -47,16 +47,16 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                         <option value="2023">2023</option>
                         <option value="2024" selected>2024</option>
                      </select>
-                 </div> -->
+                 </div>
       </div>
    </div>
    <div class="row">
-          <!-- <div class="col-md-4">
+          <div class="col-md-4">
           </div>
           <div class="col-md-3">
              <button type="button" class="btn btn-info" onclick="buscarcomparativo()" ><span class="glyphicon glyphicon-check"></span> Aceptar</button>
              <button type="button" class="btn btn-success" onclick="document.form1.action='<?php echo base_url();?>reportesm/ReporteEstadoResultado/Excelexport'; document.form1.submit()"; ><span class="glyphicon glyphicon-file"></span> Exportar excel</button>
-          </div> -->
+          </div>
         </div>
 
         <br>
