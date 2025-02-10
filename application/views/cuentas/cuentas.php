@@ -116,7 +116,7 @@ if(isset($mensaje))
          </div>
          <label class="control-label col-sm-1" for="tipo">Tipo:</label>
         <div class="col-sm-2">
-            <select name="tipo" id="tipo" disabled class="form-control">
+            <select name="tipo" id="tipo"  class="form-control">
                 <?php
                 if($datos[0]['tipo'] == 1)
                 {
