@@ -127,7 +127,7 @@ class OperacionesModel extends MY_Model
     }
     public function estadocomparativo($mes,$ano)
     {
-        
+       // var_dump($mes);
 
         $fechaini = date($ano.'-'.$mes.'-01 00:00:00');
         if($mes == '02')
@@ -148,7 +148,9 @@ class OperacionesModel extends MY_Model
         $query = $this->db2->query('CALL getEstadoResultadoComparativo(\''.$fechaini.'\',\''.$fechafin.'\')');
 
      //   var_dump($query->result());
-        return $query->result();
+        $data = $query->result_array();
+
+        return $data;
     }
     public function getprovicion($folio,$seri,$uuid)
     {
@@ -193,6 +195,14 @@ class OperacionesModel extends MY_Model
       ->get();
 
       return $row->result_array();
+    }
+    public function auxiliarcliente($subcta,$fechaini,$fechafin)
+    {
+        $query = $this->db2->query('CALL getAuxiliarCliente(\''.$subcta.'\',\''.$fechaini.'\',\''.$fechafin.'\')');
+
+        return $query->result();
+
+
     }
     public function auxiliardetalle($cuenta,$subcuenta,$subcuen2,$fechaini,$fechafin,$agrupa)
     {

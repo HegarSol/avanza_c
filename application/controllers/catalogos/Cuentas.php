@@ -77,7 +77,7 @@ class Cuentas extends MY_Controller
         foreach($list as $cuentas)
         {
             $row = array();
-            $row[] = '<button type="button" class="btn btn-primary" onclick="seleccionarcuneta(\''.$cuentas->cuenta.'\',\''.$cuentas->sub_cta.'\',\''.$cuentas->nombre.'\',\''.$cuentas->ssub_cta.'\')">Seleccionar</button>';
+            $row[] = '<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="seleccionarcuneta(\''.$cuentas->cuenta.'\',\''.$cuentas->sub_cta.'\',\''.$cuentas->nombre.'\',\''.$cuentas->ssub_cta.'\')">Seleccionar</button>';
             // $row[] = $cuentas->idcuenta;
             $row[] = $cuentas->cuenta;
             $row[] = $cuentas->sub_cta;

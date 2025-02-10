@@ -12,12 +12,12 @@
    <tbody>
      <?php foreach($comparativos as $comparativo):?>
         <tr>
-           <td><?php echo $comparativo->cuenta ;?></td>
-           <td><?php echo $comparativo->sub_cta ;?></td>
-           <td><?php echo $comparativo->nombre ;?></td>
+           <td><?php echo $comparativo['cuenta'] ;?></td>
+           <td><?php echo $comparativo['sub_cta'] ;?></td>
+           <td><?php echo $comparativo['nombre'] ;?></td>
 
             <?php foreach($meses as $mes):?>
-                <td><?php echo $comparativo->periodo ;?></td>
+                <td><?php echo $comparativo['periodo'] ;?></td>
             <?php endforeach;?>
         </tr>
       <?php endforeach;?>

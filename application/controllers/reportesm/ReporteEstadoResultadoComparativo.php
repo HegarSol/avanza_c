@@ -67,6 +67,11 @@ class ReporteEstadoResultadoComparativo extends MY_Controller
         else if($mes == 07)
         {
             $mesletra = array('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio');
+//            $junio = $this->operaciones->estadocomparativo('06',$ano);
+         //   $julio = $this->operaciones->estadocomparativo('07',$ano);
+
+  //          var_dump($junio);
+      //      var_dump($julio);
         }
         else if($mes == '08')
         {

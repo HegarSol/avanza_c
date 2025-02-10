@@ -363,11 +363,11 @@ function deleteRow(tableID)
       if(null != chkbox && true == chkbox.checked)
       {
 
-          var signo = row.cells[7].innerHTML;
+          var signo = row.cells[8].innerHTML;
           var posit = parseFloat(document.getElementById('positivo').value);
           var nega = parseFloat(document.getElementById('negativo').value);
           
-          var monto = parseFloat(row.cells[6].innerHTML);          
+          var monto = parseFloat(row.cells[7].innerHTML);          
           
           if(signo == '+')
           {

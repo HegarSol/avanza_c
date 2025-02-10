@@ -31,6 +31,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
     <button type="button" onclick="rechazarDoc()" class="btn btn-danger btn-lg"><span class="fa fa-minus"></span> Rechazar</button>
     <button type="button" onclick="cargacompro()"class="btn btn-info btn-lg"><span class="fa fa-upload"></span> Carga XML/PDF</button>
     <button type="button" onclick="btnVerDocument(1)" class="btn btn-info btn-lg"><span class="fa fa-plus"></span> Carga PDF sin XML</button>
+    <button type="button" onclick="cargarxml()" class="btn btn-info btn-lg"><span class="fa fa-plus"></span> Carga XML sin PDF</button>
     </center>
 </div>
 
@@ -54,6 +55,32 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
 </div>
 
 <div id="espacioEstafeta"></div>
+
+<div class="modal fade" id="modalCargaXML" tabindex="-1" role="dialog" aria-labelledby="modalGrande">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+         </button>
+         <h3 class="modal-title">Almacena XML</h3>
+       </div>
+       <div class="modal-body">
+         <form enctype="multipart/form-data" action="#" id="formularioXML">
+            <div class="form-group">
+            <label for="xml">Archivo XML</label>
+				  <input id="xmlmulti" class="form-control" type="file" name="xml" multiple accept="application/xml">
+				  <p class="help-block">Seleccione el archivo XML a almacenar</p>
+            </div>
+         </form>
+      </div>
+      <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+			<button type="button" class="btn btn-primary" onclick="almacenaxml()">Almacenar</button>
+		 </div>
+     </div> 
+   </div>
+</div>
 
 <div class="modal fade" id="modalCargaComprobante" tabindex="-1" role="dialog" aria-labelledby="modalGrande">
    <div class="modal-dialog" role="document">
@@ -1212,7 +1239,60 @@ function aceptarasiento(tableID)
 
         $('#myModalxml').modal('show');
   }
+   function almacenaxml()
+   {
+      var fileinput = document.getElementById('xmlmulti');
+      var files = fileinput.files;
+      var formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+         formData.append('xml', files[i]);
+     // }
+      // var formElement = document.getElementById("formularioXML");
+      // var formData = new FormData(formElement);
+      formData.append('empresa','<?php echo $rfc?>');
+      
+      $.ajax({
+       url : "http://avanzab.hegarss.com/api/Comprobantes/uploadxmlmulti",
+		 //url : "http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/uploadxmlmulti",
+		 type : "POST",
+		 data : formData,
+		 processData : false,
+		 contentType : false,
+		 success : function (data){
+			var n = noty({
+			   text : "Comprobante Registrado Correctamente",
+			   theme : "relax",
+			   type : 'success'
+      }).show();
 
+      //     $.ajax({
+      //         url: baseurl + "catalogos/Beneficiarios/bitacoraalmacena",
+      //         type:"POST",
+      //         data : formData,
+      //          processData : false,
+      //          contentType : false,
+      //         success : function (data)
+      //         {
+
+      //         }
+      //     });
+          
+      btnPantalla();
+		 	$('#modalCargaXML').modal('hide');
+		 },
+		 error : function(request, status, error){
+			var n = noty({
+			   text : request.responseJSON.error,
+			   theme : 'relax',
+			   type : 'error'
+			}).show();
+			$('#modalCargaXML').modal('hide');
+		 }
+	  })
+
+   }
+
+   }
    function almacenaComprobante(){
 	  var formElement = document.getElementById("formularioComprobante");
 	  var formData = new FormData(formElement);
@@ -1322,13 +1402,13 @@ function agregarregistro()
 
                jQuery.ajax({
                   type:"POST",
-                  url:"https://avanzab.hegarss.com/api/Comprobantes/uploadpdf",
+                  url:"http://avanzab.hegarss.com/api/Comprobantes/uploadpdf",
                   data:formData,
                   processData : false,
                   contentType : false,
                   success:function(response)
                   {
-                     response=JSON.parse(response);
+                    // response=JSON.parse(response);
                      if(response.status == true)
                      {
                         $('#modalVerComprobante').modal('hide');
@@ -1413,6 +1493,10 @@ function btnVerDocument(val)
 function cargacompro()
 {
    $('#modalCargaComprobante').modal('show');
+}
+function cargarxml()
+{
+   $('#modalCargaXML').modal('show');
 }
 function aceptarDoc()
 {
