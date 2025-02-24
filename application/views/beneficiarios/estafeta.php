@@ -72,6 +72,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
 				  <input id="xmlmulti" class="form-control" type="file" name="xml" multiple accept="application/xml">
 				  <p class="help-block">Seleccione el archivo XML a almacenar</p>
             </div>
+            <input type="checkbox" id="aceptarxml" name="aceptarxml"> <label for="check">Aceptar los XML</label>
          </form>
       </div>
       <div class="modal-footer">
@@ -1244,14 +1245,24 @@ function aceptarasiento(tableID)
       var fileinput = document.getElementById('xmlmulti');
       var files = fileinput.files;
       var formData = new FormData();
+
       for (let i = 0; i < files.length; i++) {
          formData.append('xml', files[i]);
      // }
       // var formElement = document.getElementById("formularioXML");
       // var formData = new FormData(formElement);
       formData.append('empresa','<?php echo $rfc?>');
-      
-      $.ajax({
+      formData.append('aceptar',document.getElementById('aceptarxml').checked);
+
+     $.ajax({
+        url: baseurl + "catalogos/Beneficiarios/leerxml",
+        type:"POST",
+        data: formData,
+        processData : false,
+        contentType : false,
+        success: function(data){
+
+         $.ajax({
        url : "http://avanzab.hegarss.com/api/Comprobantes/uploadxmlmulti",
 		 //url : "http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/uploadxmlmulti",
 		 type : "POST",
@@ -1265,30 +1276,35 @@ function aceptarasiento(tableID)
 			   type : 'success'
       }).show();
 
-      //     $.ajax({
-      //         url: baseurl + "catalogos/Beneficiarios/bitacoraalmacena",
-      //         type:"POST",
-      //         data : formData,
-      //          processData : false,
-      //          contentType : false,
-      //         success : function (data)
-      //         {
+   //        $.ajax({
+   //            url: baseurl + "catalogos/Beneficiarios/bitacoraalmacena",
+   //            type:"POST",
+   //            data : formData,
+   //             processData : false,
+   //             contentType : false,
+   //            success : function (data)
+   //            {
 
-      //         }
-      //     });
+   //            }
+   //        });
           
-      btnPantalla();
-		 	$('#modalCargaXML').modal('hide');
-		 },
-		 error : function(request, status, error){
-			var n = noty({
-			   text : request.responseJSON.error,
-			   theme : 'relax',
-			   type : 'error'
-			}).show();
-			$('#modalCargaXML').modal('hide');
-		 }
-	  })
+   //   btnPantalla();
+	// 	 	$('#modalCargaXML').modal('hide');
+               },
+               error : function(request, status, error){
+                  var n = noty({
+                     text : request.responseJSON.error,
+                     theme : 'relax',
+                     type : 'error'
+                  }).show();
+                  $('#modalCargaXML').modal('hide');
+               }
+            })
+
+        }
+     });
+      
+      
 
    }
 

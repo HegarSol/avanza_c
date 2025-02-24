@@ -22,6 +22,13 @@ class PagosModel extends MY_Model
         $this->dbEmpresa->insert('pagos',$datos);
         return $this->dbEmpresa->insert_id();
     }
+    public function get_pagos_by_clv($clv)
+    {
+         return $this->dbEmpresa->from('pagos')
+         ->where('clave_cliente',$clv)
+         ->get()
+         ->result();
+    }
     public function update_pago($idPago,$datos)
     {
         return $this->dbEmpresa->where('idPago',$idPago)
