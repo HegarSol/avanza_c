@@ -646,7 +646,7 @@ function abrircuentaspagar()
 }
 function abrirregistropago()
 {
-    document.getElementById('monto_pago').value = document.getElementById('montopoli').value;
+   // document.getElementById('monto_pago').value = document.getElementById('montopoli').value;
     document.getElementById('fechapago').value = document.getElementById('fechatrabajo').value;
     $('#myModalregistroPagos').modal('show');
 }

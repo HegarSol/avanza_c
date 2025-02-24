@@ -18,6 +18,18 @@ class Archivo extends REST_Controller
     {
         parent::__construct('rest_api');
         $this->load->model('CuentasModel','cuentas');
+        $this->load->model('PagosModel','pagos');
+    }
+    public function traerpagos_post()
+    {
+        $clv = $_POST['clv'];
+        $idempre = $_POST['idempre'];
+
+        $this->pagos->set_database($idempre);
+
+        $datos = $this->pagos->get_pagos_by_clv($clv);
+
+        $this->response(array('status' => true, 'data' => $datos));
     }
     public function buscarcuentaextranjera_post()
     {

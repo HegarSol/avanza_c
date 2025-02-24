@@ -48,6 +48,44 @@ class Beneficiarios extends MY_Controller
             show_error('No tiene permisos para entrar a beneficiarios');
         }
     }
+    public function leerxml()
+    {
+        $xml = $_FILES['xml']['name'];
+        $archivo = $_FILES['xml']['tmp_name'];
+
+        $xmlData = file_get_contents($archivo);
+
+        $this->xmlDom = new DOMDocument();
+        $this->xmlDom->loadXML($xmlData);
+
+        $this->rfcemisor=$this->getAttribute('cfdi:Comprobante/cfdi:Emisor/@Rfc');
+        $this->nombreemisor=$this->getAttribute('cfdi:Comprobante/cfdi:Emisor/@Nombre');
+        $this->cp=$this->getAttribute('cfdi:Comprobante/@LugarExpedicion');
+
+
+        $rfcemisor = $this->benefi->datosbenerfc($this->rfcemisor);
+
+        if(count($rfcemisor) > 0)
+        {
+
+        }
+        else
+        {
+            $noprov = $this->benefi->getNoProv();
+            $datas = $noprov[0]['no_prov'] + 1;
+
+            $datos = array(
+                'no_prov' => $datas,
+                'nombre' => $this->nombreemisor,
+                'cp' => $this->cp,
+                'rfc' => $this->rfcemisor,
+            );
+
+            $correcto=$this->benefi->crearBeneficiario($datos);
+        }
+        
+
+    }
     public function estafeta()
     {
         if($this->aauth->is_loggedin())
