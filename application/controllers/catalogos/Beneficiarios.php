@@ -119,6 +119,24 @@ class Beneficiarios extends MY_Controller
             redirect('inicio/login','refresh');
         }
     }
+    public function getpolizacuenta()
+    {
+        $poliza = $this->input->post('poliza');
+       // var_dump($poliza);
+       $partes = preg_replace('/\s+/', '', $poliza);
+        // $tipo_mov = substr($partes,0, 1);
+        // $banco_mov = substr($partes,-3, 1);
+
+        $letra = substr($partes,-1);
+        $resultado = strlen($partes);
+        $resultado2 = $resultado - 1;
+        $numeros = substr($partes,2,$resultado2);
+
+        $detal = $this->operaciones->traerpolizaprovisiondetalle($numeros);
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($detal));
+
+    }
     public function getupdateAutorizacion()
     {
         $rfc = $this->input->post('rfc');
@@ -256,6 +274,8 @@ class Beneficiarios extends MY_Controller
         $formaDePago = $this->input->post('formapago');
         $autorizado = $conf[0]['autorizacion'];
 
+
+
       //  var_dump($autorizado);
 
         if(ENVIRONMENT == 'development')
@@ -351,7 +371,67 @@ class Beneficiarios extends MY_Controller
 
         $this->load->view('beneficiarios/comprobantes_pendientes/tabla',$data);
     }
+    public function guardarasientoprovicion()
+    {
+        date_default_timezone_set("America/Mexico_City");
+        setlocale(LC_TIME, 'es_ES.UTF-8');
 
+        $tipo = $this->input->post('tm');
+        $no_banco = $this->input->post('nob');
+        $no_mov = $this->input->post('nom');
+        $cta = $this->input->post('ct');
+        $sub_cta = $this->input->post('su_cta');
+        $monto = $this->input->post('mon');
+        $ren = $this->input->post('re');
+        $c_a = $this->input->post('ca');
+        $fecha = $this->input->post('fec');
+        $conce = $this->input->post('conce');
+        $refe = $this->input->post('refe');
+        $factref = $this->input->post('factre');
+        $no_prov = $this->input->post('nopro');
+        $ssub_cta = $this->input->post('ssu_cta');
+        $idsiento = $this->input->post('idasiento');
+        $tipoasiento = $this->input->post('tipoasiento');
+        $bancoasiento = $this->input->post('bancoid');
+        $moovasiento = $this->input->post('movid');
+        $fechacon = $this->input->post('fechacon');
+        $nombre_cuenta = $this->input->post('nombre_cuenta');
+
+        $this->operaciones->borrarDetalle($idsiento);
+
+        for($i=1; $i<count($tipo); $i++)
+        {
+            $monto[$i] = str_replace(',', '', $monto[$i]);
+             $detalle = array(
+                   'id_encabezado' => $idsiento,
+                   'tipo_mov' => $tipo[$i],
+                   'no_banco' => $no_banco[$i],
+                   'no_mov' => $no_mov[$i],
+                   'ren' => $ren[$i],
+                   'cuenta' => $cta[$i],
+                   'sub_cta' => $sub_cta[$i],
+                   'monto' => $monto[$i],
+                   'c_a' => $c_a[$i],
+                   'fecha' => $fecha[$i],
+                   'concepto' => $conce[$i],
+                   'referencia' => $refe[$i],
+                   'no_prov' => $no_prov[$i],
+                   'factrefe' => $factref[$i],
+                   'nombre_cuenta' => $nombre_cuenta[$i],
+                   'ssub_cta' => $ssub_cta[$i]
+                );
+
+                $detalles= $this->operaciones->guardarDetalle($detalle);               
+        }
+        if($detalles > 0)
+        {
+            $this->output->set_content_type('application/json')->set_output(json_encode(1));
+        }
+        else
+        {
+            $this->output->set_content_type('application/json')->set_output(json_encode(0));
+        }
+    }
     public function insert_poliza_provision()
     {
 

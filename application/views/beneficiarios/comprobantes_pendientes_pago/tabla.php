@@ -32,7 +32,7 @@
                     <th style="display:none">No Certificado SAT</th>
                     <th style="display:none">Fecha Ingreso</th>
                     <th style="display:none">Fecha Programada</th>
-                    <th style="display:none">Poliza Contabilidad</th>
+                    <th>Poliza Contabilidad</th>
                     <th style="display:none">Fecha Contabilidad</th>
                     <th style="display:none">Poliza Pago</th>
                     <th style="display:none">Fecha Pago</th>
@@ -81,7 +81,7 @@
                     <td style="display:none"><?php echo $comprobante->no_certificado_sat; ?></td>
                     <td style="display:none"><?php echo $comprobante->fecha_ingreso; ?></td>
                     <td style="display:none"><?php echo $comprobante->fecha_programada; ?></td>
-                    <td style="display:none"><?php echo $comprobante->poliza_contabilidad; ?></td>
+                    <td><?php echo $comprobante->poliza_contabilidad; ?></td>
                     <td style="display:none"><?php echo $comprobante->fecha_contabilidad; ?></td>
                     <td style="display:none"><?php echo $comprobante->poliza_pago; ?></td>
                     <td style="display:none"><?php echo $comprobante->fecha_pago; ?></td>
