@@ -1,4 +1,3 @@
-
 <div class="modal fade" id="myModalCuentasPagar" role="dialog" >
 <div class="modal-dialog modal-lg" id="mdialTamanio">
     <div class="modal-content">
@@ -1314,16 +1313,111 @@ function editarpoliza()
       {
          var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: 'Seleccione un registro.'});
       }
+      else if(aData[0][27] == '')
+      {
+         var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: 'No se puede editar la factura por que no tiene pólisa.'});
+      }
       else
       {
+
           jQuery.ajax({
               type: "POST",
-              url: baseurl + "",
-              data: {},
+              url: baseurl+"catalogos/Beneficiarios/getpolizacuenta",
+              data: {poliza:aData[0][27]},
               dataType: "html",
               success:function(response)
               {
+                  $('#asiento_conta_provision tbody').empty();
+                  document.getElementById('positivo_provision').value = 0.00;
+                  document.getElementById('negativo_provision').value = 0.00;
+                  document.getElementById('totalpoliza_provision').value = 0.00;
+                  response=JSON.parse(response);
+                  document.getElementById('id_asiento_contable').value = response[0].id_encabezado;
+                  document.getElementById('tipo_asiento_contable').value = response[0].tipo_mov;
+                  document.getElementById('banco_asiento_contable').value = response[0].no_banco;
+                  document.getElementById('mov_asiento_contable').value = response[0].no_mov;
+                  document.getElementById('fechacontable').value = response[0].fecha;
+                  for(var i in response)
+                  {
 
+                     var tbody = document.getElementById('asiento_conta_provision').getElementsByTagName("TBODY")[0];
+                     var row = document.createElement("TR")
+
+                     var element1 = document.createElement("input");
+                     element1.type = "checkbox";
+                     element1.name="chkbox[]"; 
+
+                     // let nf = new Intl.NumberFormat('en-US');
+                     // nf.format(response[i].monto)
+
+                     const formatoMexico = (number) => {
+                     const exp = /(\d)(?=(\d{3})+(?!\d))/g;
+                     const rep = '$1,';
+                     return number.toString().replace(exp,rep);
+                     }
+
+                     
+                     var td0 = document.createElement("TD")
+                     td0.style.textAlign = 'center';
+                     td0.appendChild(element1)
+                     var td1 = document.createElement("TD")
+                     td1.appendChild(document.createTextNode(response[i].cuenta))
+                     var td2 = document.createElement("TD")
+                     td2.appendChild(document.createTextNode(response[i].sub_cta))
+                     var td9 = document.createElement("TD")
+                     td9.appendChild(document.createTextNode(response[i].ssub_cta))
+                     var td3 = document.createElement("TD")
+                     td3.appendChild(document.createTextNode(response[i].no_prov))
+                     var td4 = document.createElement("TD")
+                     td4.appendChild(document.createTextNode(response[i].factrefe))
+                     var td5 = document.createElement("TD")
+                     td5.appendChild(document.createTextNode(response[i].nombre_cuenta))
+                     var td6 = document.createElement("TD")
+                     td6.setAttribute("contenteditable","true");
+                     td6.appendChild(document.createTextNode(response[i].concepto))
+                     var td7 = document.createElement("TD")
+                     td7.appendChild(document.createTextNode(formatoMexico(response[i].monto)))
+                     var td8 = document.createElement("TD")
+                     td8.appendChild(document.createTextNode(response[i].c_a))
+                      
+
+                     row.appendChild(td0);
+                     row.appendChild(td1);
+                     row.appendChild(td2);
+                     row.appendChild(td9);
+                     row.appendChild(td3);
+                     row.appendChild(td4);
+                     row.appendChild(td5);
+                     row.appendChild(td6);
+                     row.appendChild(td7);
+                     row.appendChild(td8);
+                     tbody.appendChild(row);
+
+
+                     var posit = parseFloat(document.getElementById('positivo_provision').value);
+                     var nega = parseFloat(document.getElementById('negativo_provision').value);
+
+                     if(response[i].c_a == '+')
+                     {
+                        var total = posit + parseFloat(response[i].monto);
+                        document.getElementById('positivo_provision').value = total.toFixed(2);
+                     }
+                     else
+                     {
+                        var total = nega + parseFloat(response[i].monto);
+                        document.getElementById('negativo_provision').value = total.toFixed(2);
+                     }
+
+                     var posit2 = parseFloat(document.getElementById('positivo_provision').value);
+                     var nega2 = parseFloat(document.getElementById('negativo_provision').value);
+
+                     var total2 = posit2-nega2;
+
+                     document.getElementById('totalpoliza_provision').value = total2.toFixed(2);
+                  }
+                  document.getElementById('polizacientocontable').innerHTML = aData[0][27];
+                  $('#myModalasientoContable').modal('show');
+                 // $('#myModalCuentasPagar').modal('hide');
               }
           });
       }

@@ -143,6 +143,29 @@ class Cuentas extends MY_Controller
 
         $this->output->set_content_type('application/json')->set_output(json_encode($dat));
     }
+    public function ajax_cuentaselejiroperacionesprovision()
+    {
+        $list = $this->cuentas->get_datatables();
+        $data = array();
+        foreach($list as $cuentas)
+        {
+            $row = array();
+            $row[] = '<button type="button" class="btn btn-primary" onclick="seleccionarcunetaoperacionesprovision(\''.$cuentas->cuenta.'\',\''.$cuentas->sub_cta.'\',\''.$cuentas->nombre.'\',\''.$cuentas->ssub_cta.'\')">Seleccionar</button>';
+            // $row[] = $cuentas->idcuenta;
+            $row[] = $cuentas->cuenta;
+            $row[] = $cuentas->sub_cta;
+            $row[] = $cuentas->nombre;
+            $row[] = $cuentas->ssub_cta;
+            $data[] = $row;
+        }
+        $output = array(
+            'draw' => $this->input->post('draw'),
+            'recordsTotal' =>  $this->cuentas->count_all(),
+            'recordsFiltered' => $this->cuentas->count_filtered(),
+            'data' => $data
+            );
+            $this->output->set_content_type('application/json')->set_output(json_encode($output));
+    }
     public function ajax_cuentaselejiroperaciones()
     {
         $list = $this->cuentas->get_datatables();

@@ -12,9 +12,11 @@ $this->load->view('beneficiarios/modales/TablaClientes');
 $this->load->view('beneficiarios/modales/ModalXML');
 $this->load->view('beneficiarios/modales/TablaCuentas');
 $this->load->view('beneficiarios/modales/TablaCuentasOperaciones');
+$this->load->view('beneficiarios/modales/TablaCuentasOperacionesProvision');
 $this->load->view('beneficiarios/modales/TablaClasifica');
 $this->load->view('beneficiarios/modales/ModalClientes');
 $this->load->view('beneficiarios/modales/TablaBancos');
+$this->load->view('beneficiarios/modales/ModalAsientoContable');
 
 
 //var_dump($datos[0]);
@@ -346,7 +348,7 @@ $this->load->view('beneficiarios/modales/TablaBancos');
                         echo ('<td>'.$row['referencia'].'</td>');
                         echo ('<td>'.$row['nombre_cuenta'].'</td>');
                         echo ('<td contenteditable="true">'.$row['concepto'].'</td>');
-                        echo ('<td>'.$row['monto'].'</td>');
+                        echo ('<td>'.number_format($row['monto'],2,'.',',').'</td>');
                         echo ('<td>'.$row['c_a'].'</td>');
                         echo ('</tr>');
                     }
@@ -1173,6 +1175,7 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
                             element1.name="chkbox[]"; 
                             
                             
+                            
                             var td0 = document.createElement("TD")
                             td0.style.textAlign = 'center';
                             td0.appendChild(element1)
@@ -1323,6 +1326,8 @@ function agregarasiento()
         var tbody = document.getElementById('asiento_conta').getElementsByTagName("TBODY")[0];
                         var row = document.createElement("TR")
                         
+                        let nf = new Intl.NumberFormat('en-US');
+
                         var element1 = document.createElement("input");
                         element1.type = "checkbox";
                         element1.name="chkbox[]"; 
@@ -1362,7 +1367,7 @@ function agregarasiento()
                         td6.setAttribute("contenteditable","true");
                         td6.appendChild(document.createTextNode(document.getElementById('concep').value))
                         var td7 = document.createElement("TD")
-                        td7.appendChild(document.createTextNode(document.getElementById('monto').value == '' ? neu : document.getElementById('monto').value))
+                        td7.appendChild(document.createTextNode(document.getElementById('monto').value == '' ? nf.format(neu) : nf.format(document.getElementById('monto').value)))
                         var td8 = document.createElement("TD")
                         td8.appendChild(document.createTextNode(document.getElementById('signo').value == '' ? sig : document.getElementById('signo').value))
 

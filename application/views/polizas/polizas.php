@@ -140,7 +140,7 @@ $this->load->view('beneficiarios/modales/TablaClientes');
                     echo ('<td>'.$row['referencia'].'</td>');
                     echo ('<td>'.$row['nombre_cuenta'].'</td>');
                     echo ('<td>'.$row['concepto'].'</td>');
-                    echo ('<td>'.$row['monto'].'</td>');
+                    echo ('<td>'.number_format($row['monto'],2,'.',',').'</td>');
                     echo ('<td>'.$row['c_a'].'</td>');
                     echo ('</tr>');
                 }

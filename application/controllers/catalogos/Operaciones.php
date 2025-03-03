@@ -465,6 +465,8 @@ class Operaciones extends MY_Controller
 
             for($i=1; $i<count($tipo_mov); $i++)
             {
+
+                $monto[$i] = str_replace(',', '', $monto[$i]);
                  $detalle = array(
                        'id_encabezado' => $id,
                        'tipo_mov' => $tipo_mov[$i],
@@ -484,6 +486,7 @@ class Operaciones extends MY_Controller
                        'ssub_cta' => $ssub_cta[$i]
                     );
                     $detalle= $this->opera->guardarDetalle($detalle);               
+                    
             }
              
             if($detalle > 0)
@@ -531,7 +534,7 @@ class Operaciones extends MY_Controller
                $row[] = $opera->no_mov;
                $row[] = date('d-m-Y',strtotime($opera->fecha));
                $row[] = $opera->beneficia.' - '.$opera->concepto;
-               $row[] = '$'.$opera->monto;
+               $row[] = '$'.number_format($opera->monto,2,'.',',');
                $row[] = '<a href="'.base_url().'catalogos/Bancos/editaroperacion/'.$opera->id.'/'.$opera->tipo_mov.'/'.$opera->no_banco.'" class="btn btn-primary" title="Editar '.$title.'"><i class="fa fa-pencil-square-o"></i></a>
                <a href="#"  onClick="EliminarPoliza(\''.$opera->id.'\',\''.$id.'\',\''.$tipo.'\')" class="btn btn-danger" title="Eliminar '.$title.'"><i class="fa fa-times"></i></a>
                <a href="'.base_url().'Reportes/ReportePoliza/'.$opera->id.'/'.$opera->tipo_mov.'" target="_blank" class="btn btn-info" title="Imprimir"> <i class="fa fa-print"></i></a>';
