@@ -31,6 +31,17 @@ class Archivo extends REST_Controller
 
         $this->response(array('status' => true, 'data' => $datos));
     }
+    public function traerpagosrelacionados_post()
+    {
+        $idpago = $_POST['idpago'];
+        $idempre = $_POST['idempre'];
+
+        $this->pagos->set_database($idempre);
+
+        $datos = $this->pagos->get_docto_relacionados_by_pago($idpago);
+
+        $this->response(array('status' => true, 'data' => $datos));
+    }
     public function buscarcuentaextranjera_post()
     {
         $idempre = $_POST['idempre'];
