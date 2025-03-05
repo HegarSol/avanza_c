@@ -89,6 +89,9 @@ defined('BASEPATH') or exit('No direct script access alloed');
         $sumaretenisr = 0;
         $sumaretenisr4porflete = 0;
         $sumaimpueeips = 0;
+        $sumatotalimpuestos = 0;
+        $sumatotalretenciones = 0;
+        $totalrealproacre = 0;
         $sumadescu = 0;
         $conceptos = [];
         $completo = [];
@@ -181,8 +184,14 @@ defined('BASEPATH') or exit('No direct script access alloed');
                   }
 
 
+                  $sumatotalimpuestos = $sumaimpueiva16 + $sumaimpueiva8 + $sumaimpueeips;
+                  $sumatotalretenciones = $sumareteniva + $sumaretenisr + $sumaretenisr4porflete;
+                  $totalrealproacre = $sumatotalimpuestos - $sumatotalretenciones;
+
+
                 for($i = 0; $i< count($conceptos); $i++)
                 {
+                   // var_dump($conceptos);
                      $completo[] = [
                           'clave' => $conceptos[$i]['clave'],
                           'importe' => $conceptos[$i]['importe'],
@@ -227,7 +236,10 @@ defined('BASEPATH') or exit('No direct script access alloed');
                     }
 
                  $datosprevi = [];
-
+                 $gastos = $CI->conficue->getidcuentaconfi(15);
+                 $compras = $CI->conficue->getidcuentaconfi(16);
+                 $totalgastos = 0;
+                 $totalcompras = 0;
                     foreach($result as $resultante)
                     {
 
@@ -245,6 +257,19 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                           'nombre_cta' => '',
                                           'ssub_cta' => $row[0]['ssub_cta'],
                                          ];
+
+                                        // var_dump($row[0]['cuenta']);
+                                        // var_dump($gastos[0]['cuenta']);
+
+                                         if($row[0]['cuenta'] == $gastos[0]['cuenta'])
+                                         {
+                                            $totalgastos=+ $resultante['importe'];
+                                         }
+                                         if($row[0]['cuenta'] == $compras[0]['cuenta'])
+                                         {
+                                            $totalcompras=+ $resultante['importe'];
+                                         }
+
                        }
                        else
                        {
@@ -257,6 +282,15 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             'nombre_cta' => '',
                             'ssub_cta' => $row[0]['ssub_cta'],
                         ];
+
+                        if($row[0]['cuenta'] == $gastos[0]['cuenta'])
+                        {
+                           $totalgastos=+ $resultante['importe'];
+                        }
+                        if($row[0]['cuenta'] == $compras[0]['cuenta'])
+                        {
+                           $totalcompras=+ $resultante['importe'];
+                        }
 
                        }
                     }
@@ -412,23 +446,43 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         
                         $activo = $CI->configene->getcxpprovpropios();
                         $propios = $CI->conficue->getidcuentaconfi(29);
-                        if($activo[0]['valor'] == 1 && $activo[0]['inactiva'] == 0)
-                        {
-                            $sub_cuenta = $propios[0]['sub_cta'];
-                            $ssub_cuenta = $propios[0]['ssub_cta'];
-                        }
-                        else
-                        {
-                              $sub_cuenta = $propios[0]['sub_cta'];
-                              $ssub_cuenta = $propios[0]['ssub_cta'];
-                        }
+                        $acreedor = $CI->conficue->getidcuentaconfi(58);
+                     //   var_dump($totalcompras);
+                     //   var_dump($totalgastos);
+                        // if($activo[0]['valor'] == 1 && $activo[0]['inactiva'] == 0)
+                        // {
+                        //     $sub_cuenta = $propios[0]['sub_cta'];
+                        //     $ssub_cuenta = $propios[0]['ssub_cta'];
+                        // }
+                        // else
+                        // {
+                        //       $sub_cuenta = $propios[0]['sub_cta'];
+                        //       $ssub_cuenta = $propios[0]['ssub_cta'];
+                        // }
                          //SI EL RFC DE LA EMPRESA ES LA MISMA AL RFC DEL RECEPTOR DE LA FACTURA ENTONCES EN PROVEEDOR PROPIO
-                         $total = array('importe' => $totalfactu, 'c_a' => '-',
-                                      'cuenta' => $propios[0]['cuenta'],
-                                      'sub_cta' => $sub_cuenta,
-                                      'nombre_cta' => $propios[0]['descrip'],
-                                      'ssub_cta' => $ssub_cuenta
-                                    );
+                         //var_dump($totalfactu);
+                        if($totalgastos > 0)
+                        {
+                            $total = array('importe' => $totalgastos+$totalrealproacre, 'c_a' => '-',
+                            'cuenta' => $acreedor[0]['cuenta'],
+                            'sub_cta' => $acreedor[0]['sub_cta'],
+                            'nombre_cta' => $acreedor[0]['descrip'],
+                            'ssub_cta' => $acreedor[0]['ssub_cta']
+                            
+                          );
+                        }
+                        if($totalcompras > 0)
+                        {
+                            $total = array('importe' => $totalcompras+$totalrealproacre, 'c_a' => '-',
+                            'cuenta' => $propios[0]['cuenta'],
+                            'sub_cta' => $propios[0]['sub_cta'],
+                            'nombre_cta' => $propios[0]['descrip'],
+                            'ssub_cta' => $propios[0]['ssub_cta']
+                            
+                          );
+                        }
+
+                         
                     }
                     else
                     {
