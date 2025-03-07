@@ -1037,7 +1037,7 @@ function aceptarasiento(tableID)
                            response=JSON.parse(response);
                               if(response.status == true)
                               {
-                                 swal("Correcto","Aceptado","success");
+                                 var n = noty({ layout:'topRight',type: 'success',  theme: 'relax',text: 'ACEPTADA.'});
                                  $('#myModalPUEpagada').modal('hide');
                                  btnPantalla();
                               }
@@ -1525,17 +1525,45 @@ function aceptarDoc()
             else
             {
 
-               var metodopago = aData[0][10];
+              // console.log(aData[0][2]);
+               if(aData[0][2] == 'P')
+               {
+                  jQuery.ajax({
+                           url: baseurl+"catalogos/Beneficiarios/getaceptar",
+                           type:"POST",
+                           data:{uuid:aData[0][1]},
+                           dataType:"html",
+                           success:function(response)
+                           {
+                           response=JSON.parse(response);
+                              if(response.status == true)
+                              {
+                                 var n = noty({ layout:'topRight',type: 'success',  theme: 'relax',text: 'ACEPTADA.'});
+                               //  $('#myModalPUEpagada').modal('hide');
+                                 btnPantalla();
+                              }
+                              else
+                              {
+                                 var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: response.error});
+                              }
+                           }
+                     });
+               }
+               else
+               {
+                  var metodopago = aData[0][10];
 
-               // if(metodopago == 'PUE')
-               // {
-                  document.getElementById('uuid_poliza').value = aData[0][1];
-                  $('#myModalPUEpagada').modal('show');
-               // }
-               // else
-               // {
-               //     alert('la factura es PPD');
-               // }
+                  // if(metodopago == 'PUE')
+                  // {
+                     document.getElementById('uuid_poliza').value = aData[0][1];
+                     $('#myModalPUEpagada').modal('show');
+                  // }
+                  // else
+                  // {
+                  //     alert('la factura es PPD');
+                  // }
+               }
+
 
             }
 }
