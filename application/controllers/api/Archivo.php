@@ -40,7 +40,15 @@ class Archivo extends REST_Controller
 
         $datos = $this->pagos->get_docto_relacionados_by_pago($idpago);
 
-        $this->response(array('status' => true, 'data' => $datos));
+        if(count($datos) > 0)
+        {
+            $this->response(array('status' => true, 'data' => $datos));
+        }
+        else
+        {
+            $this->response(array('status' => false, 'data' => $datos));
+        }
+
     }
     public function buscarcuentaextranjera_post()
     {

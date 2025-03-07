@@ -322,6 +322,8 @@ class Polizasdiarias extends MY_Controller
 
             for($i=1; $i<count($tipo_mov); $i++)
             {
+
+                $monto[$i] = str_replace(',', '', $monto[$i]);
                 $detalle = array(
                     'id_encabezado' => $id,
                     'tipo_mov' => $tipo_mov[$i],

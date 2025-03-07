@@ -325,6 +325,18 @@
                 </div>
                 <br>
                 <div class="row">
+                    <div class="col-md-2">  
+                        <label for="">Obj Imp:</label>
+                        <select name="objeto_imp_dr" id="objeto_imp_dr" class="form-control">
+                            <option value="">-Seleccione-</option>
+                            <option value="01">01 - No objeto de impuesto</option>
+                            <option value="02" selected >02 - Si objeto de impuesto</option>
+                            <option value="03">03 - Si objeto del impuesto y no obligado al desglose</option>
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
                    <center>
                       <button type="button" class="btn btn-success" onclick="agregar_tabla_pagos()">
                       Agregar
@@ -351,6 +363,7 @@
                         <th>Dif. Importe</th>
                         <th>Total Pago</th>
                         <th>Saldo Insoluto</th>
+                        <th>Obj imp</th>
                      </tr>
                   </thead>
                   <?php
@@ -373,6 +386,7 @@
                               echo ('<td>'.$pagos_deta->c_aPorDiferencia.'</td>');
                               echo ('<td>'.$pagos_deta->totalPago.'</td>');
                               echo ('<td>'.$pagos_deta->impSaldoInsoluto.'</td>');
+                              echo ('<td>'.$pagos_deta->objimpdr.'</td>');
                               echo ('</tr>');
                           }
                      }
@@ -527,6 +541,10 @@ function agregar_tabla_pagos()
   {
     swal('Advertencia','Agregue el importe de diferencia','warning');
   }
+  else if(document.getElementById('objeto_imp_dr').value == '')
+  {
+    swal('Advertencia','Falta agregar si es objeto de impuesto','warning');
+  }
   else
   {
 
@@ -614,6 +632,8 @@ function agregar_tabla_pagos()
                      td12.appendChild(document.createTextNode(total_pago.toFixed(2)))
                      var td13 = document.createElement("TD")
                      td13.appendChild(document.createTextNode(saldo_inso.toFixed(2)))
+                     var td14 = document.createElement("TD")
+                     td14.appendChild(document.createTextNode(document.getElementById('objeto_imp_dr').value))
 
                      var factura_total = parseFloat(document.getElementById('factura_total').value);
                      var nueva_factu_total = total_pago + factura_total;
@@ -659,6 +679,7 @@ function agregar_tabla_pagos()
                      row.appendChild(td11);
                      row.appendChild(td12);
                      row.appendChild(td13);
+                     row.appendChild(td14);
 
                      tbody.appendChild(row);
 
@@ -717,6 +738,8 @@ function agregar_tabla_pagos()
                    td12.appendChild(document.createTextNode(total_pago.toFixed(2)))
                    var td13 = document.createElement("TD")
                    td13.appendChild(document.createTextNode(saldo_inso.toFixed(2)))
+                   var td14 = document.createElement("TD")
+                   td14.appendChild(document.createTextNode(document.getElementById('objeto_imp_dr').value))
 
 
 
@@ -734,6 +757,7 @@ function agregar_tabla_pagos()
                   row.appendChild(td11);
                   row.appendChild(td12);
                   row.appendChild(td13);
+                  row.appendChild(td14);
 
                   tbody.appendChild();
 
@@ -868,7 +892,7 @@ function guardar_pago_regi(tableID)
             var referencia = [];      var uuid = [];          var monedaP = [];
             var tipo_cambio = [];     var metodo = [];        var saldo = [];
             var parc = [];            var pago = [];          var difimporte = [];    
-            var total_pago = [];      var saldo_inso = [];
+            var total_pago = [];      var saldo_inso = [];    var objimpdr = [];
             var rowCount = table.rows.length;
 
             for(var i = 0; i < rowCount; i++)
@@ -887,6 +911,7 @@ function guardar_pago_regi(tableID)
                difimporte[i] = table.rows[i].cells[11].innerHTML;
                total_pago[i] = table.rows[i].cells[12].innerHTML;
                saldo_inso[i] = table.rows[i].cells[13].innerHTML;
+               objimpdr[i] = table.rows[i].cells[14].innerHTML;
             }
 
 var jqXHR = jQuery.ajax({
@@ -898,7 +923,7 @@ var jqXHR = jQuery.ajax({
         rfcemisorctaben:rfcemisorctaben,ctabenefici:ctabenefici,tipocadpago:tipocadpago,certpago:certpago,cadpago:cadpago,
         sellopago:sellopago,tipo_movimiento:tipo_movimiento,no_banco:no_banco,no_mov:no_mov,tipo:tipo,serie:serie,folio:folio,
         referencia:referencia,uuid:uuid,monedaP:monedaP,tipo_cambio:tipo_cambio,metodo:metodo,saldo:saldo,parc:parc,pago:pago,
-        difimporte:difimporte,total_pago:total_pago,saldo_inso:saldo_inso},
+        difimporte:difimporte,total_pago:total_pago,saldo_inso:saldo_inso,objimpdr:objimpdr},
         dataType:"html",
         success:function(response)
         {
