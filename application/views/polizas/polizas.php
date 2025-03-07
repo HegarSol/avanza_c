@@ -98,7 +98,7 @@ $this->load->view('beneficiarios/modales/TablaClientes');
         </div>
         <div class="col-sm-1">
               <label for="">+/-</label>
-              <input type="text" class="form-control" id="signo" onkeypress="return soloSignos(event)" maxlength="1">
+              <input type="text" class="form-control" onblur="agregarasiento()" id="signo" onkeypress="return soloSignos(event)" maxlength="1">
         </div>
         <div class="col-sm-1">
         <br>
@@ -326,7 +326,9 @@ function editRow(tableID)
           var posit = parseFloat(document.getElementById('positivo').value);
           var nega = parseFloat(document.getElementById('negativo').value);
           
-          var monto = parseFloat(row.cells[7].innerHTML);          
+          var monto = row.cells[7].innerHTML;
+          var monto = parseFloat(monto.replaceAll(",", ""));     
+        //  console.log(monto);     
           
           if(signo == '+')
           {
@@ -335,6 +337,7 @@ function editRow(tableID)
           }
           else
           {
+
               var total = nega - monto;
               document.getElementById('negativo').value = total.toFixed(2);
           }
@@ -367,7 +370,8 @@ function deleteRow(tableID)
           var posit = parseFloat(document.getElementById('positivo').value);
           var nega = parseFloat(document.getElementById('negativo').value);
           
-          var monto = parseFloat(row.cells[7].innerHTML);          
+          var monto = row.cells[7].innerHTML;
+          var monto = parseFloat(monto.replaceAll(",", ""));               
           
           if(signo == '+')
           {
@@ -421,7 +425,35 @@ function agregarcuentas()
             success:function(response)
             {
                 response=JSON.parse(response);
-                document.getElementById('nom_cuenta').value = response[0].nombre;
+                if(response.length > 0)
+                {
+                    document.getElementById('nom_cuenta').value = response[0].nombre;
+                    
+                    var posit = parseFloat(document.getElementById('positivo').value);
+                    var nega = parseFloat(document.getElementById('negativo').value);
+                    if(posit > nega)
+                    {
+                    var neu = document.getElementById('totalpoliza').value;
+                    var sig = '-';
+                    }
+                    else
+                    {
+                    var neu = (-1) * document.getElementById('totalpoliza').value;
+                    var sig = '+';
+                    }
+                    document.getElementById('monto').value = neu;
+                    document.getElementById('signo').value = sig;
+                   // document.getElementById('no_prov_factu').value = document.getElementById('noprov').value;
+                   // document.getElementById('concep').value = document.getElementById('nombre').value;
+                }
+                else
+                {
+                    swal("Advertencia","No existe la cuenta",'warning');
+                    document.getElementById('cuenta').value = '';
+                    document.getElementById('sub_cuenta').value = '';
+                    document.getElementById('ssub_cuenta').value = '';
+                    document.getElementById('cuenta').focus();
+                }
             }
         });
     }
@@ -438,6 +470,8 @@ function agregarasiento()
     {
         var tbody = document.getElementById('asiento_conta').getElementsByTagName("TBODY")[0];
                         var row = document.createElement("TR")
+
+                        let nf = new Intl.NumberFormat('en-US');
                         
                         var element1 = document.createElement("input");
                         element1.type = "checkbox";
@@ -460,7 +494,7 @@ function agregarasiento()
                         var td6 = document.createElement("TD")
                         td6.appendChild(document.createTextNode(document.getElementById('concep').value))
                         var td7 = document.createElement("TD")
-                        td7.appendChild(document.createTextNode(document.getElementById('monto').value))
+                        td7.appendChild(document.createTextNode(document.getElementById('monto').value == '' ? nf.format(neu) : nf.format(document.getElementById('monto').value)))
                         var td8 = document.createElement("TD")
                         td8.appendChild(document.createTextNode(document.getElementById('signo').value))
 

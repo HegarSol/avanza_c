@@ -277,6 +277,7 @@ class Pagos extends MY_Controller
             $difimporte = $this->input->post('difimporte');
             $total_pago = $this->input->post('total_pago');
             $saldo_inso = $this->input->post('saldo_inso');
+            $objimpdr = $this->input->post('objimpdr');
 
     
             $mensaje=array();
@@ -300,7 +301,8 @@ class Pagos extends MY_Controller
                    'c_aPorDiferencia' => $difimporte[$i],
                    'totalPago' => $total_pago[$i],
                    't_cFactura' => $tipo_cambio[$i],
-                   'no_cte' => $id_cliente
+                   'no_cte' => $id_cliente,
+                   'objimpdr' => $objimpdr[$i]
                );
                 $detalle2 = $this->pagos->guardardetalle($detalle);
             }

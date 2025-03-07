@@ -704,6 +704,10 @@ function agregarcuentas()
                 else
                 {
                     swal("Advertencia","No existe la cuenta",'warning');
+                    document.getElementById('cuenta').value = '';
+                    document.getElementById('sub_cuenta').value = '';
+                    document.getElementById('ssub_cuenta').value = '';
+                    document.getElementById('cuenta').focus();
                 }
             }
         });
@@ -1002,7 +1006,8 @@ function recogerDatosPoliza(tableID)
           var posit = parseFloat(document.getElementById('positivo').value);
           var nega = parseFloat(document.getElementById('negativo').value);
           
-          var monto = parseFloat(row.cells[8].innerHTML);          
+          var monto = row.cells[8].innerHTML;
+          var monto = parseFloat(monto.replaceAll(",", ""));          
           
           if(signo == '+')
           {
@@ -1043,7 +1048,8 @@ function deleteRow(tableID)
           var posit = parseFloat(document.getElementById('positivo').value);
           var nega = parseFloat(document.getElementById('negativo').value);
           
-          var monto = parseFloat(row.cells[8].innerHTML);          
+          var monto = row.cells[8].innerHTML;
+          var monto = parseFloat(monto.replaceAll(",", ""));               
           
           if(signo == '+')
           {
