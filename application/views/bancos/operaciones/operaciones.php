@@ -999,7 +999,7 @@ function recogerDatosPoliza(tableID)
            x("referen").value = table.rows[i].cells[5].innerHTML;
            x("nom_cuenta").value = table.rows[i].cells[6].innerHTML;
            x("concep").value = table.rows[i].cells[7].innerHTML;
-           x("monto").value = table.rows[i].cells[8].innerHTML;
+           x("monto").value = table.rows[i].cells[8].innerHTML.replaceAll(",", "");
            x("signo").value = table.rows[i].cells[9].innerHTML;
            
           var signo = row.cells[9].innerHTML;
@@ -1049,7 +1049,7 @@ function deleteRow(tableID)
           var nega = parseFloat(document.getElementById('negativo').value);
           
           var monto = row.cells[8].innerHTML;
-          var monto = parseFloat(monto.replaceAll(",", ""));               
+                    var monto = parseFloat(monto.replaceAll(",", ""));               
           
           if(signo == '+')
           {

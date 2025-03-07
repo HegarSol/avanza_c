@@ -319,7 +319,7 @@ function editRow(tableID)
            x("referen").value = table.rows[i].cells[4].innerHTML;
            x("nom_cuenta").value = table.rows[i].cells[5].innerHTML;
            x("concep").value = table.rows[i].cells[6].innerHTML;
-           x("monto").value = table.rows[i].cells[7].innerHTML;
+           x("monto").value = table.rows[i].cells[7].innerHTML.replaceAll(",", "");
            x("signo").value = table.rows[i].cells[8].innerHTML;
            
           var signo = row.cells[8].innerHTML;
