@@ -58,6 +58,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
         $CI->load->model('Configuraciones_model','configcon');
         $CI->load->model('ConfiguracionesGenemodel','configene');
         $CI->load->model('CuentasModel','cuentas');
+        $CI->load->model('BeneficiarioModel','beneficiario');
 
        $conf = $CI->configcon->getConfig();
 
@@ -99,11 +100,17 @@ defined('BASEPATH') or exit('No direct script access alloed');
           //$totalfactu = $CI->getAttribute('cfdi:Comprobante/@Total');
           $totalfactu = (string) $xml2->attributes()->Total;
           $rfcReceptors = $CI->xmlDom->getElementsBytagName('Receptor');
+          $rfcEmisor = $CI->xmlDom->getElementsBytagName('Emisor');
           foreach($rfcReceptors as $rfc)
           {
                 $rfcReceptor = $rfc->getAttribute('Rfc');
           }
+          foreach($rfcEmisor as $rfc)
+          {
+                $rfcEmisor = $rfc->getAttribute('Rfc');
+          }
 
+          $emisordatos = $CI->beneficiario->datosbenerfc($rfcEmisor);
   
                  $conceplist = $CI->xmlDom->getElementsBytagName('Concepto');
                 foreach($conceplist as $concepto)
@@ -250,7 +257,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                        {
 
                         $datosprevi[] = ['clave' => $resultante['clave'],
-                                          'importe' => $resultante['importe'],
+                                          'importe' => $emisordatos[0]['traslada_ieps'] == 1 ?  $resultante['importe']-$sumadescu :($resultante['importe']-$sumadescu)+$sumaimpueeips,
                                           'c_a' => $result[$i]['c_a'],
                                           'cuenta' => $row[0]['cuenta'],
                                           'sub_cta' => $row[0]['sub_cta'],
@@ -275,7 +282,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                        {
 
                          $datosprevi[] = ['clave' => $resultante['clave'],
-                            'importe' => $resultante['importe'],
+                            'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? $resultante['importe']-$sumadescu : ($resultante['importe']-$sumadescu)+$sumaimpueeips,
                             'c_a' => $result[$i]['c_a'],
                             'cuenta' => $row[0]['cuenta'],
                             'sub_cta' => $row[0]['sub_cta'],
@@ -352,25 +359,33 @@ defined('BASEPATH') or exit('No direct script access alloed');
                     }
 
 
-                    //SI LA FACTURA TIENE EIPS
-                    if($porpaga == 1 && $poli == '')
+                   // var_dump($emisordatos[0]['traslada_ieps']);
+                    if($emisordatos[0]['traslada_ieps'] == 1)
                     {
-                        if($sumaimpueeips != 0)
+                        //SI LA FACTURA TIENE EIPS
+                        if($porpaga == 1 && $poli == '')
                         {
-                            $ieps = $CI->conficue->getidcuentaconfi(40);
-                            $eip = array('importe' => $sumaimpueeips, 'c_a' => '-','cuenta' => $ieps[0]['cuenta'],'sub_cta' => $ieps[0]['sub_cta'],'nombre_cta' => $ieps[0]['descrip'],'ssub_cta' => $ieps[0]['ssub_cta']);
-                            array_push($datosresul, $eip);
+                            if($sumaimpueeips != 0)
+                            {
+                                $ieps = $CI->conficue->getidcuentaconfi(40);
+                                $eip = array('importe' => $sumaimpueeips, 'c_a' => '-','cuenta' => $ieps[0]['cuenta'],'sub_cta' => $ieps[0]['sub_cta'],'nombre_cta' => $ieps[0]['descrip'],'ssub_cta' => $ieps[0]['ssub_cta']);
+                                array_push($datosresul, $eip);
+                            }
+                        }
+                        else
+                        {
+                            if($sumaimpueeips != 0)
+                            {
+                                $ieps = $CI->conficue->getidcuentaconfi(42);
+                                $eip = array('importe' => $sumaimpueeips, 'c_a' => '+','cuenta' => $ieps[0]['cuenta'],'sub_cta' => $ieps[0]['sub_cta'],'nombre_cta' => $ieps[0]['descrip'],'ssub_cta' => $ieps[0]['ssub_cta']);
+                                array_push($datosresul, $eip);
+                            }
                         }
                     }
-                    else
-                    {
-                        if($sumaimpueeips != 0)
-                        {
-                            $ieps = $CI->conficue->getidcuentaconfi(42);
-                            $eip = array('importe' => $sumaimpueeips, 'c_a' => '+','cuenta' => $ieps[0]['cuenta'],'sub_cta' => $ieps[0]['sub_cta'],'nombre_cta' => $ieps[0]['descrip'],'ssub_cta' => $ieps[0]['ssub_cta']);
-                            array_push($datosresul, $eip);
-                        }
-                    }
+                    // else
+                    // {
+                    //     $totalgastos = $totalgastos + $sumaimpueeips;
+                    // }
 
 
                     //SI LA FACTURA TIENE RETENCION DEL ISR
@@ -440,10 +455,10 @@ defined('BASEPATH') or exit('No direct script access alloed');
                 }
                 else
                 {
-                    
+
                     if($conf[0]['rfc'] == $rfcReceptor)
                     {
-                        
+                      //  var_dump($sumaimpueeips);
                         $activo = $CI->configene->getcxpprovpropios();
                         $propios = $CI->conficue->getidcuentaconfi(29);
                         $acreedor = $CI->conficue->getidcuentaconfi(58);
@@ -463,7 +478,8 @@ defined('BASEPATH') or exit('No direct script access alloed');
                          //var_dump($totalfactu);
                         if($totalgastos > 0)
                         {
-                            $total = array('importe' => $totalgastos+$totalrealproacre, 'c_a' => '-',
+
+                            $total = array('importe' => ($totalgastos-$sumadescu)+$totalrealproacre, 'c_a' => '-',
                             'cuenta' => $acreedor[0]['cuenta'],
                             'sub_cta' => $acreedor[0]['sub_cta'],
                             'nombre_cta' => $acreedor[0]['descrip'],
@@ -473,7 +489,8 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         }
                         if($totalcompras > 0)
                         {
-                            $total = array('importe' => $totalcompras+$totalrealproacre, 'c_a' => '-',
+
+                            $total = array('importe' => ($totalcompras-$sumadescu)+$totalrealproacre, 'c_a' => '-',
                             'cuenta' => $propios[0]['cuenta'],
                             'sub_cta' => $propios[0]['sub_cta'],
                             'nombre_cta' => $propios[0]['descrip'],
@@ -482,7 +499,6 @@ defined('BASEPATH') or exit('No direct script access alloed');
                           );
                         }
 
-                         
                     }
                     else
                     {
@@ -512,14 +528,14 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                     array_push($datosresul, $total);
                 }
-                    //SI LA FACTURA TIENE DESCUENTO
-                    if($sumadescu != 0)
-                    {
-                        $DAtos = $CI->conficue->getidcuentaconfi(39);
-                        $des = array('importe' => $sumadescu,'c_a' => '-' , 'cuenta' => $DAtos[0]['cuenta'],'sub_cta' => $DAtos[0]['sub_cta'],'nombre_cta' => $DAtos[0]['descrip'],'ssub_cta' => $DAtos[0]['ssub_cta']);
+                    //SI LA FACTURA TIENE DESCUENTO , YA NO LLEVA DESCEUNTO A NIVEL GLOBAL SOLO A CONCEPTO
+                    // if($sumadescu != 0)
+                    // {
+                    //     $DAtos = $CI->conficue->getidcuentaconfi(39);
+                    //     $des = array('importe' => $sumadescu,'c_a' => '-' , 'cuenta' => $DAtos[0]['cuenta'],'sub_cta' => $DAtos[0]['sub_cta'],'nombre_cta' => $DAtos[0]['descrip'],'ssub_cta' => $DAtos[0]['ssub_cta']);
 
-                        array_push($datosresul, $des);
-                    }
+                    //     array_push($datosresul, $des);
+                    // }
 
                      return $datosresul;
     }
