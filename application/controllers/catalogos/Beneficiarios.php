@@ -275,7 +275,6 @@ class Beneficiarios extends MY_Controller
         $autorizado = $conf[0]['autorizacion'];
 
 
-
       //  var_dump($autorizado);
 
         if(ENVIRONMENT == 'development')
