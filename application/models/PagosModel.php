@@ -10,8 +10,8 @@ class PagosModel extends MY_Model
     {
         parent::__construct(true);
         $this->table = 'pagos';
-        $this->column_order = array('idPago','no_cte','fechaPago','formaDepagoP','moendaP','monto');
-        $this->column_search = array('idPago','no_cte','fechaPago','formaDepagoP','moendaP','monto');
+        $this->column_order = array('idPago','no_cte','fechaPago','formaDepagoP','monedaP','monto');
+        $this->column_search = array('idPago','no_cte','fechaPago','formaDepagoP','monedaP','monto');
         if(isset($_SESSION['idEmpresa'])){
             $this->db2 = $this->hegardb->getDatabase($_SESSION['idEmpresa']);
             if(!$this->db2){show_error('No se puede establecer conexion con la base de datos');}
@@ -26,10 +26,16 @@ class PagosModel extends MY_Model
     {
          return $this->dbEmpresa->from('pagos')
          ->where('clave_cliente',$clv)
+         ->where('marca_pago =',null)
          ->get()
          ->result();
     }
     public function update_pago($idPago,$datos)
+    {
+        return $this->dbEmpresa->where('idPago',$idPago)
+        ->update('pagos',$datos);
+    }
+    public function update_pago_marca($idPago,$datos)
     {
         return $this->dbEmpresa->where('idPago',$idPago)
         ->update('pagos',$datos);

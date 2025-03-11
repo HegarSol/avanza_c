@@ -20,6 +20,17 @@ class Archivo extends REST_Controller
         $this->load->model('CuentasModel','cuentas');
         $this->load->model('PagosModel','pagos');
     }
+    public function actualizarpago_post()
+    {
+        $idpago = $_POST['idpago'];
+        $idempre = $_POST['idempre'];
+
+        $this->pagos->set_database($idempre);
+
+        $datos = array('marca_pago' => 1);
+
+        $this->pagos->update_pago_marca($idpago,$datos);
+    }
     public function traerpagos_post()
     {
         $clv = $_POST['clv'];
