@@ -25,7 +25,7 @@ class ReportePagado extends MY_Controller
             $errores=array();
             $rfc = $this->configModel->getConfig();
             $permisos=$this->permisosForma($_SESSION['id'],1);
-            $data=array('titulo'=>'Reporte efectivamente pagado','rfc' => $rfc[0]['rfc'],'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores'=>$errores,'permisosGrupo'=>$permisos);
+            $data=array('titulo'=>'Reporte efectivamente cobrado','rfc' => $rfc[0]['rfc'],'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores'=>$errores,'permisosGrupo'=>$permisos);
             $items=$this->menuModel->menus($_SESSION['tipo']);
             $this->multi_menu->set_items($items);
             $this->load->view('templates/header');

@@ -237,11 +237,10 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         }
                         if($repeat==false)
                             $result[] = array('clave' => $t['clave'], 
-                                              'importe' => $t['importe'],
+                                              'importe' => doubleval($t['importe']),
                                               'c_a' => '+'
                                             );
                     }
-
                  $datosprevi = [];
                  $gastos = $CI->conficue->getidcuentaconfi(15);
                  $compras = $CI->conficue->getidcuentaconfi(16);
@@ -249,7 +248,6 @@ defined('BASEPATH') or exit('No direct script access alloed');
                  $totalcompras = 0;
                     foreach($result as $resultante)
                     {
-
                        $row =  $CI->dicuentas->buscariguales($resultante['clave']);
 
                 
@@ -265,16 +263,15 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                           'ssub_cta' => $row[0]['ssub_cta'],
                                          ];
 
-                                        // var_dump($row[0]['cuenta']);
-                                        // var_dump($gastos[0]['cuenta']);
-
                                          if($row[0]['cuenta'] == $gastos[0]['cuenta'])
                                          {
-                                            $totalgastos=+ $resultante['importe'];
+                                            $totalgastos= $totalgastos+ $resultante['importe'];
                                          }
                                          if($row[0]['cuenta'] == $compras[0]['cuenta'])
                                          {
-                                            $totalcompras=+ $resultante['importe'];
+
+                                            $totalcompras= $totalcompras + $resultante['importe'];
+
                                          }
 
                        }
@@ -292,11 +289,12 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                         if($row[0]['cuenta'] == $gastos[0]['cuenta'])
                         {
-                           $totalgastos=+ $resultante['importe'];
+                           $totalgastos= $totalgastos + $resultante['importe'];
                         }
                         if($row[0]['cuenta'] == $compras[0]['cuenta'])
                         {
-                           $totalcompras=+ $resultante['importe'];
+
+                           $totalcompras= $totalcompras + $resultante['importe'];
                         }
 
                        }
