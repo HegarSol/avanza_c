@@ -96,6 +96,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
         $sumadescu = 0;
         $conceptos = [];
         $completo = [];
+        $conceptos2 = [];
 
           //$totalfactu = $CI->getAttribute('cfdi:Comprobante/@Total');
           $totalfactu = (string) $xml2->attributes()->Total;
@@ -111,21 +112,67 @@ defined('BASEPATH') or exit('No direct script access alloed');
           }
 
           $emisordatos = $CI->beneficiario->datosbenerfc($rfcEmisor);
-  
-                 $conceplist = $CI->xmlDom->getElementsBytagName('Concepto');
-                foreach($conceplist as $concepto)
+          $tieneieps = 0; 
+          $iepss = [];
+                $conceplist = $CI->xmlDom->getElementsBytagName('Concepto');
+                foreach($conceplist as $conceptod)
                 {
-                    if($concepto->getAttribute('Descuento'))
+
+                    if($conceptod->getAttribute('Descuento'))
                     {
-                       $sumadescu = $sumadescu + $concepto->getAttribute('Descuento');
+                        $sumadescu = $sumadescu + $conceptod->getAttribute('Descuento');
                     }
-                        $conceptos[] = [
-                                        'clave' => $concepto->getAttribute('ClaveProdServ'),
-                                        'descripcion' => $concepto->getAttribute('Descripcion'),
-                                        'importe' => $concepto->getAttribute('Importe')
-                                        ];
+                                $conceptos[] = [
+                                                'clave' => $conceptod->getAttribute('ClaveProdServ'),
+                                                'descripcion' => $conceptod->getAttribute('Descripcion'),
+                                                'importe' => $conceptod->getAttribute('Importe'),
+                                                'descuento' => $conceptod->getAttribute('Descuento'),
+                                                'tieneieps' => $tieneieps,
+                                                ];
                 }
-      
+
+                    foreach($xml2->children('cfdi',TRUE)->Conceptos->Concepto as $concepto)
+                    {
+                                if(isset($concepto->Impuestos->Traslados->Traslado))
+                                {
+                                    for($j=0;$j <= count($concepto->Impuestos->Traslados); $j++)
+                                    {
+                                        if(isset($concepto->Impuestos->Traslados->Traslado[$j]))
+                                        {
+                                                                                    
+                                            if($concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Impuesto == 003)
+                                            {
+                                                $tieneieps = (double) $concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Importe;
+                                            }
+                                            else
+                                            {
+                                                $tieneieps = 0;
+                                            }
+
+                                            $iepss[] = [
+                                                'tieneieps' => $tieneieps,
+                                                ];
+
+                                        }
+                                        
+                                    }
+                                }
+
+                    }
+
+                    
+                        for($i=0; $i<=count($conceptos)-1 ; $i++)
+                        {
+                            $conceptos2[] = [
+                                'clave' => $conceptos[$i]['clave'],
+                                'importe' => $conceptos[$i]['importe'],
+                                'descuento' => $conceptos[$i]['descuento'],
+                                'tieneieps' => $iepss[$i]['tieneieps'],
+                                'descripcion' => $conceptos[$i]['descripcion'],
+                            ];
+                        }
+                       
+
                   $retenList = $CI->xmlDom->getElementsByTagName('Retencion');
                   foreach($xml2->children('cfdi',TRUE)->Conceptos->Concepto as $concepto)
                   {
@@ -196,13 +243,16 @@ defined('BASEPATH') or exit('No direct script access alloed');
                   $totalrealproacre = $sumatotalimpuestos - $sumatotalretenciones;
 
 
-                for($i = 0; $i< count($conceptos); $i++)
+
+                for($i = 0; $i< count($conceptos2); $i++)
                 {
-                   // var_dump($conceptos);
+
                      $completo[] = [
-                          'clave' => $conceptos[$i]['clave'],
-                          'importe' => $conceptos[$i]['importe'],
-                          'descripcion' => $conceptos[$i]['descripcion']
+                          'clave' => $conceptos2[$i]['clave'],
+                          'importe' => $conceptos2[$i]['importe'],
+                          'descripcion' => $conceptos2[$i]['descripcion'],
+                          'descuento' => $conceptos2[$i]['descuento'],
+                          'tieneieps' => $conceptos2[$i]['tieneieps'],
                      ];
                 }
 
@@ -218,7 +268,9 @@ defined('BASEPATH') or exit('No direct script access alloed');
                 {
                     $ordenado[] = ['clave' => $row['clave'],
                                'importe' => $row['importe'],
-                               'descripcion' => $row['descripcion']
+                               'descripcion' => $row['descripcion'],
+                               'descuento' => $row['descuento'],
+                               'tieneieps' => $row['tieneieps'],
 
                         ];
                 }
@@ -238,6 +290,8 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($repeat==false)
                             $result[] = array('clave' => $t['clave'], 
                                               'importe' => doubleval($t['importe']),
+                                              'descuento' => doubleval($t['descuento']),
+                                              'tieneieps' => doubleval($t['tieneieps']),
                                               'c_a' => '+'
                                             );
                     }
@@ -250,12 +304,13 @@ defined('BASEPATH') or exit('No direct script access alloed');
                     {
                        $row =  $CI->dicuentas->buscariguales($resultante['clave']);
 
+                    //    var_dump($resultante);
                 
                        if($deta == 0)
                        {
 
                         $datosprevi[] = ['clave' => $resultante['clave'],
-                                          'importe' => $emisordatos[0]['traslada_ieps'] == 1 ?  $resultante['importe']-$sumadescu :($resultante['importe']-$sumadescu)+$sumaimpueeips,
+                                          'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? $resultante['importe'] - $resultante['descuento']: ($resultante['importe'] - $resultante['descuento']) + $resultante['tieneieps'],
                                           'c_a' => $result[$i]['c_a'],
                                           'cuenta' => $row[0]['cuenta'],
                                           'sub_cta' => $row[0]['sub_cta'],
@@ -269,7 +324,6 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                          }
                                          if($row[0]['cuenta'] == $compras[0]['cuenta'])
                                          {
-
                                             $totalcompras= $totalcompras + $resultante['importe'];
 
                                          }
@@ -279,23 +333,23 @@ defined('BASEPATH') or exit('No direct script access alloed');
                        {
 
                          $datosprevi[] = ['clave' => $resultante['clave'],
-                            'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? $resultante['importe']-$sumadescu : ($resultante['importe']-$sumadescu)+$sumaimpueeips,
-                            'c_a' => $result[$i]['c_a'],
-                            'cuenta' => $row[0]['cuenta'],
-                            'sub_cta' => $row[0]['sub_cta'],
-                            'nombre_cta' => '',
-                            'ssub_cta' => $row[0]['ssub_cta'],
-                        ];
+                                        'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? $resultante['importe'] - $resultante['descuento']: ($resultante['importe'] - $resultante['descuento']) + $resultante['tieneieps'],
+                                        'c_a' => $result[$i]['c_a'],
+                                        'cuenta' => $row[0]['cuenta'],
+                                        'sub_cta' => $row[0]['sub_cta'],
+                                        'nombre_cta' => '',
+                                        'ssub_cta' => $row[0]['ssub_cta'],
+                                        ];
 
-                        if($row[0]['cuenta'] == $gastos[0]['cuenta'])
-                        {
-                           $totalgastos= $totalgastos + $resultante['importe'];
-                        }
-                        if($row[0]['cuenta'] == $compras[0]['cuenta'])
-                        {
+                                        if($row[0]['cuenta'] == $gastos[0]['cuenta'])
+                                        {
+                                        $totalgastos= $totalgastos + $resultante['importe'];
+                                        }
+                                        if($row[0]['cuenta'] == $compras[0]['cuenta'])
+                                        {
 
-                           $totalcompras= $totalcompras + $resultante['importe'];
-                        }
+                                        $totalcompras= $totalcompras + $resultante['importe'];
+                                        }
 
                        }
                     }
@@ -487,7 +541,6 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         }
                         if($totalcompras > 0)
                         {
-
                             $total = array('importe' => ($totalcompras-$sumadescu)+$totalrealproacre, 'c_a' => '-',
                             'cuenta' => $propios[0]['cuenta'],
                             'sub_cta' => $propios[0]['sub_cta'],
@@ -496,6 +549,10 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             
                           );
                         }
+
+                        // var_dump($totalcompras);
+                        // var_dump($sumadescu);
+                        // var_dump($totalrealproacre);
 
                     }
                     else
