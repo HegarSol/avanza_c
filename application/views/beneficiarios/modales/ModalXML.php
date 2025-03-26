@@ -17,7 +17,7 @@
                      <th>Nombre cuenta</th>
                      <th>Clave</th>
                      <th>Descripción SAT</th>
-                     <!-- <th>Descripción XML</th> -->
+                     <th>Descripción XML</th>
                   </thead>
                  
                   <tbody>

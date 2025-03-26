@@ -1165,8 +1165,8 @@ console.log(1);
                                                             td6.appendChild(document.createTextNode(clave))
                                                             var td7 = document.createElement("TD")
                                                             td7.appendChild(document.createTextNode(descrip))
-                                                            // var td8 = document.createElement("TD")
-                                                            // td8.appendChild(document.createTextNode(descripxml))
+                                                            var td9 = document.createElement("TD")
+                                                            td9.appendChild(document.createTextNode(descripxml))
 
                                                             row.appendChild(td2);
                                                             row.appendChild(td3);
@@ -1175,7 +1175,7 @@ console.log(1);
                                                             row.appendChild(td5);
                                                             row.appendChild(td6);
                                                             row.appendChild(td7);
-                                                            // row.appendChild(td8);
+                                                            row.appendChild(td9);
 
                                                             tbody.appendChild(row);
 
