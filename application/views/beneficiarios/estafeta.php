@@ -1157,8 +1157,8 @@ function aceptarasiento(tableID)
                                                             td7.appendChild(document.createTextNode(clave))
                                                             var td8 = document.createElement("TD")
                                                             td8.appendChild(document.createTextNode(descrip))
-                                                            // var td8 = document.createElement("TD")
-                                                            // td8.appendChild(document.createTextNode(descripxml))
+                                                            var td9 = document.createElement("TD")
+                                                            td9.appendChild(document.createTextNode(descripxml))
 
                                                             row.appendChild(td2);
                                                             row.appendChild(td3);
@@ -1167,7 +1167,7 @@ function aceptarasiento(tableID)
                                                             row.appendChild(td6);
                                                             row.appendChild(td7);
                                                             row.appendChild(td8);
-                                                            // row.appendChild(td8);
+                                                            row.appendChild(td9);
 
                                                             tbody.appendChild(row);
 

@@ -621,7 +621,7 @@ class Beneficiarios extends MY_Controller
 
                 foreach ($completo as $key => $row) 
                 {
-                    $ordenado[] = ['clave' => $row['clave']];
+                    $ordenado[] = ['clave' => $row['clave'],'descripcion' => $row['descripcion']];
                 }
 
                  //ELIMINAR
@@ -653,7 +653,7 @@ class Beneficiarios extends MY_Controller
                    {
                        $noEstan[] = [ 
                                        'clave' => $clave['clave'],
-                                       'descripcionxml' => '',
+                                       'descripcionxml' => substr($clave['descripcion'],0,40),
                                        'descripcionSAT' => $descrip[0]['descripcion']
                                     ];
 
