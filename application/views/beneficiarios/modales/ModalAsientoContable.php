@@ -2,7 +2,7 @@
 <div class="modal-dialog modal-lg" id="mdialTamanio">
     <div class="modal-content">
         <div class="modal-header">
-        <button type="button" id="cerrarclick2" name="cerrarclick2" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <button type="button" id="cerrarclick1" name="cerrarclick1" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <center><h1 class="modal-title">Asiento contable</h1></center>
 
             <h2>Póliza: <span id="polizacientocontable" name="polizacientocontable"></span></h2>
@@ -136,14 +136,15 @@
            x("referen_provision").value = table.rows[i].cells[5].innerHTML;
            x("nom_cuenta_provision").value = table.rows[i].cells[6].innerHTML;
            x("concep_provision").value = table.rows[i].cells[7].innerHTML;
-           x("monto_provision").value = table.rows[i].cells[8].innerHTML;
+           x("monto_provision").value = table.rows[i].cells[8].innerHTML.replaceAll(",", "");
            x("signo_provision").value = table.rows[i].cells[9].innerHTML;
            
           var signo = row.cells[9].innerHTML;
           var posit = parseFloat(document.getElementById('positivo_provision').value);
           var nega = parseFloat(document.getElementById('negativo_provision').value);
           
-          var monto = parseFloat(row.cells[8].innerHTML);          
+          var monto = row.cells[8].innerHTML;
+          var monto = parseFloat(monto.replaceAll(",", ""));          
           
           if(signo == '+')
           {
@@ -184,7 +185,8 @@ function deleteRowprovision(tableID)
           var posit = parseFloat(document.getElementById('positivo_provision').value);
           var nega = parseFloat(document.getElementById('negativo_provision').value);
           
-          var monto = parseFloat(row.cells[8].innerHTML);          
+          var monto = row.cells[8].innerHTML;
+          var monto = parseFloat(monto.replaceAll(",", ""));       
           
           if(signo == '+')
           {
@@ -223,10 +225,14 @@ function deleteRowprovision(tableID)
     {
         var tbody = document.getElementById('asiento_conta_provision').getElementsByTagName("TBODY")[0];
                         var row = document.createElement("TR")
+
+                        let nf = new Intl.NumberFormat('en-US');
                         
                         var element1 = document.createElement("input");
                         element1.type = "checkbox";
                         element1.name="chkbox[]"; 
+
+
                         
                         if(document.getElementById('monto_provision').value == '' || document.getElementById('monto_provision').value == 0)
                         {
@@ -243,7 +249,7 @@ function deleteRowprovision(tableID)
                                 var sig = '+';
                             }
                         }
-                        
+
                         var td0 = document.createElement("TD")
                         td0.style.textAlign = 'center';
                         td0.appendChild(element1)
@@ -263,7 +269,7 @@ function deleteRowprovision(tableID)
                         td6.setAttribute("contenteditable","true");
                         td6.appendChild(document.createTextNode(document.getElementById('concep_provision').value))
                         var td7 = document.createElement("TD")
-                        td7.appendChild(document.createTextNode(document.getElementById('monto_provision').value == '' ? neu : document.getElementById('monto_provision').value))
+                        td7.appendChild(document.createTextNode(document.getElementById('monto_provision').value == '' ? nf.format(neu) : nf.format(document.getElementById('monto_provision').value)))
                         var td8 = document.createElement("TD")
                         td8.appendChild(document.createTextNode(document.getElementById('signo_provision').value == '' ? sig : document.getElementById('signo_provision').value))
 

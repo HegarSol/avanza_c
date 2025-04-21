@@ -1417,7 +1417,7 @@ function editarpoliza()
                   }
                   document.getElementById('polizacientocontable').innerHTML = aData[0][27];
                   $('#myModalasientoContable').modal('show');
-                 // $('#myModalCuentasPagar').modal('hide');
+                  $("#cerrarclick2").trigger("click");
               }
           });
       }
