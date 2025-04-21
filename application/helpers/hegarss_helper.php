@@ -139,30 +139,32 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                     {
                                         if(isset($concepto->Impuestos->Traslados->Traslado[$j]))
                                         {
-                                                                                    
+
                                             if($concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Impuesto == 003)
                                             {
                                                 $tieneieps = (double) $concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Importe;
-                                            }
-                                            else
-                                            {
-                                                $tieneieps = 0;
+                                               
+                                                $iepss[] = [
+                                                    'tieneieps' => $tieneieps,
+                                                    ];
                                             }
 
-                                            $iepss[] = [
-                                                'tieneieps' => $tieneieps,
-                                                ];
+                                            // $iepss[] = [
+                                            //     'tieneieps' => $tieneieps,
+                                            //     ];
 
                                         }
-                                        
+                                        // $iepss[] = [
+                                        //     'tieneieps' => $tieneieps,
+                                        //     ];
                                     }
                                 }
 
                     }
 
-                    
                         for($i=0; $i<=count($conceptos)-1 ; $i++)
                         {
+
                             $conceptos2[] = [
                                 'clave' => $conceptos[$i]['clave'],
                                 'importe' => $conceptos[$i]['importe'],
@@ -171,7 +173,6 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                 'descripcion' => $conceptos[$i]['descripcion'],
                             ];
                         }
-                       
 
                   $retenList = $CI->xmlDom->getElementsByTagName('Retencion');
                   foreach($xml2->children('cfdi',TRUE)->Conceptos->Concepto as $concepto)
@@ -304,7 +305,6 @@ defined('BASEPATH') or exit('No direct script access alloed');
                     {
                        $row =  $CI->dicuentas->buscariguales($resultante['clave']);
 
-                    //    var_dump($resultante);
                 
                        if($deta == 0)
                        {
@@ -514,6 +514,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         $activo = $CI->configene->getcxpprovpropios();
                         $propios = $CI->conficue->getidcuentaconfi(29);
                         $acreedor = $CI->conficue->getidcuentaconfi(58);
+                    
                      //   var_dump($totalcompras);
                      //   var_dump($totalgastos);
                         // if($activo[0]['valor'] == 1 && $activo[0]['inactiva'] == 0)
@@ -528,10 +529,14 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         // }
                          //SI EL RFC DE LA EMPRESA ES LA MISMA AL RFC DEL RECEPTOR DE LA FACTURA ENTONCES EN PROVEEDOR PROPIO
                          //var_dump($totalfactu);
-                        if($totalgastos > 0)
-                        {
 
-                            $total = array('importe' => ($totalgastos-$sumadescu)+$totalrealproacre, 'c_a' => '-',
+                        if($totalgastos > 0)
+                        {                            
+                            $totalron = round($totalgastos,2);
+                            $totaldescu = round($sumadescu,2);
+                            $totalreal = round($totalrealproacre,2);
+
+                            $total = array('importe' => ($totalron-$totaldescu)+$totalreal, 'c_a' => '-',
                             'cuenta' => $acreedor[0]['cuenta'],
                             'sub_cta' => $acreedor[0]['sub_cta'],
                             'nombre_cta' => $acreedor[0]['descrip'],
@@ -541,7 +546,11 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         }
                         if($totalcompras > 0)
                         {
-                            $total = array('importe' => ($totalcompras-$sumadescu)+$totalrealproacre, 'c_a' => '-',
+                            $totalron = round($totalcompras,2);
+                            $totaldescu = round($sumadescu,2);
+                            $totalreal = round($totalrealproacre,2);
+
+                            $total = array('importe' => ($totalron-$totaldescu)+$totalreal, 'c_a' => '-',
                             'cuenta' => $propios[0]['cuenta'],
                             'sub_cta' => $propios[0]['sub_cta'],
                             'nombre_cta' => $propios[0]['descrip'],
@@ -592,7 +601,29 @@ defined('BASEPATH') or exit('No direct script access alloed');
                     //     array_push($datosresul, $des);
                     // }
 
-                     return $datosresul;
+                    $result2 = array();
+                    foreach($datosresul as $t) {
+                        $repeat=false;
+                        for($i=0;$i<count($result2);$i++)
+                        {
+                            if($result2[$i]['cuenta']==$t['cuenta'] && $result2[$i]['sub_cta']==$t['sub_cta'] && $result2[$i]['ssub_cta']==$t['ssub_cta'])
+                            {
+                                $result2[$i]['importe']+=$t['importe'];
+                                $repeat=true;
+                                break;
+                            }
+                        }
+                        if($repeat==false)
+                            $result2[] = array('importe' => $t['importe'],
+                                            'cuenta' => $t['cuenta'],
+                                            'sub_cta' => $t['sub_cta'],
+                                            'nombre_cta' => $t['nombre_cta'],
+                                            'ssub_cta' => $t['ssub_cta'], 
+                                              'c_a' => $t['c_a'],
+                                            );
+                    }
+
+                     return $result2;
     }
 }
 
