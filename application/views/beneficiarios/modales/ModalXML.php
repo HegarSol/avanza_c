@@ -26,9 +26,24 @@
                </table>
                </div>
                <font size="10"><span id="estadocol" name="estadocol" ></span></font>
-
             </div>
         <div class="modal-footer">
+       <div class="col-md-3"></div>
+       <div class="col-md-3"></div>
+       <div class="col-md-3"></div>
+        <div class="col-md-2">
+            <select class="form-control" id="departamentos" name="departamentos">
+                <option value="-" selected></option>
+            <?php foreach ($departamentos as $rowDC)
+                {
+                    echo"<option value='".$rowDC['clave']."'";
+                    echo '>'.$rowDC['clave'].' - '.$rowDC['descripcion']; 
+                    echo "</option>";
+                }
+                ?>
+            </select>
+         </div>
+
            <button type="button" class="btn btn-success" onclick="recorrercuentas()" >Aceptar</button>
         </div>
     </div>

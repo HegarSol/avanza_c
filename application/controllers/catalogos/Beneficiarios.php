@@ -16,6 +16,7 @@ class Beneficiarios extends MY_Controller
         $this->load->model('DicCuentasModel','dicuentas');
         $this->load->model('CatalogosModel','catalogos');
         $this->load->model('EmpresasModel','empresas');
+        $this->load->model('DepartamentoCostosModel','deparcostos');
     }
     public function index()
     {
@@ -93,6 +94,7 @@ class Beneficiarios extends MY_Controller
 
             $rfc = $this->configModel->getConfig();
           //  $informabene = $this->benefi->datosBenefi($id);
+          $departa = $this->deparcostos->getalldepartamento();
 
             $conse = $this->operaciones->maxidPro();
 
@@ -106,7 +108,7 @@ class Beneficiarios extends MY_Controller
             }
 
             $errores=array();
-            $data = array('titulo' => 'Listado de comprobantes pendientes','consepro' => $conesucu,'rfc' => $rfc[0]['rfc'],'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores' => $errores);
+            $data = array('titulo' => 'Listado de comprobantes pendientes','departamentos' => $departa,'consepro' => $conesucu,'rfc' => $rfc[0]['rfc'],'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores' => $errores);
             $items=$this->menuModel->menus($_SESSION['tipo']);
             $this->multi_menu->set_items($items);
             $this->load->view('templates/header');
