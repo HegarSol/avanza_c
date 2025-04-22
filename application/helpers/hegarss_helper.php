@@ -48,7 +48,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
  if(!function_exists('get_factura_poliza'))
 {
-    function get_factura_poliza($uuid,$nom_prov,$deta = 0,$porpaga = 0,$poli = '')
+    function get_factura_poliza($uuid,$nom_prov,$deta = 0,$porpaga = 0,$poli = '',$departa = 0)
     {
 
         $CI =& get_instance();
@@ -70,7 +70,6 @@ defined('BASEPATH') or exit('No direct script access alloed');
        {
          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
        }
-
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -322,6 +321,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                          {
                                             $totalgastos= $totalgastos+ $resultante['importe'];
                                          }
+
                                          if($row[0]['cuenta'] == $compras[0]['cuenta'])
                                          {
                                             $totalcompras= $totalcompras + $resultante['importe'];
@@ -363,12 +363,13 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                         'importe' => $cu['importe'],
                                         'c_a' => $cu['c_a'],
                                         'cuenta' => $cu['cuenta'],
-                                        'sub_cta' => $cu['sub_cta'],
+                                        'sub_cta' => isset($departa) && $departa > 0 ? $departa : 1,
                                         'nombre_cta' =>  $nom_cuen[0]['nombre'],
                                         'ssub_cta' => $cu['ssub_cta'],
                                       ];
                     }
 
+                   // var_dump($datosresul);
                     //SI LA FACTURA TIENE IVA al 8%
 
                     if($porpaga == 1 && $poli == '')

@@ -17,4 +17,24 @@ class DepartamentoCostosModel extends MY_Model
             if(!$this->db2){show_error('No se puede establecer conexion con la base de datos');}
         }
     }
+    public function getalldepartamento()
+    {
+        $row = $this->db2->select('*')->from('deptos_costos')->get();
+        return $row->result_array();
+    }
+    public function datosDepartamento($id)
+    {
+        $row = $this->db2->select('*')->from('deptos_costos')->where('id',$id)->get();
+        return $row->result_array();
+    }
+    public function insert($data)
+    {
+        $this->dbEmpresa->insert('deptos_costos', $data);
+        return $this->dbEmpresa->insert_id();
+    }
+    public function update($id, $data)
+    {
+        $this->db2->where('id', $id);
+        return $this->db2->update('deptos_costos', $data);
+    }
 }

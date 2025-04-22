@@ -807,11 +807,12 @@ function aceptarasiento(tableID)
                    
                
                         var nom_prov = response2[0].no_prov;
+                        var departa = document.getElementById('departamentos').value;
 
                         jQuery.ajax({
                            type:"POST",
                            url: baseurl + "catalogos/Operaciones/buildAcientoContable",
-                           data:{uuid:aData2[0][1],nom_prov:nom_prov},
+                           data:{uuid:aData2[0][1],nom_prov:nom_prov,departa:departa},
                            dataType:"html",
                            success:function(response)
                            {

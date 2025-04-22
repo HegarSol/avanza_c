@@ -67,8 +67,9 @@ class Operaciones extends MY_Controller
         $uuid = $this->input->post('uuid');
         $nom_prov = $this->input->post('nom_prov');
         $deta = $this->input->post('datos');
+        $departa = $this->input->post('departa');
 
-        $datosprevi = get_factura_poliza($uuid,$nom_prov,$deta);
+        $datosprevi = get_factura_poliza($uuid,$nom_prov,$deta,0,0,$departa);
 
         $response = array('status' => true,'data' => $datosprevi);
         $this->output->set_content_type('application/json')->set_output(json_encode($response));

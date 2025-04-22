@@ -87,8 +87,57 @@ class DeptosCostos extends MY_Controller
             redirect('inicio/login','refresh');           
         }
     }
+    public function editar($id)
+    {
+        if($this->aauth->is_loggedin())
+        {
+            $permisos = $this->permisosForma($_SESSION['id'],13);
+            if(isset($permisos) && $permisos['edit']=="1")
+            {
+                $datos=$this->depacoto->datosDepartamento($id);
+                $data = array('titulo' => 'Editar cuenta','accion' => 'catalogos/DeptosCostos/guardarcostos','permisosGrupo' => $permisos,'datos'=>$datos );
+                $this->load->view('templates/navigation',$data);
+                $this->load->view('departacostos/departacostos');
+                $this->load->view('templates/footer');
+            }
+            else
+            {
+               redirect('welcome','refresh');
+            }
+        }
+        else
+        {
+           redirect('/inicio/login','refresh');
+        }
+    }
     public function guardarcostos()
     {
+        $id = $this->input->post('id');
+        $correcto=false;
+        $clave = $this->input->post('clave');
+        $descripcion = $this->input->post('descripcion');
+        $matriz = $this->input->post('matriz');
+
+        if($id > 0)
+        {
+            $data = array(
+                'clave' => $clave,
+                'descripcion' => $descripcion,
+                'matriz' => $matriz
+            );
+            $this->depacoto->update($id,$data);
+        }
+        else
+        {
+            $data = array(
+                'clave' => $clave,
+                'descripcion' => $descripcion,
+                'matriz' => $matriz
+            );
+            $this->depacoto->insert($data);
+        }
+         
+        $this->output->set_content_type('application/json')->set_output(json_encode(1));
 
     }
 }

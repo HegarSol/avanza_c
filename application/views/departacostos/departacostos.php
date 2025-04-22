@@ -49,7 +49,22 @@ echo form_open_multipart($accion);
          var matriz = document.getElementById('matriz').value;
 
          $.ajax({
-                type:"POST"            
+                type:"POST",
+                url:"<?php echo base_url();?>catalogos/DeptosCostos/guardarcostos",
+                data:{id:id,clave:clave,descripcion:des,matriz:matriz},
+                dataType:"html",
+                success:function(data)
+                {
+                    if(data == "1")
+                    {
+                        swal('Correcto','guardado correctamente','success');
+                        setTimeout(function(){ window.location.href=baseurl+'catalogos/DeptosCostos/index'; }, 500);
+                    }
+                    else
+                    {
+                        noty({layout:'topRight',type: 'warning',  theme: 'relax',text: 'Error al guardar el departamento costos'});
+                    }
+                }
          })
     }
 </script>
