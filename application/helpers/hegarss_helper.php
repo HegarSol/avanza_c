@@ -93,6 +93,45 @@ defined('BASEPATH') or exit('No direct script access alloed');
         $sumatotalretenciones = 0;
         $totalrealproacre = 0;
         $sumadescu = 0;
+
+        $sumaimpueiva16c = 0;
+        $sumaimpueiva8c = 0;
+        $sumaretenivac = 0;
+        $sumaretenisrc = 0;
+        $sumaretenisr4porfletec = 0;
+        $sumaimpueeipsc = 0;
+        $sumatotalimpuestos8c = 0;
+        $sumatotalretencionesc = 0;
+        $totalrealproacrec = 0;
+        $sumadescuc = 0;
+
+        $sumatotalimpuestosg = 0;
+        $sumatotalimpuestosc = 0;
+
+        $sumaimpueiva16g = 0;
+        $sumaimpueiva8g = 0;
+        $sumaretenivag = 0;
+        $sumaretenisrg = 0;
+        $sumaretenisr4porfleteg = 0;
+        $sumaimpueeipsg = 0;
+        $sumatotalimpuestos8g = 0;
+        $sumatotalretencionesg = 0;
+        $totalrealproacreg = 0;
+        $sumadescug = 0;
+
+        $cimporteiva = 0;
+        $ctasaiva = 0;
+        $cimporteieps = 0;
+        $ctasaieps = 0;
+        $cimporteretiva = 0;
+        $ctasaretiva = 0;
+        $ctasaretisr = 0;
+        $cimporteretisr = 0;
+        $cimpuestoiva = 0;
+        $cimpuestoieps = 0;
+        $cimpuestoretiva = 0;
+        $cimpuestoretisr = 0;
+        
         $conceptos = [];
         $completo = [];
         $conceptos2 = [];
@@ -113,167 +152,140 @@ defined('BASEPATH') or exit('No direct script access alloed');
           $emisordatos = $CI->beneficiario->datosbenerfc($rfcEmisor);
           $tieneieps = 0; 
           $iepss = [];
+          $gastos = $CI->conficue->getidcuentaconfi(15);
+          $compras = $CI->conficue->getidcuentaconfi(16);
                 $conceplist = $CI->xmlDom->getElementsBytagName('Concepto');
                 foreach($conceplist as $conceptod)
                 {
-
-                    if($conceptod->getAttribute('Descuento'))
-                    {
-                        $sumadescu = $sumadescu + $conceptod->getAttribute('Descuento');
-                    }
-                                $conceptos[] = [
-                                                'clave' => $conceptod->getAttribute('ClaveProdServ'),
-                                                'descripcion' => $conceptod->getAttribute('Descripcion'),
-                                                'importe' => $conceptod->getAttribute('Importe'),
-                                                'descuento' => $conceptod->getAttribute('Descuento'),
-                                                'tieneieps' => $tieneieps,
-                                                ];
-                }
-
-                    foreach($xml2->children('cfdi',TRUE)->Conceptos->Concepto as $concepto)
-                    {
-                                if(isset($concepto->Impuestos->Traslados->Traslado))
-                                {
-                                    for($j=0;$j <= count($concepto->Impuestos->Traslados); $j++)
-                                    {
-                                        if(isset($concepto->Impuestos->Traslados->Traslado[$j]))
-                                        {
-
-                                            if($concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Impuesto == 003)
-                                            {
-                                                $tieneieps = (double) $concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Importe;
+                    
+                                                 $cClave = $conceptod->getAttribute('ClaveProdServ');
+                                                $cDescripcion = $conceptod->getAttribute('Descripcion');
+                                                $cImporte = $conceptod->getAttribute('Importe');
+                                                $cDescuento = $conceptod->getAttribute('Descuento') ? $conceptod->getAttribute('Descuento') : 0;
+                                                
                                                
-                                                $iepss[] = [
-                                                    'tieneieps' => $tieneieps,
-                                                    ];
-                                            }
-
-                                            // $iepss[] = [
-                                            //     'tieneieps' => $tieneieps,
-                                            //     ];
-
-                                        }
-                                        // $iepss[] = [
-                                        //     'tieneieps' => $tieneieps,
-                                        //     ];
-                                    }
-                                }
-
-                    }
-
-                        for($i=0; $i<=count($conceptos)-1 ; $i++)
-                        {
-
-                            $conceptos2[] = [
-                                'clave' => $conceptos[$i]['clave'],
-                                'importe' => $conceptos[$i]['importe'],
-                                'descuento' => $conceptos[$i]['descuento'],
-                                'tieneieps' => $iepss[$i]['tieneieps'],
-                                'descripcion' => $conceptos[$i]['descripcion'],
-                            ];
-                        }
-
-                  $retenList = $CI->xmlDom->getElementsByTagName('Retencion');
-                  foreach($xml2->children('cfdi',TRUE)->Conceptos->Concepto as $concepto)
-                  {
-                    if(isset($concepto->Impuestos->Retenciones->Retencion))
-                    {
-                        for($j=0;$j <= count($concepto->Impuestos->Retenciones); $j++)
-                        {
-                            if(isset($concepto->Impuestos->Retenciones->Retencion[$j]))
-                            {
-                                if($concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->Impuesto == 002)
-                                {
-                                     if($concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->TasaOCuota == '0.053334' || $concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->TasaOCuota == '0.053333')
-                                     {
-                                        $sumareteniva = $sumareteniva + (double) $concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->Importe;
-                                     }
-                                     else if($concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->TasaOCuota == '0.106667' || $concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->TasaOCuota == '0.106666')
-                                     {
-                                        $sumareteniva = $sumareteniva + (double) $concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->Importe;
-                                     }
-                                     else if($concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->TasaOCuota == '0.040000')
-                                     {
-                                        $sumaretenisr4porflete = $sumaretenisr4porflete + (double) $concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->Importe;
-                                     }
-                                }
-                                if($concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->Impuesto == 001)
-                                {
-                                    $sumaretenisr = $sumaretenisr + (double) $concepto->Impuestos->Retenciones->Retencion[$j]->attributes()->Importe;
-                                }
-                            }
-                        }
-                    }
-                  }
-
-                 $trasladoList = $CI->xmlDom->getElementsByTagName('Concepto');
-
-                foreach($xml2->children('cfdi',TRUE)->Conceptos->Concepto as $concepto)
-                  {
-                                if(isset($concepto->Impuestos->Traslados->Traslado))
-                                {
-                                    for($j=0;$j <= count($concepto->Impuestos->Traslados); $j++)
-                                    {
-                                        if(isset($concepto->Impuestos->Traslados->Traslado[$j]))
-                                        {
-                                            if($concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Impuesto == 002)
-                                            {
-                                                if($concepto->Impuestos->Traslados->Traslado[$j]->attributes()->TasaOCuota == '0.160000')
+                                                foreach($conceptod->getElementsByTagName('Impuestos') as $impuesto)
                                                 {
-                                                   $sumaimpueiva16 = $sumaimpueiva16 + (double) $concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Importe;  
+                                                    foreach($impuesto->getElementsByTagName('Traslados') as $traslado)
+                                                    {
+                                                        foreach($traslado->getElementsByTagName('Traslado') as $traslados)
+                                                        {
+                                                            if($traslados->getAttribute('Impuesto') == '002')
+                                                            {                                                               
+                                                                $cimporteiva =  (double) $traslados->getAttribute('Importe');
+                                                                $ctasaiva = (double) $traslados->getAttribute('TasaOCuota');
+                                                                $cimpuestoiva = $traslados->getAttribute('Impuesto');
+                                                            }
+                                                            else if($traslados->getAttribute('Impuesto') == '003')
+                                                            {
+                                                                $cimporteieps = (double) $traslados->getAttribute('Importe');
+                                                                $ctasaieps = (double) $traslados->getAttribute('TasaOCuota');
+                                                                $cimpuestoieps = $traslados->getAttribute('Impuesto');
+                                                            }
+                                                            
+                                                        }
+                                                    }
+                                                    foreach($impuesto->getElementsByTagName('Retenciones') as $retencion)
+                                                    {
+                                                        foreach($retencion->getElementsByTagName('Retencion') as $retenciones)
+                                                        {
+                                                            if($retenciones->getAttribute('Impuesto') == '002')
+                                                            {
+                                                                $cimporteretiva = (double) $retenciones->getAttribute('Importe');
+                                                                $ctasaretiva = (double) $retenciones->getAttribute('TasaOCuota');
+                                                                $cimpuestoretiva = $retenciones->getAttribute('Impuesto');
+                                                            }
+                                                            else if($retenciones->getAttribute('Impuesto') == '001')
+                                                            {
+                                                                $cimporteretisr = (double) $retenciones->getAttribute('Importe');
+                                                                $ctasaretisr = (double) $retenciones->getAttribute('TasaOCuota');
+                                                                $cimpuestoretisr = $retenciones->getAttribute('Impuesto');
+                                                            }
+                                                        }
+                                                    }
+                                                    
+                                                    
+                                                  
                                                 }
-                                                else if($concepto->Impuestos->Traslados->Traslado[$j]->attributes()->TasaOCuota == '0.080000')
-                                                {
-                                                    $sumaimpueiva8 = $sumaimpueiva8 + (double) $concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Importe;                                           
-                                                }                                                                    
-                                            }                                           
-                                            if($concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Impuesto == 003)
-                                            {
-                                                $sumaimpueeips = $sumaimpueeips + (double) $concepto->Impuestos->Traslados->Traslado[$j]->attributes()->Importe;
-                                            }
-                                        }
-                                       
-                                    }
-                                 }
-                  }
+
+                                $row =  $CI->dicuentas->buscariguales($cClave);
+                               
 
 
-                  $sumatotalimpuestos = $sumaimpueiva16 + $sumaimpueiva8 + $sumaimpueeips;
-                  $sumatotalretenciones = $sumareteniva + $sumaretenisr + $sumaretenisr4porflete;
-                  $totalrealproacre = $sumatotalimpuestos - $sumatotalretenciones;
+                                $cCuenta = $row[0]['cuenta'];
+                                $cSub_Cta = $row[0]['sub_cta'];
+                                $cSsub_Cta = $row[0]['ssub_cta'];
 
+                                $temsubcta =  isset($departa) && $departa > 0 ? $departa : 1;
+                                $nom_cuen = $CI->cuentas->get_cuenta($cCuenta,$temsubcta,$cSsub_Cta);
 
+                                $conceptos[] = [
+                                    'clave' => $cClave,
+                                    'importe' => $cImporte,
+                                    'descuento' => $cDescuento,
+                                    'descripcion' => $cDescripcion,
+                                    'importeiva' => $cimporteiva,
+                                    'tasaiva' => $ctasaiva,
+                                    'importeieps' => $cimporteieps,
+                                    'tasaieps' => $ctasaieps,
+                                    'importeretiva' => $cimporteretiva,
+                                    'tasaretiva' => $ctasaretiva,
+                                    'tasaretisr' => $ctasaretisr,
+                                    'importeretisr' => $cimporteretisr,
+                                    'cuenta' => $cCuenta,
+                                    'sub_cta' => isset($departa) && $departa > 0 ? $departa : 1,
+                                    'ssub_cta' => $cSsub_Cta,
+                                    'nombre_cta' =>  isset($nom_cuen[0]['nombre']) ? $nom_cuen[0]['nombre'] : 'No tiene esta cuenta',
+                                    'impuestoiva' => $cimpuestoiva,
+                                    'impuestoieps' => $cimpuestoieps,
+                                    'impuestoretiva' => $cimpuestoretiva,
+                                    'impuestoretisr' => $cimpuestoretisr,
+                                ];
 
-                for($i = 0; $i< count($conceptos2); $i++)
-                {
-
-                     $completo[] = [
-                          'clave' => $conceptos2[$i]['clave'],
-                          'importe' => $conceptos2[$i]['importe'],
-                          'descripcion' => $conceptos2[$i]['descripcion'],
-                          'descuento' => $conceptos2[$i]['descuento'],
-                          'tieneieps' => $conceptos2[$i]['tieneieps'],
-                     ];
                 }
 
-                foreach ($completo as $key => $row) 
+                foreach ($conceptos as $key => $row) 
                 {
                     $aux[$key] = $row['clave'];
 
                 }
 
-                array_multisort($aux, SORT_ASC, $completo);
 
-                foreach ($completo as $key => $row) 
+                array_multisort($aux, SORT_ASC, $conceptos);
+
+                foreach ($conceptos as $key => $row) 
                 {
                     $ordenado[] = ['clave' => $row['clave'],
                                'importe' => $row['importe'],
                                'descripcion' => $row['descripcion'],
                                'descuento' => $row['descuento'],
-                               'tieneieps' => $row['tieneieps'],
+                               'importeiva' => $row['importeiva'],
+                               'tasaiva' => $row['tasaiva'],
+                               'tasaieps' => $row['tasaieps'],
+                               'importeieps' => $row['importeieps'],
+                               'importeretiva' => $row['importeretiva'],
+                               'tasaretiva' => $row['tasaretiva'],
+                               'tasaretisr' => $row['tasaretisr'],
+                               'importeretisr' => $row['importeretisr'],
+                               'cuenta' => $row['cuenta'],
+                               'sub_cta' => $row['sub_cta'],
+                               'ssub_cta' => $row['ssub_cta'],
+                               'nombre_cta' =>  $row['nombre_cta'],
+                               'impuestoiva' => $row['impuestoiva'],
+                                 'impuestoieps' => $row['impuestoieps'],
+                                    'impuestoretiva' => $row['impuestoretiva'],
+                                    'impuestoretisr' => $row['impuestoretisr'],
 
                         ];
                 }
+
+                $totalgastos = 0;
+                $totalcompras = 0;
+
+                $sumaieps = 0;
+
+                $cDescuento = 0;
+                $gDescuento = 0;
 
                  $result = array();
                     foreach($ordenado as $t) {
@@ -283,91 +295,223 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             if($result[$i]['clave']==$t['clave'])
                             {
                                 $result[$i]['importe']+=$t['importe'];
+                                $sumaieps += $t['importeieps'];
                                 $repeat=true;
                                 break;
                             }
                         }
                         if($repeat==false)
                             $result[] = array('clave' => $t['clave'], 
-                                              'importe' => doubleval($t['importe']),
+                                              'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? doubleval($t['importe']) - doubleval($t['descuento']): ($t['importe'] - $t['descuento']) + $sumaieps,
                                               'descuento' => doubleval($t['descuento']),
-                                              'tieneieps' => doubleval($t['tieneieps']),
+                                              'descripcion' => $t['descripcion'],
+                                                'importeiva' => doubleval($t['importeiva']),
+                                                'tasaiva' => doubleval($t['tasaiva']),
+                                                'tasaieps' => doubleval($t['tasaieps']),
+                                                'importeieps' => doubleval($t['importeieps']),
+                                                'importeretiva' => doubleval($t['importeretiva']),
+                                                'tasaretiva' => doubleval($t['tasaretiva']),
+                                                'tasaretisr' => doubleval($t['tasaretisr']),
+                                                'importeretisr' => doubleval($t['importeretisr']),
+                                                'impuestoiva' => $t['impuestoiva'],
+                                                'impuestoieps' => $t['impuestoieps'],
+                                                'impuestoretiva' => $t['impuestoretiva'],
+                                                'impuestoretisr' => $t['impuestoretisr'],
+                                                'nombre_cta' => $t['nombre_cta'],
+                                                'cuenta' => $t['cuenta'],
+                                                'sub_cta' => $t['sub_cta'],
+                                                'ssub_cta' => $t['ssub_cta'],
                                               'c_a' => '+'
+
                                             );
+
+                                            if($t['impuestoiva'] == '002')
+                                            {
+                                                if($t['tasaiva'] == '0.080000')
+                                                {
+                                                    $sumaimpueiva8 = $sumaimpueiva8 + (double) $t['importeiva'];
+                                                }
+                                                else if($t['tasaiva'] == '0.160000')
+                                                {
+                                                    $sumaimpueiva16 = $sumaimpueiva16 + (double) $t['importeiva'];
+                                                }
+                                            }
+                                            if($t['impuestoieps'] == '003')
+                                            {
+                                                $sumaimpueeips = $sumaimpueeips + (double) $t['importeieps'];
+                                            }
+
+
+                                            if($t['impuestoretiva'] == '002')
+                                            {
+                                                if($t['tasaretiva'] == '0.053334' || $t['tasaretiva'] == '0.053333')
+                                                {
+                                                    $sumareteniva = $sumareteniva + (double) $t['importeretiva'];
+                                                }
+                                                else if($t['tasaretiva'] == '0.106667' || $t['tasaretiva'] == '0.106666')
+                                                {
+                                                    $sumareteniva = $sumareteniva + (double) $t['importeretiva'];
+                                                }
+                                                else if($t['tasaretiva'] == '0.040000')
+                                                {
+                                                    $sumaretenisr4porflete = $sumaretenisr4porflete + (double) $t['importeretiva'];
+                                                }
+                                            }
+
+                                            if($t['impuestoretisr'] == '001')
+                                            {
+                                                $sumaretenisr = $sumaretenisr + (double) $t['importeretisr'];
+                                            }
+
+                                          //-------------------------------------------------------------------------------------------------------------
+
+                                            
+                                            if($t['cuenta'] == $gastos[0]['cuenta'])
+                                            {
+                                               $totalgastos= $totalgastos+ $t['importe'];
+                                               $gDescuento = $gDescuento + $t['descuento'];
+                                                if($t['tasaiva'] ==  '0.080000')
+                                                {
+                                                    $sumaimpueiva8g = $sumaimpueiva8g + $t['importeiva'];
+                                                }
+                                                else if($t['tasaiva'] == '0.160000')
+                                                {
+                                                    $sumaimpueiva16g = $sumaimpueiva16g + $t['importeiva'];
+                                                }
+
+                                                $sumaimpueeipsg = $sumaimpueeipsg + $t['importeieps'];
+
+                                                if($t['tasaretiva'] == '0.053334' || $t['tasaretiva'] == '0.053333')
+                                                {
+                                                    $sumaretenivag = $sumaretenivag + $t['importeretiva'];
+                                                }
+                                                else if($t['tasaretiva'] == '0.106667' || $t['tasaretiva'] == '0.106666')
+                                                {
+                                                    $sumaretenivag = $sumaretenivag + $t['importeretiva'];
+                                                }
+                                                else if($t['tasaretiva'] == '0.040000')
+                                                {
+                                                    $sumaretenisr4porfleteg = $sumaretenisr4porfleteg +  $t['importeretiva'];
+                                                }
+
+                                                $sumaretenisrg = $sumaretenisrg + $t['importeretisr'];
+                                            }
+   
+                                            if($t['cuenta'] == $compras[0]['cuenta'])
+                                            {
+                                               $totalcompras= $totalcompras + $t['importe'];
+                                               $cDescuento = $cDescuento + $t['descuento'];
+                                               if($t['tasaiva'] ==  '0.080000')
+                                                {
+                                                    $sumaimpueiva8c = $sumaimpueiva8c + $t['importeiva'];
+                                                }
+                                                else if($t['tasaiva'] == '0.160000')
+                                                {
+                                                    $sumaimpueiva16c = $sumaimpueiva16c + $t['importeiva'];
+                                                }
+
+                                                $sumaimpueeipsc = $sumaimpueeipsc + $t['importeieps'];
+
+                                                if($t['tasaretiva'] == '0.053334' || $t['tasaretiva'] == '0.053333')
+                                                {
+                                                    $sumaretenivac = $sumaretenivac + $t['importeretiva'];
+                                                }
+                                                else if($t['tasaretiva'] == '0.106667' || $t['tasaretiva'] == '0.106666')
+                                                {
+                                                    $sumaretenivac = $sumaretenivac + $t['importeretiva'];
+                                                }
+                                                else if($t['tasaretiva'] == '0.040000')
+                                                {
+                                                    $sumaretenisr4porfletec = $sumaretenisr4porfletec +  $t['importeretiva'];
+                                                }
+
+                                                $sumaretenisrc = $sumaretenisrc + $t['importeretisr'];
+   
+                                            }
                     }
-                 $datosprevi = [];
-                 $gastos = $CI->conficue->getidcuentaconfi(15);
-                 $compras = $CI->conficue->getidcuentaconfi(16);
-                 $totalgastos = 0;
-                 $totalcompras = 0;
-                    foreach($result as $resultante)
-                    {
-                       $row =  $CI->dicuentas->buscariguales($resultante['clave']);
+
+                    $sumatotalimpuestosg = $sumaimpueiva8g + $sumaimpueiva16g + $sumaimpueeipsg;
+                    $sumatotalretencionesg = $sumaretenivag + $sumaretenisrg + $sumaretenisr4porfleteg;
+                    $totalrealproacreg = $sumatotalimpuestosg - $sumatotalretencionesg;
+
+
+                    $sumatotalimpuestosc = $sumaimpueiva8c + $sumaimpueiva16c + $sumaimpueeipsc;
+                    $sumatotalretencionesc = $sumaretenivac + $sumaretenisrc + $sumaretenisr4porfletec;
+                    $totalrealproacrec = $sumatotalimpuestosc - $sumatotalretencionesc;
+                 //   var_dump($result);
+                // $datosprevi = [];
+                //  $gastos = $CI->conficue->getidcuentaconfi(15);
+                //  $compras = $CI->conficue->getidcuentaconfi(16);
+                //  $totalgastos = 0;
+                //  $totalcompras = 0;
+                    // foreach($result as $resultante)
+                    // {
+                    //    $row =  $CI->dicuentas->buscariguales($resultante['clave']);
 
                 
-                       if($deta == 0)
-                       {
+                    //    if($deta == 0)
+                    //    {
 
-                        $datosprevi[] = ['clave' => $resultante['clave'],
-                                          'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? $resultante['importe'] - $resultante['descuento']: ($resultante['importe'] - $resultante['descuento']) + $resultante['tieneieps'],
-                                          'c_a' => $result[$i]['c_a'],
-                                          'cuenta' => $row[0]['cuenta'],
-                                          'sub_cta' => $row[0]['sub_cta'],
-                                          'nombre_cta' => '',
-                                          'ssub_cta' => $row[0]['ssub_cta'],
-                                         ];
+                    //     $datosprevi[] = ['clave' => $resultante['clave'],
+                    //                       'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? $resultante['importe'] - $resultante['descuento']: ($resultante['importe'] - $resultante['descuento']) + $resultante['tieneieps'],
+                    //                       'c_a' => $result[$i]['c_a'],
+                    //                       'cuenta' => $row[0]['cuenta'],
+                    //                       'sub_cta' => $row[0]['sub_cta'],
+                    //                       'nombre_cta' => '',
+                    //                       'ssub_cta' => $row[0]['ssub_cta'],
+                    //                      ];
 
-                                         if($row[0]['cuenta'] == $gastos[0]['cuenta'])
-                                         {
-                                            $totalgastos= $totalgastos+ $resultante['importe'];
-                                         }
+                    //                     //  if($row[0]['cuenta'] == $gastos[0]['cuenta'])
+                    //                     //  {
+                    //                     //     $totalgastos= $totalgastos+ $resultante['importe'];
+                    //                     //  }
 
-                                         if($row[0]['cuenta'] == $compras[0]['cuenta'])
-                                         {
-                                            $totalcompras= $totalcompras + $resultante['importe'];
+                    //                     //  if($row[0]['cuenta'] == $compras[0]['cuenta'])
+                    //                     //  {
+                    //                     //     $totalcompras= $totalcompras + $resultante['importe'];
 
-                                         }
+                    //                     //  }
 
-                       }
-                       else
-                       {
+                    //    }
+                    //    else
+                    //    {
 
-                         $datosprevi[] = ['clave' => $resultante['clave'],
-                                        'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? $resultante['importe'] - $resultante['descuento']: ($resultante['importe'] - $resultante['descuento']) + $resultante['tieneieps'],
-                                        'c_a' => $result[$i]['c_a'],
-                                        'cuenta' => $row[0]['cuenta'],
-                                        'sub_cta' => $row[0]['sub_cta'],
-                                        'nombre_cta' => '',
-                                        'ssub_cta' => $row[0]['ssub_cta'],
-                                        ];
+                    //      $datosprevi[] = ['clave' => $resultante['clave'],
+                    //                     'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? $resultante['importe'] - $resultante['descuento']: ($resultante['importe'] - $resultante['descuento']) + $resultante['tieneieps'],
+                    //                     'c_a' => $result[$i]['c_a'],
+                    //                     'cuenta' => $row[0]['cuenta'],
+                    //                     'sub_cta' => $row[0]['sub_cta'],
+                    //                     'nombre_cta' => '',
+                    //                     'ssub_cta' => $row[0]['ssub_cta'],
+                    //                     ];
 
-                                        if($row[0]['cuenta'] == $gastos[0]['cuenta'])
-                                        {
-                                        $totalgastos= $totalgastos + $resultante['importe'];
-                                        }
-                                        if($row[0]['cuenta'] == $compras[0]['cuenta'])
-                                        {
+                    //                     if($row[0]['cuenta'] == $gastos[0]['cuenta'])
+                    //                     {
+                    //                     $totalgastos= $totalgastos + $resultante['importe'];
+                    //                     }
+                    //                     if($row[0]['cuenta'] == $compras[0]['cuenta'])
+                    //                     {
 
-                                        $totalcompras= $totalcompras + $resultante['importe'];
-                                        }
+                    //                     $totalcompras= $totalcompras + $resultante['importe'];
+                    //                     }
 
-                       }
-                    }
+                    //    }
+                    //}
 
-                    $datosresul = [];
-                    foreach($datosprevi as $cu)
-                    {
-                        $nom_cuen = $CI->cuentas->get_cuenta($cu['cuenta'],$cu['sub_cta'],$cu['ssub_cta']);
+                    // $datosresul = [];
+                    // foreach($datosprevi as $cu)
+                    // {
+                    //     $nom_cuen = $CI->cuentas->get_cuenta($cu['cuenta'],$cu['sub_cta'],$cu['ssub_cta']);
 
-                        $datosresul[] = ['clave' => $cu['clave'],
-                                        'importe' => $cu['importe'],
-                                        'c_a' => $cu['c_a'],
-                                        'cuenta' => $cu['cuenta'],
-                                        'sub_cta' => isset($departa) && $departa > 0 ? $departa : 1,
-                                        'nombre_cta' =>  $nom_cuen[0]['nombre'],
-                                        'ssub_cta' => $cu['ssub_cta'],
-                                      ];
-                    }
+                    //     $datosresul[] = ['clave' => $cu['clave'],
+                    //                     'importe' => $cu['importe'],
+                    //                     'c_a' => $cu['c_a'],
+                    //                     'cuenta' => $cu['cuenta'],
+                    //                     'sub_cta' => isset($departa) && $departa > 0 ? $departa : 1,
+                    //                     'nombre_cta' =>  $nom_cuen[0]['nombre'],
+                    //                     'ssub_cta' => $cu['ssub_cta'],
+                    //                   ];
+                    // }
 
                    // var_dump($datosresul);
                     //SI LA FACTURA TIENE IVA al 8%
@@ -378,7 +522,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $iva8 = $CI->conficue->getidcuentaconfi(37);
                             $ivaesti = array('importe' => number_format($sumaimpueiva8,2,'.',''), 'c_a' => '-','cuenta' => $iva8[0]['cuenta'],'sub_cta' => $iva8[0]['sub_cta'],'nombre_cta' => $iva8[0]['descrip'],'ssub_cta' => $iva8[0]['ssub_cta']);
-                            array_push($datosresul, $ivaesti);
+                            array_push($result, $ivaesti);
                         }
                     }
                     else
@@ -387,7 +531,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $iva8 = $CI->conficue->getidcuentaconfi(38);
                             $ivaesti = array('importe' => number_format($sumaimpueiva8,2,'.',''), 'c_a' => '+','cuenta' => $iva8[0]['cuenta'],'sub_cta' => $iva8[0]['sub_cta'],'nombre_cta' => $iva8[0]['descrip'],'ssub_cta' => $iva8[0]['ssub_cta']);
-                            array_push($datosresul, $ivaesti);
+                            array_push($result, $ivaesti);
                         }
                     }
 
@@ -398,7 +542,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $iva16 = $CI->conficue->getidcuentaconfi(6);
                             $ivaesti = array('importe' => $sumaimpueiva16, 'c_a' => '-','cuenta' => $iva16[0]['cuenta'],'sub_cta' => $iva16[0]['sub_cta'],'nombre_cta' => $iva16[0]['descrip'],'ssub_cta' => $iva16[0]['ssub_cta']);
-                            array_push($datosresul, $ivaesti);
+                            array_push($result, $ivaesti);
                         }
                     }
                     else
@@ -407,7 +551,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $iva16 = $CI->conficue->getidcuentaconfi(28);
                             $ivaesti = array('importe' => $sumaimpueiva16, 'c_a' => '+','cuenta' => $iva16[0]['cuenta'],'sub_cta' => $iva16[0]['sub_cta'],'nombre_cta' => $iva16[0]['descrip'],'ssub_cta' => $iva16[0]['ssub_cta']);
-                            array_push($datosresul, $ivaesti);
+                            array_push($result, $ivaesti);
                         }
                     }
 
@@ -422,7 +566,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             {
                                 $ieps = $CI->conficue->getidcuentaconfi(40);
                                 $eip = array('importe' => $sumaimpueeips, 'c_a' => '-','cuenta' => $ieps[0]['cuenta'],'sub_cta' => $ieps[0]['sub_cta'],'nombre_cta' => $ieps[0]['descrip'],'ssub_cta' => $ieps[0]['ssub_cta']);
-                                array_push($datosresul, $eip);
+                                array_push($result, $eip);
                             }
                         }
                         else
@@ -431,7 +575,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             {
                                 $ieps = $CI->conficue->getidcuentaconfi(42);
                                 $eip = array('importe' => $sumaimpueeips, 'c_a' => '+','cuenta' => $ieps[0]['cuenta'],'sub_cta' => $ieps[0]['sub_cta'],'nombre_cta' => $ieps[0]['descrip'],'ssub_cta' => $ieps[0]['ssub_cta']);
-                                array_push($datosresul, $eip);
+                                array_push($result, $eip);
                             }
                         }
                     }
@@ -448,7 +592,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $isrrete = $CI->conficue->getidcuentaconfi(31);
                             $reteisr = array('importe' => $sumaretenisr, 'c_a' => '+','cuenta' => $isrrete[0]['cuenta'],'sub_cta' => $isrrete[0]['sub_cta'],'nombre_cta' => $isrrete[0]['descrip'],'ssub_cta' => $isrrete[0]['ssub_cta']);
-                            array_push($datosresul, $reteisr);
+                            array_push($result, $reteisr);
                         }
                     }
                     else
@@ -457,7 +601,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $isrrete = $CI->conficue->getidcuentaconfi(34);
                             $reteisr = array('importe' => $sumaretenisr, 'c_a' => '-','cuenta' => $isrrete[0]['cuenta'],'sub_cta' => $isrrete[0]['sub_cta'],'nombre_cta' => $isrrete[0]['descrip'],'ssub_cta' => $isrrete[0]['ssub_cta']);
-                            array_push($datosresul, $reteisr);
+                            array_push($result, $reteisr);
                         }
                     }
 
@@ -468,7 +612,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $flete = $CI->conficue->getidcuentaconfi(41);
                             $ivafle = array('importe' => $sumaretenisr4porflete, 'c_a' => '+','cuenta' => $flete[0]['cuenta'],'sub_cta' => $flete[0]['sub_cta'],'nombre_cta' => $flete[0]['descrip'],'ssub_cta' => $flete[0]['ssub_cta']);
-                            array_push($datosresul, $ivafle);
+                            array_push($result, $ivafle);
                         }
                     }
                     else
@@ -477,7 +621,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $flete = $CI->conficue->getidcuentaconfi(46);
                             $ivafle = array('importe' => $sumaretenisr4porflete, 'c_a' => '-','cuenta' => $flete[0]['cuenta'],'sub_cta' => $flete[0]['sub_cta'],'nombre_cta' => $flete[0]['descrip'],'ssub_cta' => $flete[0]['ssub_cta']);
-                            array_push($datosresul, $ivafle);
+                            array_push($result, $ivafle);
                         }
                     }
 
@@ -489,7 +633,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $ivarete = $CI->conficue->getidcuentaconfi(30);
                             $reteiva = array('importe' => $sumareteniva, 'c_a' => '+','cuenta' => $ivarete[0]['cuenta'],'sub_cta' => $ivarete[0]['sub_cta'],'nombre_cta' => $ivarete[0]['descrip'],'ssub_cta' => $ivarete[0]['ssub_cta']);
-                            array_push($datosresul, $reteiva);
+                            array_push($result, $reteiva);
                         }
                     }
                     else
@@ -498,7 +642,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $ivarete = $CI->conficue->getidcuentaconfi(33);
                             $reteiva = array('importe' => $sumareteniva, 'c_a' => '-','cuenta' => $ivarete[0]['cuenta'],'sub_cta' => $ivarete[0]['sub_cta'],'nombre_cta' => $ivarete[0]['descrip'],'ssub_cta' => $ivarete[0]['ssub_cta']);
-                            array_push($datosresul, $reteiva);
+                            array_push($result, $reteiva);
                         }
                     }
 
@@ -534,35 +678,35 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         if($totalgastos > 0)
                         {                            
                             $totalron = round($totalgastos,2);
-                            $totaldescu = round($sumadescu,2);
-                            $totalreal = round($totalrealproacre,2);
+                            $totaldescu = round($gDescuento,2);
+                            $totalrealg = round($totalrealproacreg,2);
 
-                            $total = array('importe' => ($totalron-$totaldescu)+$totalreal, 'c_a' => '-',
+                            $total = array('importe' => ($totalron-$totaldescu)+$totalrealg, 'c_a' => '-',
                             'cuenta' => $acreedor[0]['cuenta'],
                             'sub_cta' => $acreedor[0]['sub_cta'],
                             'nombre_cta' => $acreedor[0]['descrip'],
                             'ssub_cta' => $acreedor[0]['ssub_cta']
                             
                           );
+
+                          array_push($result, $total);
                         }
                         if($totalcompras > 0)
                         {
                             $totalron = round($totalcompras,2);
-                            $totaldescu = round($sumadescu,2);
-                            $totalreal = round($totalrealproacre,2);
+                            $totaldescu = round($cDescuento,2);
+                            $totalrealc = round($totalrealproacrec,2);
 
-                            $total = array('importe' => ($totalron-$totaldescu)+$totalreal, 'c_a' => '-',
+                            $total = array('importe' => ($totalron-$totaldescu)+$totalrealc, 'c_a' => '-',
                             'cuenta' => $propios[0]['cuenta'],
                             'sub_cta' => $propios[0]['sub_cta'],
                             'nombre_cta' => $propios[0]['descrip'],
                             'ssub_cta' => $propios[0]['ssub_cta']
                             
                           );
-                        }
 
-                        // var_dump($totalcompras);
-                        // var_dump($sumadescu);
-                        // var_dump($totalrealproacre);
+                          array_push($result, $total);
+                        }
 
                     }
                     else
@@ -591,7 +735,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         //var_dump($total);
                     }
 
-                    array_push($datosresul, $total);
+
                 }
                     //SI LA FACTURA TIENE DESCUENTO , YA NO LLEVA DESCEUNTO A NIVEL GLOBAL SOLO A CONCEPTO
                     // if($sumadescu != 0)
@@ -603,7 +747,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                     // }
 
                     $result2 = array();
-                    foreach($datosresul as $t) {
+                    foreach($result as $t) {
                         $repeat=false;
                         for($i=0;$i<count($result2);$i++)
                         {
