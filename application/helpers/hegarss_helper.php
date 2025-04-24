@@ -140,6 +140,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
           $totalfactu = (string) $xml2->attributes()->Total;
           $rfcReceptors = $CI->xmlDom->getElementsBytagName('Receptor');
           $rfcEmisor = $CI->xmlDom->getElementsBytagName('Emisor');
+          $descuento = $CI->xmlDom->getElementsBytagName('Comprobante');
           foreach($rfcReceptors as $rfc)
           {
                 $rfcReceptor = $rfc->getAttribute('Rfc');
@@ -148,6 +149,11 @@ defined('BASEPATH') or exit('No direct script access alloed');
           {
                 $rfcEmisor = $rfc->getAttribute('Rfc');
           }
+          foreach($descuento as $descu)
+          {
+                $descuent = $descu->getAttribute('Descuento') ? $descu->getAttribute('Descuento') : 0;
+          }
+
 
           $emisordatos = $CI->beneficiario->datosbenerfc($rfcEmisor);
           $tieneieps = 0; 
@@ -283,6 +289,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                 $totalcompras = 0;
 
                 $sumaieps = 0;
+                $sumadescuento = 0;
 
                 $cDescuento = 0;
                 $gDescuento = 0;
@@ -302,7 +309,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         }
                         if($repeat==false)
                             $result[] = array('clave' => $t['clave'], 
-                                              'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? doubleval($t['importe']) - doubleval($t['descuento']): ($t['importe'] - $t['descuento']) + $sumaieps,
+                                              'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? doubleval($t['importe']): doubleval($t['importe']) + $sumaieps,
                                               'descuento' => doubleval($t['descuento']),
                                               'descripcion' => $t['descripcion'],
                                                 'importeiva' => doubleval($t['importeiva']),
@@ -438,82 +445,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                     $sumatotalimpuestosc = $sumaimpueiva8c + $sumaimpueiva16c + $sumaimpueeipsc;
                     $sumatotalretencionesc = $sumaretenivac + $sumaretenisrc + $sumaretenisr4porfletec;
                     $totalrealproacrec = $sumatotalimpuestosc - $sumatotalretencionesc;
-                 //   var_dump($result);
-                // $datosprevi = [];
-                //  $gastos = $CI->conficue->getidcuentaconfi(15);
-                //  $compras = $CI->conficue->getidcuentaconfi(16);
-                //  $totalgastos = 0;
-                //  $totalcompras = 0;
-                    // foreach($result as $resultante)
-                    // {
-                    //    $row =  $CI->dicuentas->buscariguales($resultante['clave']);
-
                 
-                    //    if($deta == 0)
-                    //    {
-
-                    //     $datosprevi[] = ['clave' => $resultante['clave'],
-                    //                       'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? $resultante['importe'] - $resultante['descuento']: ($resultante['importe'] - $resultante['descuento']) + $resultante['tieneieps'],
-                    //                       'c_a' => $result[$i]['c_a'],
-                    //                       'cuenta' => $row[0]['cuenta'],
-                    //                       'sub_cta' => $row[0]['sub_cta'],
-                    //                       'nombre_cta' => '',
-                    //                       'ssub_cta' => $row[0]['ssub_cta'],
-                    //                      ];
-
-                    //                     //  if($row[0]['cuenta'] == $gastos[0]['cuenta'])
-                    //                     //  {
-                    //                     //     $totalgastos= $totalgastos+ $resultante['importe'];
-                    //                     //  }
-
-                    //                     //  if($row[0]['cuenta'] == $compras[0]['cuenta'])
-                    //                     //  {
-                    //                     //     $totalcompras= $totalcompras + $resultante['importe'];
-
-                    //                     //  }
-
-                    //    }
-                    //    else
-                    //    {
-
-                    //      $datosprevi[] = ['clave' => $resultante['clave'],
-                    //                     'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? $resultante['importe'] - $resultante['descuento']: ($resultante['importe'] - $resultante['descuento']) + $resultante['tieneieps'],
-                    //                     'c_a' => $result[$i]['c_a'],
-                    //                     'cuenta' => $row[0]['cuenta'],
-                    //                     'sub_cta' => $row[0]['sub_cta'],
-                    //                     'nombre_cta' => '',
-                    //                     'ssub_cta' => $row[0]['ssub_cta'],
-                    //                     ];
-
-                    //                     if($row[0]['cuenta'] == $gastos[0]['cuenta'])
-                    //                     {
-                    //                     $totalgastos= $totalgastos + $resultante['importe'];
-                    //                     }
-                    //                     if($row[0]['cuenta'] == $compras[0]['cuenta'])
-                    //                     {
-
-                    //                     $totalcompras= $totalcompras + $resultante['importe'];
-                    //                     }
-
-                    //    }
-                    //}
-
-                    // $datosresul = [];
-                    // foreach($datosprevi as $cu)
-                    // {
-                    //     $nom_cuen = $CI->cuentas->get_cuenta($cu['cuenta'],$cu['sub_cta'],$cu['ssub_cta']);
-
-                    //     $datosresul[] = ['clave' => $cu['clave'],
-                    //                     'importe' => $cu['importe'],
-                    //                     'c_a' => $cu['c_a'],
-                    //                     'cuenta' => $cu['cuenta'],
-                    //                     'sub_cta' => isset($departa) && $departa > 0 ? $departa : 1,
-                    //                     'nombre_cta' =>  $nom_cuen[0]['nombre'],
-                    //                     'ssub_cta' => $cu['ssub_cta'],
-                    //                   ];
-                    // }
-
-                   // var_dump($datosresul);
                     //SI LA FACTURA TIENE IVA al 8%
 
                     if($porpaga == 1 && $poli == '')
@@ -660,18 +592,6 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         $propios = $CI->conficue->getidcuentaconfi(29);
                         $acreedor = $CI->conficue->getidcuentaconfi(58);
                     
-                     //   var_dump($totalcompras);
-                     //   var_dump($totalgastos);
-                        // if($activo[0]['valor'] == 1 && $activo[0]['inactiva'] == 0)
-                        // {
-                        //     $sub_cuenta = $propios[0]['sub_cta'];
-                        //     $ssub_cuenta = $propios[0]['ssub_cta'];
-                        // }
-                        // else
-                        // {
-                        //       $sub_cuenta = $propios[0]['sub_cta'];
-                        //       $ssub_cuenta = $propios[0]['ssub_cta'];
-                        // }
                          //SI EL RFC DE LA EMPRESA ES LA MISMA AL RFC DEL RECEPTOR DE LA FACTURA ENTONCES EN PROVEEDOR PROPIO
                          //var_dump($totalfactu);
 
@@ -738,13 +658,13 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                 }
                     //SI LA FACTURA TIENE DESCUENTO , YA NO LLEVA DESCEUNTO A NIVEL GLOBAL SOLO A CONCEPTO
-                    // if($sumadescu != 0)
-                    // {
-                    //     $DAtos = $CI->conficue->getidcuentaconfi(39);
-                    //     $des = array('importe' => $sumadescu,'c_a' => '-' , 'cuenta' => $DAtos[0]['cuenta'],'sub_cta' => $DAtos[0]['sub_cta'],'nombre_cta' => $DAtos[0]['descrip'],'ssub_cta' => $DAtos[0]['ssub_cta']);
+                    if($descuent != 0)
+                    {
+                        $DAtos = $CI->conficue->getidcuentaconfi(39);
+                        $des = array('importe' => $descuent,'c_a' => '-' , 'cuenta' => $DAtos[0]['cuenta'],'sub_cta' => $DAtos[0]['sub_cta'],'nombre_cta' => $DAtos[0]['descrip'],'ssub_cta' => $DAtos[0]['ssub_cta']);
 
-                    //     array_push($datosresul, $des);
-                    // }
+                        array_push($result, $des);
+                    }
 
                     $result2 = array();
                     foreach($result as $t) {
