@@ -256,9 +256,8 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                 }
 
-
                 array_multisort($aux, SORT_ASC, $conceptos);
-
+                
                 foreach ($conceptos as $key => $row) 
                 {
                     $ordenado[] = ['clave' => $row['clave'],
@@ -289,6 +288,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                 $totalcompras = 0;
 
                 $sumaieps = 0;
+                
                 $sumadescuento = 0;
 
                 $cDescuento = 0;
@@ -296,20 +296,22 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                  $result = array();
                     foreach($ordenado as $t) {
+
                         $repeat=false;
                         for($i=0;$i<count($result);$i++)
                         {
+                            
                             if($result[$i]['clave']==$t['clave'])
                             {
-                                $result[$i]['importe']+=$t['importe'];
-                                $sumaieps += $t['importeieps'];
+                                $result[$i]['importe']+=$t['importe'];                              
                                 $repeat=true;
                                 break;
                             }
+                            
                         }
                         if($repeat==false)
                             $result[] = array('clave' => $t['clave'], 
-                                              'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? doubleval($t['importe']): doubleval($t['importe']) + $sumaieps,
+                                              'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? doubleval($t['importe']): doubleval($t['importe']) + doubleval($t['importeieps']),
                                               'descuento' => doubleval($t['descuento']),
                                               'descripcion' => $t['descripcion'],
                                                 'importeiva' => doubleval($t['importeiva']),
