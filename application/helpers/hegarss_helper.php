@@ -659,7 +659,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
 
                 }
-                    //SI LA FACTURA TIENE DESCUENTO , YA NO LLEVA DESCEUNTO A NIVEL GLOBAL SOLO A CONCEPTO
+                    //SI LA FACTURA TIENE DESCUENTO
                     if($descuent != 0)
                     {
                         $DAtos = $CI->conficue->getidcuentaconfi(39);

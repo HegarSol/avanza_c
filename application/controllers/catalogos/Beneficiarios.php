@@ -96,19 +96,19 @@ class Beneficiarios extends MY_Controller
           //  $informabene = $this->benefi->datosBenefi($id);
           $departa = $this->deparcostos->getalldepartamento();
 
-            $conse = $this->operaciones->maxidPro();
+            // $conse = $this->operaciones->maxidPro();
 
-            if(count($conse) > 0)
-            {
-                $conesucu = $conse[0]['no_mov'] + 1;
-            }
-            else
-            {
-                $conesucu = 1;
-            }
+            // if(count($conse) > 0)
+            // {
+            //     $conesucu = $conse[0]['no_mov'] + 1;
+            // }
+            // else
+            // {
+            //     $conesucu = 1;
+            // }
 
             $errores=array();
-            $data = array('titulo' => 'Listado de comprobantes pendientes','departamentos' => $departa,'consepro' => $conesucu,'rfc' => $rfc[0]['rfc'],'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores' => $errores);
+            $data = array('titulo' => 'Listado de comprobantes pendientes','departamentos' => $departa,'rfc' => $rfc[0]['rfc'],'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores' => $errores);
             $items=$this->menuModel->menus($_SESSION['tipo']);
             $this->multi_menu->set_items($items);
             $this->load->view('templates/header');
@@ -440,7 +440,7 @@ class Beneficiarios extends MY_Controller
         setlocale(LC_TIME, 'es_ES.UTF-8');
         
         $tipo = $this->input->post('tipo');
-        $mov = $this->input->post('mov');
+       // $mov = $this->input->post('mov');
         $uuid = $this->input->post('uuid');
         $fecha = $this->input->post('fecha');
         $provee = $this->input->post('provee');
@@ -449,6 +449,17 @@ class Beneficiarios extends MY_Controller
         $serie_pro = $this->input->post('serie_provisi');
         $total = $this->input->post('total');
         $benefinombre = $this->benefi->datosBenefi($provee);
+
+         $conse = $this->operaciones->maxidPro();
+
+         if(count($conse) > 0)
+         {
+            $mov = $conse[0]['no_mov'] + 1;
+         }
+         else
+         {
+            $mov = 1;
+         }
 
         $poliza = $tipo.' '.' 0 '.'       '.$mov;
 
@@ -610,8 +621,8 @@ class Beneficiarios extends MY_Controller
                         ];
 
                          $sumaimporte = $sumaimporte + $concepto->getAttribute('Importe');
-
                   }
+
 
                   //ORDENAR
                 foreach ($completo as $key => $row) 
@@ -653,9 +664,10 @@ class Beneficiarios extends MY_Controller
                    }
                    else
                    {
+
                        $noEstan[] = [ 
                                        'clave' => $clave['clave'],
-                                       'descripcionxml' => substr($clave['descripcion'],0,40),
+                                       'descripcionxml' => strlen($clave['descripcion']) <= 40 ? substr($clave['descripcion'],0,30) : substr($clave['descripcion'],0,45),
                                        'descripcionSAT' => $descrip[0]['descripcion']
                                     ];
 
@@ -664,8 +676,8 @@ class Beneficiarios extends MY_Controller
 
               }
 
-             
               $response = array('status' => true,'data' => $noEstan);
+
               $this->output->set_content_type('application/json')->set_output(json_encode($response));
 
     }

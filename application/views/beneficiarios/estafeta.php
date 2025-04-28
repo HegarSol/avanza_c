@@ -377,7 +377,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                   </div>
                   <div class="col-md-1">
                        <label for="">Consecutivo</label>
-                       <input type="text" class="form-control" value="<?php echo $consepro; ?>" readonly id="movi_provision" name="movi_provision">
+                       <input type="text" class="form-control" value="" readonly id="movi_provision" name="movi_provision">
                   </div>
                   <div class="col-md-3">
                        <label for="">UUID:</label>
@@ -1110,7 +1110,7 @@ function aceptarasiento(tableID)
                      {
                         $("#table tbody").empty();
                          response=JSON.parse(response);
-
+                  
                            if(response.data == 0)
                            {
                               document.getElementById("estadocol").innerHTML = 'Las claves del XML ya las tiene en su diccionario. Presione el botón de aceptar.';
