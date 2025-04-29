@@ -463,7 +463,8 @@ class Bancos extends MY_Controller
               }
 
               $CXP = 'BAN';
-              $data = array('titulo' => $titulo,'tipo_letra' => $letra,'datosprove' => $datosprove,'totalmontopoliza' => $totalmontopoliza,'impPagado' => $imppagago,'impDife' => $impdife,'totalPago' => $totalPAgo,'saldoInso' => $saldoinso,'pagos_detalle' => $pagos_detalle,'pagos' => $pagos,'monedas' => $monedas,'formapago' => $formapago,'CXP' => $CXP,'rfc' => $rfc[0]['rfc'],'montonegativo' => $montonegati,'bc' => $bc ,'montopositivo' => $montoposito , 'id' => $no_banco, 'tipo' => $tipo , 'permisosGrupo' => $permisos , 'datos' => $datos, 'datospoliza' => $datospoliza,'detalle'=>$detalle);
+              $editopera = 1;
+              $data = array('titulo' => $titulo,'tipo_letra' => $letra,'datosprove' => $datosprove,'editopera' => $editopera,'totalmontopoliza' => $totalmontopoliza,'impPagado' => $imppagago,'impDife' => $impdife,'totalPago' => $totalPAgo,'saldoInso' => $saldoinso,'pagos_detalle' => $pagos_detalle,'pagos' => $pagos,'monedas' => $monedas,'formapago' => $formapago,'CXP' => $CXP,'rfc' => $rfc[0]['rfc'],'montonegativo' => $montonegati,'bc' => $bc ,'montopositivo' => $montoposito , 'id' => $no_banco, 'tipo' => $tipo , 'permisosGrupo' => $permisos , 'datos' => $datos, 'datospoliza' => $datospoliza,'detalle'=>$detalle);
               $this->load->view('templates/navigation',$data);
               $this->load->view('bancos/operaciones/operaciones');
               $this->load->view('templates/footer');
@@ -511,7 +512,8 @@ class Bancos extends MY_Controller
                 $datas = $noprovb[0]['no_prov'] + 1;
                // $pagos = $this->pagos->get_pagos_by_movi($increme,$tipo_letra);
                 $CXP = 'BAN';
-                $data = array('titulo' => $titulo,'tipo_letra' => $tipo_letra,'datas' => $datas,'id' => $id,'monedas' => $monedas,'formapago' => $formapago,'consecu' => $increme,'CXP' => $CXP,'rfc' => $rfc[0]['rfc'],'tipo' => $tipo, 'permisosGrupo' => $permisos,'datos' => $datos,'bc' => $bc);
+                $editopera = 0;
+                $data = array('titulo' => $titulo,'tipo_letra' => $tipo_letra,'datas' => $datas,'id' => $id,'editopera' => $editopera,'monedas' => $monedas,'formapago' => $formapago,'consecu' => $increme,'CXP' => $CXP,'rfc' => $rfc[0]['rfc'],'tipo' => $tipo, 'permisosGrupo' => $permisos,'datos' => $datos,'bc' => $bc);
                 $this->load->view('templates/navigation',$data);
                 $this->load->view('bancos/operaciones/operaciones');
                 $this->load->view('templates/footer');

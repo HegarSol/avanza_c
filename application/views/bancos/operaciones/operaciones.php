@@ -45,7 +45,7 @@ $this->load->view('beneficiarios/modales/ModalAsientoContable');
             <div class="col-sm-2"></div>
             <div class="col-sm-2">
             <b><?php if($tipo == 1){echo 'Transferencia:';}else if($tipo == 2){ echo 'Cheque:'; }else{echo 'Depósito:';}?></b>
-            <input readonly type="text" id="no_mov" name="no_mov" class="form-control" value="<?php echo isset($datospoliza[0]['no_mov']) ? $datospoliza[0]['no_mov'] : $consecu ?>"> 
+            <input <?php echo $tipo == 1 ? 'readonly' : ($tipo == 2 ? ($editopera == 1 ? 'readonly' : '') : 'readonly') ?> type="text" id="no_mov" name="no_mov" class="form-control" value="<?php echo isset($datospoliza[0]['no_mov']) ? $datospoliza[0]['no_mov'] : $consecu ?>"> 
             </div>
             <div class="col-sm-2">
             <b>Fecha:</b><input type="date" id="fechatrabajo" name="fechatrabajo" value="<?php echo isset($datospoliza[0]['fecha']) ? $datospoliza[0]['fecha'] : date('Y-m-d')?>" class="form-control">
