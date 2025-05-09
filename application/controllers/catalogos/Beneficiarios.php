@@ -1149,7 +1149,9 @@ class Beneficiarios extends MY_Controller
 
             if(isset($permisos) && $permisos['add'] == "1")
             {
-                 $data = array('titulo' => 'Nuevo beneficiario','datas' => $datas,'accion' => 'catalogos/Beneficiarios/guardarbenefi','permisosGrupo' => $permisos, 'mensaje' => $mensaje);
+                 $rfc = $this->input->get('rfc');
+                 $nombre = $this->input->get('nombre');
+                 $data = array('titulo' => 'Nuevo beneficiario','datas' => $datas,'rfc' => $rfc,'nombre' => $nombre,'accion' => 'catalogos/Beneficiarios/guardarbenefi','permisosGrupo' => $permisos, 'mensaje' => $mensaje);
                  $this->load->view('templates/navigation',$data);
                  $this->load->view('beneficiarios/beneficiarios');
                  $this->load->view('templates/footer');

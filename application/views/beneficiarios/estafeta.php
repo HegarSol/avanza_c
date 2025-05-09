@@ -1088,7 +1088,7 @@ function aceptarasiento(tableID)
                               },
                               function(isConfirm){
                               if (isConfirm)
-                              { location.href=baseurl+"catalogos/Beneficiarios/agregar";  }
+                              { location.href=baseurl+"catalogos/Beneficiarios/agregar?rfc="+aData2[0][6]+"&nombre="+aData2[0][7];  }
                               else {
                                  swal("Cancelado", "No se creara al proveedor.", "error");
                               }
