@@ -37,7 +37,7 @@ if(isset($mensaje))
                                              <div class="row">
                                                   <div class="col-sm-8">
                                                        <label for="">Nombre:</label>
-                                                       <input type="text" class="form-control" value="<?php echo isset($datos[0]['nombre']) ? $datos[0]['nombre'] : '' ?>" id="nombre" name="nombre">
+                                                       <input type="text" class="form-control" value="<?php echo isset($datos[0]['nombre']) ? $datos[0]['nombre'] : (isset($nombre) ? $nombre : '') ?>" id="nombre" name="nombre">
                                                   </div>
                                              </div>
                                              <br>
@@ -48,7 +48,7 @@ if(isset($mensaje))
                                                   </div>
                                                   <div class="col-sm-3">
                                                        <label for="">RFC:</label>
-                                                       <input type="text" class="form-control" value="<?php echo isset($datos[0]['rfc']) ? $datos[0]['rfc'] : '' ?>" id="rfc" name="rfc">
+                                                       <input type="text" class="form-control" value="<?php echo isset($datos[0]['rfc']) ? $datos[0]['rfc'] : (isset($rfc) ? $rfc : '') ?>" id="rfc" name="rfc">
                                                   </div>
                                                   <div class="col-sm-2">
                                                        <label for="">Telefono: </label>
