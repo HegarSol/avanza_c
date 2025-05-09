@@ -1063,124 +1063,161 @@ function aceptarasiento(tableID)
                var oTT2 = $.fn.dataTable.TableTools.fnGetInstance("tabla_pendientes");
                var aData2 = oTT2.fnGetSelectedData();
 
-               let date = new Date(aData2[0][3]);
-
-               
-
-              // console.log(date);
-
-                let day = date.getDate();
-                let month = date.getMonth() + 1;
-                let year = date.getFullYear();
-
-                if(day.toString().length == 1)
-                {
-                  day = '0'+day;
-                }
-                if(month.toString().length == 1)
-                  {
-                     month = '0'+month;
-                  }
-                
-                  jQuery.ajax({
+               jQuery.ajax({
                   url : baseurl + "catalogos/Beneficiarios/getbeneficirfc",
                   type:"POST",
                   data:{rfc:aData2[0][6]},
                   dataType:"html",
-                  success:function(response)
+                  success:function(response2)
                   {
-                     response=JSON.parse(response);
-                    // var idpros = response[0].no_prov;
-                     
-               document.getElementById('uuid_provision').value = aData2[0][1];
-               document.getElementById('provee_provisi').value = response[0].no_prov;
-               document.getElementById('pago_provision').value = aData2[0][26];
-               document.getElementById('fecha_provision').value = year+'-'+month+'-'+day;
-               document.getElementById('num_factur_provisi').value = aData2[0][4];
-               document.getElementById('serie_provisi').value = aData2[0][5];
-            }
-               });
+                     response2=JSON.parse(response2);
 
-               jQuery.ajax({
-                     url: baseurl+"catalogos/Beneficiarios/getarchivos",
-                     type:"POST",
-                     data:{uuid:aData2[0][1]},
-                     dataType:"html",
-                     success:function(response)
+                     if(response2=='')
                      {
-                        $("#table tbody").empty();
-                         response=JSON.parse(response);
-                  
-                           if(response.data == 0)
-                           {
-                              document.getElementById("estadocol").innerHTML = 'Las claves del XML ya las tiene en su diccionario. Presione el botón de aceptar.';
-                              $("#estadocol").css("color","#3ADA13");
-                              $('#myModalxml').modal('show');
-                           }
-                           else
-                           {
-                              document.getElementById("estadocol").innerHTML = '';
-
-                                                   if(response.status == false)
-                                                   {
-                                                      var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: response.error});
-                                                   }
-                                                   else
-                                                   {
-
-                                                      for(var i in response.data)
-                                                      {
-
-                                                      var btn2 = document.createElement("INPUT");
-                                                            btn2.setAttribute("type","button");
-                                                            btn2.setAttribute('onclick','abrirmodalcuentas(this)');
-                                                            btn2.id = 'btnbuscar';
-                                                            btn2.className = 'btn btn-primary';
-                                                            btn2.value = 'Abrir catálogo cuentas'
-
-                                                            var clave = response.data[i].clave;
-                                                            var descrip = response.data[i].descripcionSAT;
-                                                            var descripxml = response.data[i].descripcionxml;
-
-                                                            var tbody = document.getElementById('table').getElementsByTagName('TBODY')[0];
-                                                            var row = document.createElement("TR")
-                                                            var td2 = document.createElement("TD")
-                                                            td2.appendChild(btn2)
-                                                            var td3 = document.createElement("TD")
-                                                            td3.appendChild(document.createTextNode(''))
-                                                            var td4 = document.createElement("TD")
-                                                            td4.appendChild(document.createTextNode(''))
-                                                            var td5 = document.createElement("TD")
-                                                            td5.appendChild(document.createTextNode(''))
-                                                            var td6 = document.createElement("TD")
-                                                            td6.appendChild(document.createTextNode(''))
-                                                            var td7 = document.createElement("TD")
-                                                            td7.appendChild(document.createTextNode(clave))
-                                                            var td8 = document.createElement("TD")
-                                                            td8.appendChild(document.createTextNode(descrip))
-                                                            var td9 = document.createElement("TD")
-                                                            td9.appendChild(document.createTextNode(descripxml))
-
-                                                            row.appendChild(td2);
-                                                            row.appendChild(td3);
-                                                            row.appendChild(td4);
-                                                            row.appendChild(td5);
-                                                            row.appendChild(td6);
-                                                            row.appendChild(td7);
-                                                            row.appendChild(td8);
-                                                            row.appendChild(td9);
-
-                                                            tbody.appendChild(row);
-
-                                                      }
-
-                                                      $('#myModalxml').modal('show');
-                                                   }
-                           }
-
-
+                        //var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: 'No tiene agregado a este proveedor, para aceptar esta factura agregelo primero.'});
+                           swal({
+                              title: "¿Desea agregarlo?",
+                              text: "No tiene agregado a este proveedor, para adjuntar a la poliza.",
+                              type: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#DD6B55",
+                              confirmButtonText: "Aceptar",
+                              cancelButtonText: "No, Cancelar",
+                              closeOnConfirm: false,
+                              closeOnCancel: false
+                              },
+                              function(isConfirm){
+                              if (isConfirm)
+                              { location.href=baseurl+"catalogos/Beneficiarios/agregar";  }
+                              else {
+                                 swal("Cancelado", "No se creara al proveedor.", "error");
+                              }
+                           });
                      }
-               });
+                     else
+                     {
+                         let date = new Date(aData2[0][3]);
+
+            
+                           // console.log(date);
+
+                              let day = date.getDate();
+                              let month = date.getMonth() + 1;
+                              let year = date.getFullYear();
+
+                              if(day.toString().length == 1)
+                              {
+                                 day = '0'+day;
+                              }
+                              if(month.toString().length == 1)
+                                 {
+                                    month = '0'+month;
+                                 }
+                              
+                                 jQuery.ajax({
+                                 url : baseurl + "catalogos/Beneficiarios/getbeneficirfc",
+                                 type:"POST",
+                                 data:{rfc:aData2[0][6]},
+                                 dataType:"html",
+                                 success:function(response)
+                                 {
+                                    response=JSON.parse(response);
+                                 // var idpros = response[0].no_prov;
+                                    
+                              document.getElementById('uuid_provision').value = aData2[0][1];
+                              document.getElementById('provee_provisi').value = response[0].no_prov;
+                              document.getElementById('pago_provision').value = aData2[0][26];
+                              document.getElementById('fecha_provision').value = year+'-'+month+'-'+day;
+                              document.getElementById('num_factur_provisi').value = aData2[0][4];
+                              document.getElementById('serie_provisi').value = aData2[0][5];
+                                 }
+                              });
+
+                              jQuery.ajax({
+                                    url: baseurl+"catalogos/Beneficiarios/getarchivos",
+                                    type:"POST",
+                                    data:{uuid:aData2[0][1]},
+                                    dataType:"html",
+                                    success:function(response)
+                                    {
+                                       $("#table tbody").empty();
+                                       response=JSON.parse(response);
+                                 
+                                          if(response.data == 0)
+                                          {
+                                             document.getElementById("estadocol").innerHTML = 'Las claves del XML ya las tiene en su diccionario. Presione el botón de aceptar.';
+                                             $("#estadocol").css("color","#3ADA13");
+                                             $('#myModalxml').modal('show');
+                                          }
+                                          else
+                                          {
+                                             document.getElementById("estadocol").innerHTML = '';
+
+                                                                  if(response.status == false)
+                                                                  {
+                                                                     var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: response.error});
+                                                                  }
+                                                                  else
+                                                                  {
+
+                                                                     for(var i in response.data)
+                                                                     {
+
+                                                                     var btn2 = document.createElement("INPUT");
+                                                                           btn2.setAttribute("type","button");
+                                                                           btn2.setAttribute('onclick','abrirmodalcuentas(this)');
+                                                                           btn2.id = 'btnbuscar';
+                                                                           btn2.className = 'btn btn-primary';
+                                                                           btn2.value = 'Abrir catálogo cuentas'
+
+                                                                           var clave = response.data[i].clave;
+                                                                           var descrip = response.data[i].descripcionSAT;
+                                                                           var descripxml = response.data[i].descripcionxml;
+
+                                                                           var tbody = document.getElementById('table').getElementsByTagName('TBODY')[0];
+                                                                           var row = document.createElement("TR")
+                                                                           var td2 = document.createElement("TD")
+                                                                           td2.appendChild(btn2)
+                                                                           var td3 = document.createElement("TD")
+                                                                           td3.appendChild(document.createTextNode(''))
+                                                                           var td4 = document.createElement("TD")
+                                                                           td4.appendChild(document.createTextNode(''))
+                                                                           var td5 = document.createElement("TD")
+                                                                           td5.appendChild(document.createTextNode(''))
+                                                                           var td6 = document.createElement("TD")
+                                                                           td6.appendChild(document.createTextNode(''))
+                                                                           var td7 = document.createElement("TD")
+                                                                           td7.appendChild(document.createTextNode(clave))
+                                                                           var td8 = document.createElement("TD")
+                                                                           td8.appendChild(document.createTextNode(descrip))
+                                                                           var td9 = document.createElement("TD")
+                                                                           td9.appendChild(document.createTextNode(descripxml))
+
+                                                                           row.appendChild(td2);
+                                                                           row.appendChild(td3);
+                                                                           row.appendChild(td4);
+                                                                           row.appendChild(td5);
+                                                                           row.appendChild(td6);
+                                                                           row.appendChild(td7);
+                                                                           row.appendChild(td8);
+                                                                           row.appendChild(td9);
+
+                                                                           tbody.appendChild(row);
+
+                                                                     }
+
+                                                                     $('#myModalxml').modal('show');
+                                                                  }
+                                          }
+
+
+                                    }
+                              });
+                     }
+                  }
+               }); 
+             
+              
          }
          else
          {
