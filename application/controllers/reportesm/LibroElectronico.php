@@ -24,7 +24,7 @@ class LibroElectronico extends MY_Controller
            $errores=array();
            $rfc = $this->configModel->getConfig();
            $permisos=$this->permisosForma($_SESSION['id'],1);
-           $data=array('titulo'=>'Reporte libro electrónico','rfc'=>$rfc[0]['rfc'],'razon'=>$this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores'=>$errores,'permisosGrupo'=>$permisos);
+           $data=array('titulo'=>'Reporte libro diario','rfc'=>$rfc[0]['rfc'],'razon'=>$this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores'=>$errores,'permisosGrupo'=>$permisos);
            $items=$this->menuModel->menus($_SESSION['tipo']);
            $this->multi_menu->set_items($items);
            $this->load->view('templates/header');
@@ -67,7 +67,7 @@ class LibroElectronico extends MY_Controller
 
         $this->pdf->SetAutoPageBreak(true,10);
         $this->pdf->AddPage();
-        $this->pdf->SetTitle(utf8_decode('Reporte Libro Electrónico'));
+        $this->pdf->SetTitle(utf8_decode('Reporte libro diario'));
         $this->pdf->SetFillColor(220,220,220);
         $this->pdf->SetDrawColor(220,220,220);
 
@@ -176,7 +176,7 @@ class LibroElectronico extends MY_Controller
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A4:G4');
 
         $objsheet->setCellValue('A1',$this->rowc[0]['nombreEmpresa']);
-        $objsheet->setCellValue('A2','Reporte Libro Electrónico');
+        $objsheet->setCellValue('A2','Reporte libro diario');
         $objsheet->setCellValue('A3','Del: '.date('d-m-Y',strtotime($fechaini)).' Al: '.date('d-m-Y',strtotime($fechafin)));
         $objsheet->setCellValue('A4','Tipo de póliza: '.$tipopoliza);
 
@@ -277,7 +277,7 @@ class LibroElectronico extends MY_Controller
         $this->pdf->Ln(20);
         $this->pdf->Cell(70);
         $this->pdf->SetFont('Helvetica','B',10);
-        $this->pdf->Cell(10,0,utf8_decode('Reporte: Libro Electrónico'));
+        $this->pdf->Cell(10,0,utf8_decode('Reporte libro diario'));
         $this->pdf->Ln(5);
         $this->pdf->Cell(70);
         $this->pdf->Cell(10,0,'Del: '.date('d-m-Y',strtotime($fechaini)).' Al :'.date('d-m-Y',strtotime($fechafin)));
