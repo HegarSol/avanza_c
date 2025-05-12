@@ -250,7 +250,7 @@ class Reportes extends MY_Controller
         $this->abonossinconciliar = $this->input->post('abonossinconciliar');
         $this->saldolibros = $this->input->post('saldolibros');
 
-        $this->valores = $this->bancos->getconciliacion($this->fechaini,$this->fechafin,$this->tipo,$this->id,$this->mosmo);
+        $this->valores = $this->bancos->getconciliacion(date('Y-m-d',strtotime($this->fechaini)),date('Y-m-d',strtotime($this->fechafin)),$this->tipo,$this->id,$this->mosmo);
 
         $this->data = $this->bancos->datosBancos($this->id);
 
