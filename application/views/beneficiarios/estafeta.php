@@ -946,7 +946,7 @@ function aceptarasiento(tableID)
                            },
                            function(isConfirm){
                            if (isConfirm)
-                           { location.href=baseurl+"catalogos/Beneficiarios/agregar";  }
+                           { location.href=baseurl+"catalogos/Beneficiarios/agregar?rfc="+aData[0][6]+"&nombre="+aData[0][7];  }
                            else {
                               swal("Cancelado", "No se creara al proveedor.", "error");
                            }
@@ -954,6 +954,7 @@ function aceptarasiento(tableID)
                    }
                    else
                    {
+                      $('#myModalpolizasPago').modal('show');
                         jQuery.ajax({
                               type:"POST",
                               url: baseurl+"catalogos/Beneficiarios/getPolizasPagoProveedor",
@@ -984,7 +985,7 @@ function aceptarasiento(tableID)
                }
             })
 
-              $('#myModalpolizasPago').modal('show');
+
          }
          else if(tipo == 2)
          {
@@ -1020,7 +1021,7 @@ function aceptarasiento(tableID)
                            },
                            function(isConfirm){
                            if (isConfirm)
-                           { location.href=baseurl+"catalogos/Beneficiarios/agregar";  }
+                           { location.href=baseurl+"catalogos/Beneficiarios/agregar?rfc="+aData[0][6]+"&nombre="+aData[0][7];  }
                            else {
                               swal("Cancelado", "No se creara al proveedor.", "error");
                            }
