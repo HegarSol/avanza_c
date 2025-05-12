@@ -10,7 +10,8 @@
    <thead>
       <tr>
          <th>Cuenta</th>
-         <th>Sub Cta</th>
+         <th>Sub cta</th>
+         <th>Ssub cta</th>
          <th>Nombre</th>
          <th>Inicial</th>
          <th>Cargos</th>
@@ -24,6 +25,7 @@
       <tr>
          <td><?php echo $balanza['cuenta'] ;?></td>
          <td><?php echo $balanza['sub_cta'] ;?></td>
+         <td><?php echo $balanza['ssub_cta'] ;?></td>
          <td><?php echo $balanza['nombre'] ;?></td>
          <td style="text-align:right;"><?php echo number_format($balanza['sini'],2,'.','') ;?></td>
          <td style="text-align:right;"><?php echo number_format($balanza['cargos'],2,'.','') ;?></td>

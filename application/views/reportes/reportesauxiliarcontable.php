@@ -1,6 +1,9 @@
 <?php
 if(!defined('BASEPATH'))
 exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Upss...</p></font></b> <p align ="center"> <font style="font-size:30px; font-family:arial">No se puede accesar directamente al archivo.</font> </p>');
+
+$this->load->view('beneficiarios/modales/TablaCuentasOperaciones');
+
 ?>
 
 <br>
@@ -15,7 +18,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
         <input type="hidden" value="<?php echo $rfc;?>" id="rfcempresa" name="rfcempresa" readonly>
               <div class="row">
                   <div class="col-md-3">
-                      <label for="">De la cuenta:</label>
+                      <label for="">De la cuenta:</label>&nbsp;&nbsp;<a class="glyphicon glyphicon-search" data-toggle="modal" data-target="#myModalCuentasOperaciones"></a>
                       <input type="text" id="cuenta" name="cuenta" class="form-control">
                   </div>
                   <div class="col-md-3">
@@ -64,3 +67,14 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
 </div>
 
 </form>
+
+<script>
+function seleccionarcunetaoperaciones(cuenta, subcuenta, nombre, ssubcuenta)
+{
+    document.getElementById('cuenta').value = cuenta;
+    document.getElementById('subcuenta').value = subcuenta;
+    document.getElementById('subcuenta2').value = ssubcuenta;
+    
+}
+
+</script>
