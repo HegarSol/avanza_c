@@ -176,8 +176,10 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
     {
         var fecha = new Date();
         var hoy = fecha.getDate();
-        var mesAnterior = fecha.getMonth() - 1 + 1; 
+        var mesAnterior = fecha.getMonth() - 1 + 2; 
 
+        document.getElementById('periodo').value = 'mensual';
+        document.getElementById('meses').style.display = 'block';
         document.getElementById('mese').value = '0'+mesAnterior;
     }
    function verificar()
