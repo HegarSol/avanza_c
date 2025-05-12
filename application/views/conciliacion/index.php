@@ -40,14 +40,24 @@ $img = $datosbanco[0]['logo'];
                 </div>
           </div>
           <br>
+          <script type="text/javascript">
+      $(function () { $('#fechaini').datetimepicker({format: 'd/m/Y', seconds: false, formatTime: 'A g:i'}); });
+      $(function () { $('#fechafin').datetimepicker({format: 'd/m/Y', seconds: false, formatTime: 'A g:i'}); });
+    </script>
           <div class="row">
               <div class="col-md-2">
                   <label for="">Del:</label>
-                  <input type="date" class="form-control" id="fechaini" name="fechaini">
+                  <!-- <input type="text" class="form-control" id="fechaini" name="fechaini"> -->
+                   <?php echo form_input(array('name'=>'fechaini','id'=>'fechaini','class'=>'form-control'),
+      set_value('fechaini'));
+      ?>
               </div>
               <div class="col-md-2">
                    <label for="">Al:</label>
-                   <input type="date" class="form-control" id="fechafin" name="fechafin">
+                   <!-- <input type="text" class="form-control" id="fechafin" name="fechafin"> -->
+                   <?php echo form_input(array('name'=>'fechafin','id'=>'fechafin','class'=>'form-control'),
+      set_value('fechafin'));
+      ?>
               </div>
               <div class="col-md-2">
                     <label for="">Tipo de póliza:</label>
@@ -534,6 +544,7 @@ function btnConciliacion(tipo)
 
   var fechaini = document.getElementById('fechaini').value;
   var fechafin = document.getElementById('fechafin').value;
+
   var no_banco = '<?php echo $no_banco[0];?>';
   var mosmo = $('input:radio[name=mosmo]:checked').val();
 

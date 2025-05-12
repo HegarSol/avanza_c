@@ -49,7 +49,7 @@ class Conciliacion extends MY_Controller
         $tipo = $this->input->post('tipo');
         $mosmo = $this->input->post('mosmo');
 
-        $data = $this->bancos->getconciliacion($fechaini,$fechafin,$tipo,$no_banco,$mosmo); 
+        $data = $this->bancos->getconciliacion(date('Y-m-d',strtotime($fechaini)),date('Y-m-d',strtotime($fechafin)),$tipo,$no_banco,$mosmo); 
 
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
