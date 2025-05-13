@@ -103,50 +103,123 @@ class LibroElectronico extends MY_Controller
 
 
         $anterior = null;
-
-        for($i=0;$i<count($this->datos);$i++)
+        $str = count($this->datos);
+        $i = 0;
+        
+        while($i < $str)
         {
-              if($anterior == $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'])
-              {
-                    if($this->datos[$i]['c_a'] == '+')
+            $valors = $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'];
+//var_dump($valors);
+            // $newvalor = $rl['tipo_mov'].'-'.$rl['no_banco'].'-'.$rl['no_mov'];
+            // $valors = $rl['tipo_mov'].'-'.$rl['no_banco'].'-'.$rl['no_mov'];
+            $totalcargo = 0;
+            $totalabono = 0;
+// var_dump($this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov']);
+            while($valors == $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'] AND $i < $str)
+            {
+                $vf = $this->datos[$i];
+
+                    if($vf['c_a'] == '+')
                     {
                         $renglon = $this->Rowpdf(array(
-                            $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'],
-                            date('d-m-Y',strtotime($this->datos[$i]['fecha'])),
-                            utf8_decode($this->datos[$i]['beneficia']),
-                            $this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta'],
-                            utf8_decode($this->datos[$i]['nombre_cuenta']),
-                            number_format($this->datos[$i]['monto'],2,'.',','),
+                            $vf['tipo_mov'].'-'.$vf['no_banco'].'-'.$vf['no_mov'],
+                            date('d-m-Y',strtotime($vf['fecha'])),
+                            utf8_decode($vf['beneficia']),
+                            $vf['cuenta'].' - '.$vf['sub_cta'].' - '.$vf['ssub_cta'],
+                            utf8_decode($vf['nombre_cuenta']),
+                            number_format($vf['monto'],2,'.',','),
                             ''
                         ));
                         $this->pdf->SetY($renglon-3.5);
                         $this->pdf->Ln(4);
+
+                        $totalcargo = $totalcargo + $vf['monto'];
                     }
                     else
                     {
-                        $renglon = $this->Rowpdf(array(
-                            $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'],
-                            date('d-m-Y',strtotime($this->datos[$i]['fecha'])),
-                            utf8_decode($this->datos[$i]['beneficia']),
-                            $this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta'],
-                            utf8_decode($this->datos[$i]['nombre_cuenta']),
-                            '',
-                            number_format($this->datos[$i]['monto'],2,'.',',')
-                        ));
-                        $this->pdf->SetY($renglon-3.5);
-                        $this->pdf->Ln(4);
+                            $renglon = $this->Rowpdf(array(
+                                $vf['tipo_mov'].'-'.$vf['no_banco'].'-'.$vf['no_mov'],
+                                date('d-m-Y',strtotime($vf['fecha'])),
+                                utf8_decode($vf['beneficia']),
+                                $vf['cuenta'].' - '.$vf['sub_cta'].' - '.$vf['ssub_cta'],
+                                utf8_decode($vf['nombre_cuenta']),
+                                '',
+                                number_format($vf['monto'],2,'.',',')
+                            ));
+                            $this->pdf->SetY($renglon-3.5);
+                            $this->pdf->Ln(4);
+
+                            $totalabono = $totalabono + $vf['monto'];
                     }
-              }
-              else
-              {
-                $this->pdf->Ln(5);
-                $y =$this->pdf->GetY();
-                $this->pdf->Line(5,$y+3,212,$y+3);
+                
 
-              }           
+                $i = $i + 1;
 
-            $anterior = $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'];
+                // if($i < $str)
+                // {
+                //        $el = $this->datos[$i];
+                //       $newvalor = $el['tipo_mov'].'-'.$el['no_banco'].'-'.$el['no_mov'];
+                // }
+              
+            }
+                      $this->pdf->SetCol(0);
+                      $this->pdf->Cell(140,0);
+                      $this->pdf->Cell(10,-7,'____________________________________');
+                      $this->pdf->SetCol(0);
+                      $this->pdf->Cell(162,0,number_format($totalcargo,2,'.',','),0,0,'R');
+                      $this->pdf->Cell(25,0,number_format($totalabono,2,'.',','),0,0,'R');
+                      $this->pdf->Ln(6);
+
+
+                      
         }
+
+        // for($i=0;$i<count($this->datos);$i++)
+        // {
+        //     $anterior = $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'];
+        //       if($anterior == $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'])
+        //       {
+        //             if($this->datos[$i]['c_a'] == '+')
+        //             {
+        //                 $renglon = $this->Rowpdf(array(
+        //                     $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'],
+        //                     date('d-m-Y',strtotime($this->datos[$i]['fecha'])),
+        //                     utf8_decode($this->datos[$i]['beneficia']),
+        //                     $this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta'].' - '.$this->datos[$i]['ssub_cta'],
+        //                     utf8_decode($this->datos[$i]['nombre_cuenta']),
+        //                     number_format($this->datos[$i]['monto'],2,'.',','),
+        //                     ''
+        //                 ));
+        //                 $this->pdf->SetY($renglon-3.5);
+        //                 $this->pdf->Ln(4);
+        //             }
+        //             else
+        //             {
+        //                 $renglon = $this->Rowpdf(array(
+        //                     $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'],
+        //                     date('d-m-Y',strtotime($this->datos[$i]['fecha'])),
+        //                     utf8_decode($this->datos[$i]['beneficia']),
+        //                     $this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta'].' - '.$this->datos[$i]['ssub_cta'],
+        //                     utf8_decode($this->datos[$i]['nombre_cuenta']),
+        //                     '',
+        //                     number_format($this->datos[$i]['monto'],2,'.',',')
+        //                 ));
+        //                 $this->pdf->SetY($renglon-3.5);
+        //                 $this->pdf->Ln(4);
+        //             }
+        //       }
+        //       else
+        //       {
+
+        //         $this->pdf->Ln(5);
+        //         $y =$this->pdf->GetY();
+        //         $this->pdf->Line(5,$y+3,212,$y+3);
+
+        //       }           
+
+
+        //     $anterior = $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'];
+        // }
 
         
         $this->pdf->footer2();
@@ -269,7 +342,7 @@ class LibroElectronico extends MY_Controller
         }
         if(isset($formato))
         {
-          $this->pdf->Image(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1],2,2,80,50);
+          $this->pdf->Image(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1],2,2,70,50);
         }
         $this->pdf->SetFont('Helvetica','B',15);
         $this->pdf->Cell(70);
