@@ -75,9 +75,9 @@
             $row = $this->db2->select('*')->from('catalogocta')->where('cuenta',$cuenta)->where('sub_cta',$sub_cta)->where('ssub_cta',$ssub_cta)->get();
             return $row->result_array();
         }
-        public function verificarreportecuenta($cuenta,$sub_cta)
+        public function verificarreportecuenta($cuenta,$sub_cta,$ssub_cta)
         {
-            $row = $this->db2->select('*')->from('catalogocta')->where('cuenta',$cuenta)->where('sub_cta',$sub_cta)->get();
+            $row = $this->db2->select('*')->from('catalogocta')->where('cuenta',$cuenta)->where('sub_cta',$sub_cta)->where('ssub_cta',$ssub_cta)->get();
             return $row->result_array();
         }
         public function borrarCuenta($id)

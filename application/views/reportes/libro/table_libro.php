@@ -9,6 +9,7 @@
          <th>Concepto</th>
          <th>Cuenta</th>
          <th>SubCta</th>
+         <th>SsubCta</th>
          <th>Nombre cuenta</th>
          <th>Monto</th>
          <th>C/A</th>
@@ -25,6 +26,7 @@
          <td><?php echo $libros['concepto']; ?></td>
          <td><?php echo $libros['cuenta']; ?></td>
          <td><?php echo $libros['sub_cta']; ?></td>
+         <td><?php echo $libros['ssub_cta']; ?></td>
          <td><?php echo $libros['nombre_cuenta']; ?></td>
          <td style="text-align:right;"><?php echo number_format($libros['monto'],2,'.',''); ?></td>
          <td><?php echo $libros['c_a']; ?></td>

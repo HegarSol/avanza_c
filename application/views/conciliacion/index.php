@@ -424,7 +424,7 @@ function btnTransito(mosmo)
                       }
 
 
-                      if(response[i].fechaCobro == null)
+                      if(response[i].cobrado == 0)
                       {
 
                         var element1 = document.createElement("input");
@@ -611,7 +611,7 @@ function btnConciliacion(tipo)
                       }
 
 
-                      if(response[i].fechaCobro == null)
+                      if(response[i].cobrado == 0)
                       {
 
                         var element1 = document.createElement("input");

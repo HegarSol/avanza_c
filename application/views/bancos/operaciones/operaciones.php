@@ -849,7 +849,7 @@ function recogerDatosPoliza(tableID)
                 }
             }
             var fechaCobro = document.getElementById('fechaconcep').value;
-            if(fecha == "")
+            if(fechaCobro == "")
             {
                var cobro = 0;
             }

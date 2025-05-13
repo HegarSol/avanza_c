@@ -188,8 +188,8 @@ class OperacionesModel extends MY_Model
       $row = $this->db2->select('cuenta,sub_cta,SUM(IF(c_a = "+",monto,-monto)) as saldo')
       ->from('opera_banco_detalle')
       ->where('cuenta',$cuenta)
-      ->where('sub_cta >=',$subcuen)
-      ->where('sub_cta <=',$subcu2)
+      ->where('sub_cta',$subcuen)
+      ->where('ssub_cta',$subcu2)
       ->where('fecha <',$fechaini)
       ->group_by('cuenta,sub_cta')
       ->get();
@@ -210,8 +210,8 @@ class OperacionesModel extends MY_Model
        ->from('opera_banco_detalle ac')
        ->join('opera_banco_encabe t','ac.tipo_mov = t.tipo_mov AND ac.no_banco = t.no_banco AND ac.no_mov = t.no_mov','left')
        ->where('ac.cuenta',$cuenta)
-       ->where('ac.sub_cta >=',$subcuenta)
-       ->where('ac.sub_cta <=',$subcuen2)
+       ->where('ac.sub_cta ',$subcuenta)
+       ->where('ac.ssub_cta ',$subcuen2)
        ->where('ac.fecha >=',$fechaini)
        ->where('ac.fecha <=',$fechafin);
        if($agrupa == 1)
@@ -254,7 +254,7 @@ class OperacionesModel extends MY_Model
     }
     public function libro($tipo,$fechaini,$fechafin)
     {
-         $this->db2->select('t.tipo_mov,t.no_banco,t.no_mov,t.fecha,t.beneficia,t.concepto,ac.cuenta,ac.sub_cta,ac.nombre_cuenta,ac.monto,ac.c_a,ac.num_reg')
+         $this->db2->select('t.tipo_mov,t.no_banco,t.no_mov,t.fecha,t.beneficia,t.concepto,ac.cuenta,ac.sub_cta,ac.ssub_cta,ac.nombre_cuenta,ac.monto,ac.c_a,ac.num_reg')
          ->from('opera_banco_encabe t')
          ->join('opera_banco_detalle ac','ac.tipo_mov = t.tipo_mov AND ac.no_banco = t.no_banco AND ac.no_mov = t.no_mov','right');
         //  ->join('catalogocta cat','ac.cuenta = cat.cuenta AND ac.sub_cta = cat.sub_cta','right');

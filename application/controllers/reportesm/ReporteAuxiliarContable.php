@@ -89,7 +89,7 @@ class ReporteAuxiliarContable extends MY_Controller
 
         $this->datosdetalle = $this->operaciones->auxiliardetalle($this->cuenta,$this->subcun,$this->subcun2,$this->fechaini,$this->fechafin,$this->agrupa);
 
-        $this->datosbanco = $this->cuentas->verificarreportecuenta($this->cuenta,$this->subcun);
+        $this->datosbanco = $this->cuentas->verificarreportecuenta($this->cuenta,$this->subcun,$this->subcun2);
 
         $saldo = 0;
 
@@ -326,7 +326,7 @@ class ReporteAuxiliarContable extends MY_Controller
 
         $this->datosdetalle = $this->operaciones->auxiliardetalle($this->cuenta,$this->subcun,$this->subcun2,$this->fechaini,$this->fechafin,$this->agrupa);
 
-        $this->datosbanco = $this->cuentas->verificarreportecuenta($this->cuenta,$this->subcun);
+        $this->datosbanco = $this->cuentas->verificarreportecuenta($this->cuenta,$this->subcun,$this->subcun2);
 
         $saldo = 0;
 
