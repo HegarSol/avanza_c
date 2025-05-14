@@ -264,55 +264,160 @@ class LibroElectronico extends MY_Controller
         $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
         $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
 
-        $numero3=5;
-        $numero4=6;
+        $numero3=7;
+        $numero4=12;
 
-        $totalcargo = 0;
-        $totalabono = 0;
+        $str = count($this->datos);
+        $i = 0;
 
-        for($i=0;$i<count($this->datos); $i++)
+        $styleArray = array(
+            'borders' => array(
+              'bottom' => array(
+                'style' => PHPExcel_Style_Border::BORDER_THIN
+              )
+            )
+          );
+
+        // $totalcargo = 0;
+        // $totalabono = 0;
+
+        while($i < $str-1)
         {
+            $valors = $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'];
+
+            $vf = $this->datos[$i];
             $numero3++;
-            $numero4++;
+            $objsheet->setCellValue('A'.$numero3,$vf['tipo_mov'].'-'.$vf['no_banco'].'-'.$vf['no_mov']);
+            $objsheet->setCellValue('B'.$numero3,date('d-m-Y',strtotime($vf['fecha'])));
+            $objsheet->setCellValue('C'.$numero3,$vf['beneficia']);
 
-            if($this->datos[$i]['c_a'] == '+')
+            $totalcargo = 0;
+            $totalabono = 0;
+
+            while($valors == $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'] AND $i < $str-1)
             {
-                $objsheet->setCellValue('A'.$numero3,$this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov']);
-                $objsheet->setCellValue('B'.$numero3,date('d-m-Y',strtotime($this->datos[$i]['fecha'])));
-                $objsheet->setCellValue('C'.$numero3,$this->datos[$i]['beneficia']);
-                $objsheet->setCellValue('D'.$numero3,$this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta']);
-                $objsheet->setCellValue('E'.$numero3,$this->datos[$i]['nombre_cuenta']);
-                $objsheet->setCellValue('F'.$numero3,number_format($this->datos[$i]['monto'],2,'.',','));
-                $objsheet->setCellValue('G'.$numero3,'');
+                $vf = $this->datos[$i];
 
-                $totalcargo += $this->datos[$i]['monto'];
-            }
-            else
-            {
-                $objsheet->setCellValue('A'.$numero3,$this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov']);
-                $objsheet->setCellValue('B'.$numero3,date('d-m-Y',strtotime($this->datos[$i]['fecha'])));
-                $objsheet->setCellValue('C'.$numero3,$this->datos[$i]['beneficia']);
-                $objsheet->setCellValue('D'.$numero3,$this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta']);
-                $objsheet->setCellValue('E'.$numero3,$this->datos[$i]['nombre_cuenta']);
-                $objsheet->setCellValue('F'.$numero3,'');
-                $objsheet->setCellValue('G'.$numero3,number_format($this->datos[$i]['monto'],2,'.',','));
+                  $numero3++;
+                  $numero4++;
 
-                $totalabono += $this->datos[$i]['monto'];
+                if($vf['c_a'] == '+')
+                {
+                    $objsheet->setCellValue('D'.$numero3,$vf['cuenta'].'-'.$vf['sub_cta'].'-'.$vf['ssub_cta']);
+                    $objsheet->setCellValue('E'.$numero3,$vf['nombre_cuenta']);
+                    $objsheet->setCellValue('F'.$numero3,number_format($vf['monto'],2,'.',','));
+                    $objsheet->setCellValue('G'.$numero3,'');
+
+                    $totalcargo = $totalcargo + $vf['monto'];
+                }
+                else
+                {
+                    $objsheet->setCellValue('D'.$numero3,$vf['cuenta'].'-'.$vf['sub_cta'].'-'.$vf['ssub_cta']);
+                    $objsheet->setCellValue('E'.$numero3,$vf['nombre_cuenta']);
+                    $objsheet->setCellValue('F'.$numero3,'');
+                    $objsheet->setCellValue('G'.$numero3,number_format($vf['monto'],2,'.',','));
+
+                    $totalabono = $totalabono + $vf['monto'];
+                }
+
+                $i = $i + 1;
+                
             }
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$numero3.':G'.$numero3)->applyFromArray($styleArray);
+                $numero3++;
+
+                $objsheet->setCellValue('F'.$numero3,number_format($totalcargo,2,'.',','));
+                $objsheet->setCellValue('G'.$numero3,number_format($totalabono,2,'.',','));
+
+                $objPHPExcel->getActiveSheet()->getStyle('F'.$numero3.':G'.$numero3)->applyFromArray($styleArray);
 
         }
 
-        $objsheet->setCellValue('E'.$numero4,'TOTALES');
-        $objsheet->setCellValue('F'.$numero4,number_format($totalcargo,2,'.',','));
-        $objsheet->setCellValue('G'.$numero4,number_format($totalabono,2,'.',','));
+                // echo '<pre>';
+                // print_r($this->datos[$i]);
+                // echo '</pre>';
 
-        $style = array(
+                // echo '<pre>';
+                // print_r($valors);
+                // echo '</pre
+
+        // for($i=0;$i<count($this->datos); $i++)
+        // {
+        //     $numero3++;
+        //     $numero4++;
+
+        //     if($this->datos[$i]['c_a'] == '+')
+        //     {
+        //         $objsheet->setCellValue('A'.$numero3,$this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov']);
+        //         $objsheet->setCellValue('B'.$numero3,date('d-m-Y',strtotime($this->datos[$i]['fecha'])));
+        //         $objsheet->setCellValue('C'.$numero3,$this->datos[$i]['beneficia']);
+        //         $objsheet->setCellValue('D'.$numero3,$this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta']);
+        //         $objsheet->setCellValue('E'.$numero3,$this->datos[$i]['nombre_cuenta']);
+        //         $objsheet->setCellValue('F'.$numero3,number_format($this->datos[$i]['monto'],2,'.',','));
+        //         $objsheet->setCellValue('G'.$numero3,'');
+
+        //         $totalcargo += $this->datos[$i]['monto'];
+        //     }
+        //     else
+        //     {
+        //         $objsheet->setCellValue('A'.$numero3,$this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov']);
+        //         $objsheet->setCellValue('B'.$numero3,date('d-m-Y',strtotime($this->datos[$i]['fecha'])));
+        //         $objsheet->setCellValue('C'.$numero3,$this->datos[$i]['beneficia']);
+        //         $objsheet->setCellValue('D'.$numero3,$this->datos[$i]['cuenta'].' - '.$this->datos[$i]['sub_cta']);
+        //         $objsheet->setCellValue('E'.$numero3,$this->datos[$i]['nombre_cuenta']);
+        //         $objsheet->setCellValue('F'.$numero3,'');
+        //         $objsheet->setCellValue('G'.$numero3,number_format($this->datos[$i]['monto'],2,'.',','));
+
+        //         $totalabono += $this->datos[$i]['monto'];
+        //     }
+
+        // }
+
+           $style = array(
             'alignment' => array(
                 'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
             )
         );
 
-        $objPHPExcel->getDefaultStyle()->applyFromArray($style);
+        $styleleft = array(
+          'alignment' => array(
+              'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+          )
+      );
+          $styleright = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+            )
+        );
+
+        
+
+      $lastrow = $objPHPExcel->getActiveSheet()->getHighestRow();
+
+
+
+        $objPHPExcel->getActiveSheet()->getStyle('A1:G1')->applyFromArray($style); 
+        $objPHPExcel->getActiveSheet()->getStyle('A2:G2')->applyFromArray($style);
+        $objPHPExcel->getActiveSheet()->getStyle('A3:G3')->applyFromArray($style); 
+        $objPHPExcel->getActiveSheet()->getStyle('A4:G4')->applyFromArray($style);
+        $objPHPExcel->getActiveSheet()->getStyle('A5:G5')->applyFromArray($style);    
+
+        $objPHPExcel->getActiveSheet()->getStyle('B1:B'.$lastrow)->applyFromArray($styleleft);
+        $objPHPExcel->getActiveSheet()->getStyle('C1:C'.$lastrow)->applyFromArray($styleright);
+        $objPHPExcel->getActiveSheet()->getStyle('D1:D'.$lastrow)->applyFromArray($styleleft);
+        $objPHPExcel->getActiveSheet()->getStyle('E1:E'.$lastrow)->applyFromArray($styleleft);
+        $objPHPExcel->getActiveSheet()->getStyle('F1:F'.$lastrow)->applyFromArray($styleright);
+        $objPHPExcel->getActiveSheet()->getStyle('G1:G'.$lastrow)->applyFromArray($styleright);
+       
+
+        // $style = array(
+        //     'alignment' => array(
+        //         'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+        //     )
+        // );
+
+        // $objPHPExcel->getDefaultStyle()->applyFromArray($style);
+
         $objWriter=PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel5');
         $objWriter->save('php://output');
     }
