@@ -215,12 +215,12 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                                 }
 
                                 $row =  $CI->dicuentas->buscariguales($cClave);
-                               
 
 
                                 $cCuenta = $row[0]['cuenta'];
                                 $cSub_Cta = $row[0]['sub_cta'];
                                 $cSsub_Cta = $row[0]['ssub_cta'];
+
 
                                 $temsubcta =  isset($departa) && $departa > 0 ? $departa : 1;
                                 $nom_cuen = $CI->cuentas->get_cuenta($cCuenta,$temsubcta,$cSsub_Cta);
@@ -249,6 +249,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                 ];
 
                 }
+
 
                 foreach ($conceptos as $key => $row) 
                 {
@@ -444,14 +445,14 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                     foreach($result as $value) 
                     {
-                        if($emisordatos[0]['traslada_ieps'] == 1)
-                        {
-                            $valuesuma = $value['importe'];
-                        }
-                        else
-                        {
-                            $valuesuma = $value['importe'] + $value['importeieps'];
-                        }
+                        // if($emisordatos[0]['traslada_ieps'] == 1)
+                        // {
+                             $valuesuma = $value['importe'];
+                        // }
+                        // else
+                        // {
+                        //     $valuesuma = $value['importe'] + $value['importeieps'];
+                        // }
 
                         $result4[] = array('clave' => $value['clave'], 
                                               'importe' => $valuesuma,
