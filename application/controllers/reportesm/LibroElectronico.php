@@ -106,62 +106,57 @@ class LibroElectronico extends MY_Controller
         $str = count($this->datos);
         $i = 0;
         
-        while($i < $str)
+        while($i < $str-1)
         {
             $valors = $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'];
-//var_dump($valors);
-            // $newvalor = $rl['tipo_mov'].'-'.$rl['no_banco'].'-'.$rl['no_mov'];
-            // $valors = $rl['tipo_mov'].'-'.$rl['no_banco'].'-'.$rl['no_mov'];
-            $totalcargo = 0;
-            $totalabono = 0;
-// var_dump($this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov']);
-            while($valors == $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'] AND $i < $str)
-            {
-                $vf = $this->datos[$i];
 
-                    if($vf['c_a'] == '+')
-                    {
-                        $renglon = $this->Rowpdf(array(
+            $vf = $this->datos[$i];
+
+             $renglon = $this->Rowpdf(array(
                             $vf['tipo_mov'].'-'.$vf['no_banco'].'-'.$vf['no_mov'],
                             date('d-m-Y',strtotime($vf['fecha'])),
-                            utf8_decode($vf['beneficia']),
-                            $vf['cuenta'].' - '.$vf['sub_cta'].' - '.$vf['ssub_cta'],
-                            utf8_decode($vf['nombre_cuenta']),
-                            number_format($vf['monto'],2,'.',','),
-                            ''
-                        ));
-                        $this->pdf->SetY($renglon-3.5);
-                        $this->pdf->Ln(4);
+                            utf8_decode($vf['beneficia'])
+             ));
+              $this->pdf->SetY($renglon-3.5);
+              $this->pdf->Ln(4);
 
-                        $totalcargo = $totalcargo + $vf['monto'];
+
+            $totalcargo = 0;
+            $totalabono = 0;
+            while($valors == $this->datos[$i]['tipo_mov'].'-'.$this->datos[$i]['no_banco'].'-'.$this->datos[$i]['no_mov'] AND $i < $str-1)
+            {
+                $vf = $this->datos[$i];
+                    $this->pdf->SetX(30);
+                    if($vf['c_a'] == '+')
+                    {
+
+                         $this->pdf->Cell(15,5,$vf['cuenta'].'-'.$vf['sub_cta'].'-'.$vf['ssub_cta'],0,0,'',false);
+                         $this->pdf->Cell(100,5,utf8_decode($vf['nombre_cuenta']),0,0,'',false);
+                         $this->pdf->Cell(28,5,number_format($vf['monto'],2,'.',','),0,0,'R',false);
+                         $this->pdf->Cell(120,5,'',0,0,'',false);
+
+                         $this->pdf->Ln(4);
+
+                         $totalcargo = $totalcargo + $vf['monto'];
                     }
                     else
                     {
-                            $renglon = $this->Rowpdf(array(
-                                $vf['tipo_mov'].'-'.$vf['no_banco'].'-'.$vf['no_mov'],
-                                date('d-m-Y',strtotime($vf['fecha'])),
-                                utf8_decode($vf['beneficia']),
-                                $vf['cuenta'].' - '.$vf['sub_cta'].' - '.$vf['ssub_cta'],
-                                utf8_decode($vf['nombre_cuenta']),
-                                '',
-                                number_format($vf['monto'],2,'.',',')
-                            ));
-                            $this->pdf->SetY($renglon-3.5);
-                            $this->pdf->Ln(4);
+                         $this->pdf->Cell(15,5,$vf['cuenta'].'-'.$vf['sub_cta'].'-'.$vf['ssub_cta'],0,0,'',false);
+                         $this->pdf->Cell(100,5,utf8_decode($vf['nombre_cuenta']),0,0,'',false);
+                         $this->pdf->Cell(28,5,'',0,0,'',false);
+                         $this->pdf->Cell(25,5,number_format($vf['monto'],2,'.',','),0,0,'R',false);
 
-                            $totalabono = $totalabono + $vf['monto'];
+                         $this->pdf->Ln(4);
+
+                         $totalabono = $totalabono + $vf['monto'];
                     }
                 
 
                 $i = $i + 1;
 
-                // if($i < $str)
-                // {
-                //        $el = $this->datos[$i];
-                //       $newvalor = $el['tipo_mov'].'-'.$el['no_banco'].'-'.$el['no_mov'];
-                // }
               
             }
+             $this->pdf->Ln(6);
                       $this->pdf->SetCol(0);
                       $this->pdf->Cell(140,0);
                       $this->pdf->Cell(10,-7,'____________________________________');
