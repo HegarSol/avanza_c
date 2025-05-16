@@ -92,7 +92,7 @@
          $this->load->model('UsuariosModel','usuarios');
          $this->load->model('EmpresasModel','empresas');
          $empresa= $this->empresas->datosEmpresa($_SESSION['idEmpresa']);
-      
+
            // $esAdmin= $this->empresas->EsAdmin($_SESSION['id']);
             $empresa = $this->empresas->datosEmpresa($_SESSION['idEmpresa']);
             if($_SESSION['tipo']=="admin" && $_SESSION['tipo']!="SU" && $_SESSION['tipo']!="hegar")
@@ -101,8 +101,9 @@
             }
             else if($_SESSION['tipo']!="SU" && $_SESSION['tipo']!="hegar")
             { 
-                $_SESSION['tipo']="usuario"; 
+                $_SESSION['tipo']="usuario";
             }
+                            $_SESSION['referenciamarca']=$empresa[0]['referenciamarca'];
             redirect('/Welcome/index');
      }
  }

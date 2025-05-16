@@ -18,5 +18,10 @@
       "empresas":"XOCHILT PRUEBA",
       "RFC":"CACX7605101P8",
       "IdEmpresa":103
+    },
+    {
+      "empresas":"HEGAR SOLUCIONES EN SISTEMAS",
+      "RFC":"HSS1306229V2",
+      "IdEmpresa":1
     }
 ]
