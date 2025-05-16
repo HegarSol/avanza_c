@@ -62,14 +62,14 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
        $conf = $CI->configcon->getConfig();
 
-       if(ENVIRONMENT == 'development')
-       {
-         $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
-       }
-       else
-       {
+    //    if(ENVIRONMENT == 'development')
+    //    {
+    //      $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
+    //    }
+    //    else
+    //    {
          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
-        }
+    //    }
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -304,7 +304,9 @@ defined('BASEPATH') or exit('No direct script access alloed');
                           
                             if($result[$i]['clave']==$t['clave'])
                             {
-                                $result[$i]['importe']+=$t['importe'];                              
+                                $result[$i]['importe']+=$t['importe'];     
+                                
+                                
                                 $repeat=true;
                                 break;
                             }
@@ -335,8 +337,13 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                               'c_a' => '+'
 
                                             );
+                                           
+                    }
 
-                                            if($t['impuestoiva'] == '002')
+                    foreach($result as $t)
+                    {
+
+                         if($t['impuestoiva'] == '002')
                                             {
                                                 if($t['tasaiva'] == '0.080000')
                                                 {
@@ -347,6 +354,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                                     $sumaimpueiva16 = $sumaimpueiva16 + (double) $t['importeiva'];
                                                 }
                                             }
+
                                             if($t['impuestoieps'] == '003')
                                             {
                                                 $sumaimpueeips = $sumaimpueeips + (double) $t['importeieps'];
@@ -390,7 +398,10 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                                     $sumaimpueiva16g = $sumaimpueiva16g + $t['importeiva'];
                                                 }
 
-                                                $sumaimpueeipsg = $sumaimpueeipsg + $t['importeieps'];
+                                                 if($t['impuestoieps'] == '003')
+                                                 {
+                                                   $sumaimpueeipsg = $sumaimpueeipsg + $t['importeieps'];
+                                                 }
 
                                                 if($t['tasaretiva'] == '0.053334' || $t['tasaretiva'] == '0.053333')
                                                 {
@@ -421,7 +432,10 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                                     $sumaimpueiva16c = $sumaimpueiva16c + $t['importeiva'];
                                                 }
 
-                                                $sumaimpueeipsc = $sumaimpueeipsc + $t['importeieps'];
+                                                if($t['impuestoieps'] == '003')
+                                                 {
+                                                    $sumaimpueeipsc = $sumaimpueeipsc + $t['importeieps'];
+                                                 }
 
                                                 if($t['tasaretiva'] == '0.053334' || $t['tasaretiva'] == '0.053333')
                                                 {
@@ -439,52 +453,19 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                                 $sumaretenisrc = $sumaretenisrc + $t['importeretisr'];
    
                                             }
-                    }
 
-                    $result4 = array();
-
-                    foreach($result as $value) 
-                    {
-                        // if($emisordatos[0]['traslada_ieps'] == 1)
-                        // {
-                             $valuesuma = $value['importe'];
-                        // }
-                        // else
-                        // {
-                        //     $valuesuma = $value['importe'] + $value['importeieps'];
-                        // }
-
-                        $result4[] = array('clave' => $value['clave'], 
-                                              'importe' => $valuesuma,
-                                              'descuento' => $value['descuento'],
-                                              'descripcion' => $value['descripcion'],
-                                              'importeiva' => $value['importeiva'],
-                                              'tasaiva' => $value['tasaiva'],
-                                              'tasaieps' => $value['tasaieps'],
-                                              'importeieps' => $value['importeieps'],
-                                              'importeretiva' => $value['importeretiva'],
-                                              'tasaretiva' => $value['tasaretiva'],
-                                              'tasaretisr' => $value['tasaretisr'],
-                                              'importeretisr' => $value['importeretisr'],
-                                              'impuestoiva' => $value['impuestoiva'],
-                                                'impuestoieps' => $value['impuestoieps'],
-                                                'impuestoretiva' => $value['impuestoretiva'],
-                                                'impuestoretisr' => $value['impuestoretisr'],
-                                                'nombre_cta' =>  $value['nombre_cta'],
-                                                'cuenta' => $value['cuenta'],
-                                                'sub_cta' => $value['sub_cta'],
-                                                'ssub_cta' => $value['ssub_cta'],
-                                                'c_a' => $value['c_a']
-                                            );
                     }
 
 
-                    $sumatotalimpuestosg = $sumaimpueiva8g + $sumaimpueiva16g + $sumaimpueeipsg;
+
+
+                    $sumatotalimpuestosg = ($sumaimpueiva8g + $sumaimpueiva16g + ($emisordatos[0]['traslada_ieps'] == 1 ? $sumaimpueeipsg : 0));
                     $sumatotalretencionesg = $sumaretenivag + $sumaretenisrg + $sumaretenisr4porfleteg;
                     $totalrealproacreg = $sumatotalimpuestosg - $sumatotalretencionesg;
 
 
-                    $sumatotalimpuestosc = $sumaimpueiva8c + $sumaimpueiva16c + $sumaimpueeipsc;
+
+                    $sumatotalimpuestosc = ($sumaimpueiva8c + $sumaimpueiva16c + ($emisordatos[0]['traslada_ieps'] == 1 ? $sumaimpueeipsc : 0));
                     $sumatotalretencionesc = $sumaretenivac + $sumaretenisrc + $sumaretenisr4porfletec;
                     $totalrealproacrec = $sumatotalimpuestosc - $sumatotalretencionesc;
                 
@@ -496,7 +477,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $iva8 = $CI->conficue->getidcuentaconfi(37);
                             $ivaesti = array('importe' => number_format($sumaimpueiva8,2,'.',''), 'c_a' => '-','cuenta' => $iva8[0]['cuenta'],'sub_cta' => $iva8[0]['sub_cta'],'nombre_cta' => $iva8[0]['descrip'],'ssub_cta' => $iva8[0]['ssub_cta']);
-                            array_push($result4, $ivaesti);
+                            array_push($result, $ivaesti);
                         }
                     }
                     else
@@ -505,7 +486,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $iva8 = $CI->conficue->getidcuentaconfi(38);
                             $ivaesti = array('importe' => number_format($sumaimpueiva8,2,'.',''), 'c_a' => '+','cuenta' => $iva8[0]['cuenta'],'sub_cta' => $iva8[0]['sub_cta'],'nombre_cta' => $iva8[0]['descrip'],'ssub_cta' => $iva8[0]['ssub_cta']);
-                            array_push($result4, $ivaesti);
+                            array_push($result, $ivaesti);
                         }
                     }
 
@@ -516,7 +497,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $iva16 = $CI->conficue->getidcuentaconfi(6);
                             $ivaesti = array('importe' => $sumaimpueiva16, 'c_a' => '-','cuenta' => $iva16[0]['cuenta'],'sub_cta' => $iva16[0]['sub_cta'],'nombre_cta' => $iva16[0]['descrip'],'ssub_cta' => $iva16[0]['ssub_cta']);
-                            array_push($result4, $ivaesti);
+                            array_push($result, $ivaesti);
                         }
                     }
                     else
@@ -525,11 +506,12 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $iva16 = $CI->conficue->getidcuentaconfi(28);
                             $ivaesti = array('importe' => $sumaimpueiva16, 'c_a' => '+','cuenta' => $iva16[0]['cuenta'],'sub_cta' => $iva16[0]['sub_cta'],'nombre_cta' => $iva16[0]['descrip'],'ssub_cta' => $iva16[0]['ssub_cta']);
-                            array_push($result4, $ivaesti);
+                            array_push($result, $ivaesti);
                         }
                     }
 
-
+                    //SI LA FACTURA TIENE IEPS
+                    // var_dump($emisordatos[0]['traslada_ieps']);
                    // var_dump($emisordatos[0]['traslada_ieps']);
                     if($emisordatos[0]['traslada_ieps'] == 1)
                     {
@@ -540,7 +522,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             {
                                 $ieps = $CI->conficue->getidcuentaconfi(40);
                                 $eip = array('importe' => $sumaimpueeips, 'c_a' => '-','cuenta' => $ieps[0]['cuenta'],'sub_cta' => $ieps[0]['sub_cta'],'nombre_cta' => $ieps[0]['descrip'],'ssub_cta' => $ieps[0]['ssub_cta']);
-                                array_push($result4, $eip);
+                                array_push($result, $eip);
                             }
                         }
                         else
@@ -549,7 +531,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             {
                                 $ieps = $CI->conficue->getidcuentaconfi(42);
                                 $eip = array('importe' => $sumaimpueeips, 'c_a' => '+','cuenta' => $ieps[0]['cuenta'],'sub_cta' => $ieps[0]['sub_cta'],'nombre_cta' => $ieps[0]['descrip'],'ssub_cta' => $ieps[0]['ssub_cta']);
-                                array_push($result4, $eip);
+                                array_push($result, $eip);
                             }
                         }
                     }
@@ -566,7 +548,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $isrrete = $CI->conficue->getidcuentaconfi(31);
                             $reteisr = array('importe' => $sumaretenisr, 'c_a' => '+','cuenta' => $isrrete[0]['cuenta'],'sub_cta' => $isrrete[0]['sub_cta'],'nombre_cta' => $isrrete[0]['descrip'],'ssub_cta' => $isrrete[0]['ssub_cta']);
-                            array_push($result4, $reteisr);
+                            array_push($result, $reteisr);
                         }
                     }
                     else
@@ -575,7 +557,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $isrrete = $CI->conficue->getidcuentaconfi(34);
                             $reteisr = array('importe' => $sumaretenisr, 'c_a' => '-','cuenta' => $isrrete[0]['cuenta'],'sub_cta' => $isrrete[0]['sub_cta'],'nombre_cta' => $isrrete[0]['descrip'],'ssub_cta' => $isrrete[0]['ssub_cta']);
-                            array_push($result4, $reteisr);
+                            array_push($result, $reteisr);
                         }
                     }
 
@@ -586,7 +568,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $flete = $CI->conficue->getidcuentaconfi(41);
                             $ivafle = array('importe' => $sumaretenisr4porflete, 'c_a' => '+','cuenta' => $flete[0]['cuenta'],'sub_cta' => $flete[0]['sub_cta'],'nombre_cta' => $flete[0]['descrip'],'ssub_cta' => $flete[0]['ssub_cta']);
-                            array_push($result4, $ivafle);
+                            array_push($result, $ivafle);
                         }
                     }
                     else
@@ -595,7 +577,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $flete = $CI->conficue->getidcuentaconfi(46);
                             $ivafle = array('importe' => $sumaretenisr4porflete, 'c_a' => '-','cuenta' => $flete[0]['cuenta'],'sub_cta' => $flete[0]['sub_cta'],'nombre_cta' => $flete[0]['descrip'],'ssub_cta' => $flete[0]['ssub_cta']);
-                            array_push($result4, $ivafle);
+                            array_push($result, $ivafle);
                         }
                     }
 
@@ -607,7 +589,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $ivarete = $CI->conficue->getidcuentaconfi(30);
                             $reteiva = array('importe' => $sumareteniva, 'c_a' => '+','cuenta' => $ivarete[0]['cuenta'],'sub_cta' => $ivarete[0]['sub_cta'],'nombre_cta' => $ivarete[0]['descrip'],'ssub_cta' => $ivarete[0]['ssub_cta']);
-                            array_push($result4, $reteiva);
+                            array_push($result, $reteiva);
                         }
                     }
                     else
@@ -616,7 +598,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         {
                             $ivarete = $CI->conficue->getidcuentaconfi(33);
                             $reteiva = array('importe' => $sumareteniva, 'c_a' => '-','cuenta' => $ivarete[0]['cuenta'],'sub_cta' => $ivarete[0]['sub_cta'],'nombre_cta' => $ivarete[0]['descrip'],'ssub_cta' => $ivarete[0]['ssub_cta']);
-                            array_push($result4, $reteiva);
+                            array_push($result, $reteiva);
                         }
                     }
 
@@ -651,7 +633,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             
                           );
 
-                          array_push($result4, $total);
+                          array_push($result, $total);
                         }
                         if($totalcompras > 0)
                         {
@@ -667,7 +649,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             
                           );
 
-                          array_push($result4, $total);
+                          array_push($result, $total);
                         }
 
                     }
@@ -705,11 +687,11 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         $DAtos = $CI->conficue->getidcuentaconfi(39);
                         $des = array('importe' => $descuent,'c_a' => '-' , 'cuenta' => $DAtos[0]['cuenta'],'sub_cta' => $DAtos[0]['sub_cta'],'nombre_cta' => $DAtos[0]['descrip'],'ssub_cta' => $DAtos[0]['ssub_cta']);
 
-                        array_push($result4, $des);
+                        array_push($result, $des);
                     }
 
                     $result2 = array();
-                    foreach($result4 as $t) {
+                    foreach($result as $t) {
                         $repeat=false;
                         for($i=0;$i<count($result2);$i++)
                         {

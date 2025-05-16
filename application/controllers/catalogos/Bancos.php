@@ -55,7 +55,7 @@ class Bancos extends MY_Controller
         $poli = $this->input->post('poli');
    
         $datas = [];
- 
+
             if($poli != '')
             {
                 $int = (int) filter_var($poli, FILTER_SANITIZE_NUMBER_INT);
@@ -66,6 +66,7 @@ class Bancos extends MY_Controller
                 {
 
                     $algo = $this->conficta->getcuenta_sub($as['cuenta'],$as['sub_cta'],$as['ssub_cta']);
+                
                     if(count($algo) > 0)
                     {
                          if($algo[0]['idcuentaconfi'] == 28)
@@ -676,7 +677,7 @@ class Bancos extends MY_Controller
                 $datos=$this->bancos->datosBancos($id);
 
                 $data2 = array('cta'=>$datos[0]['cta'],'sub_cta'=>$datos[0]['sub_cta'],'ssub_cta'=>$datos[0]['ssub_cta'],'banco'=>$datos[0]['banco'],'c_a'=>'+','monto'=>0,'val'=>1);
-     
+    
                  $datostemporal = $this->opera->obtenerTablaTemporal();
                  $dats = [];
                  foreach($datostemporal as $dat)
