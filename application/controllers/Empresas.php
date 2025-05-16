@@ -123,7 +123,7 @@ class Empresas extends MY_Controller
       $datos=array('razon'=>$this->input->post('nombre'),'rfcEmpresa'=>$this->input->post('rfc'),'curp'=>$this->input->post('curp'),
       'tel'=>$this->input->post('telefono'),'basedeDatos'=>$this->input->post('basedeDatos'),'usuario'=>$this->input->post('usuario'),
       'contrasena'=>$this->input->post('contrasena'),'host'=>$this->input->post('host'),'idAdmin'=>$this->input->post('idU'),
-      'correoAdmin'=>$this->input->post('admin'),'autorizacion'=>$this->input->post('autorizacion') == 1 ? 1 : 0);
+      'correoAdmin'=>$this->input->post('admin'),'autorizacion'=>$this->input->post('autorizacion') == 1 ? 1 : 0,'referenciamarca'=>$this->input->post('referenciamarca') == 1 ? 1 : 0);
 
       if($id>0)
       {

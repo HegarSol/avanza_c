@@ -121,6 +121,31 @@ class Beneficiarios extends MY_Controller
             redirect('inicio/login','refresh');
         }
     }
+    public function buscarconcurso()
+    {
+        // Inicializar cURL
+        $ch = curl_init();
+
+        // Establecer URL y opciones
+        curl_setopt($ch, CURLOPT_URL, "https://api.asfaltosyconcretos.com:7894/api/concurso/verConcursosFacturacion/");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+        // Establecer encabezados
+        $headers = [
+            "Content-Type: application/json",
+            "Authorization: Token 28521d432ded2eb20e1787a362e36ea4939a503b"
+        ];
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        // Ejecutar la petición
+        $resu = curl_exec($ch);
+
+        $response = json_decode($resu);
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
     public function getpolizacuenta()
     {
         $poliza = $this->input->post('poliza');
@@ -447,6 +472,7 @@ class Beneficiarios extends MY_Controller
         $pago = $this->input->post('pago');
         $num_fa = $this->input->post('num_fact');
         $serie_pro = $this->input->post('serie_provisi');
+        $referencia = $this->input->post('referencia');
         $total = $this->input->post('total');
         $benefinombre = $this->benefi->datosBenefi($provee);
 
@@ -543,7 +569,7 @@ class Beneficiarios extends MY_Controller
                         }
 
                             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-                            curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uuid."&fecha=".$fecha."&poliza=".$poliza);
+                            curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uuid."&fecha=".$fecha."&poliza=".$poliza."&referencia=".$referencia);
                             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
                             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);

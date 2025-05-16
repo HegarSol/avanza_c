@@ -51,6 +51,10 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
             <label class="control-label" for="controlInventario"></label>
             <div class="checkbox" ><?php echo form_checkbox('autorizacion', '1',  $datos[0]['autorizacion'] != 0 ? TRUE:  FALSE); ?>Autorizacion</div>
           </div>
+               <div class="col-sm-2">
+            <label class="control-label" for="controlInventario"></label>
+            <div class="checkbox" ><?php echo form_checkbox('referenciamarca', '1',  $datos[0]['referenciamarca'] != 0 ? TRUE:  FALSE); ?>Referencia</div>
+          </div>
 
     </div>
      

@@ -63,6 +63,7 @@ if(isset($mensaje))
                                                   </div>
                                              </div>
                                              <br>
+                                             <div style="display:none">
                                              <?php
                                               $tipo_pre = 0;
                                               if(isset($datos))
@@ -87,6 +88,7 @@ if(isset($mensaje))
                                                   <div class="col-sm-2">
                                                     <input type="radio" name="tipoprove" id="radiocorre" <?php echo $tipo_pre == 5 ? 'checked' : ''?> value="radiocorre">Corresponsal
                                                  </div>
+                                             </div>
                                              </div>
                                         </div>
                                    </div>
@@ -156,7 +158,7 @@ if(isset($mensaje))
                                         <div class="col-sm-10">
                                              <div class="panel-group">
                                                   <div class="panel panel-default">
-                                                       <div class="panel-heading"><b>Datos Contables</b></div>
+                                                       <div class="panel-heading"><b>Otros datos</b></div>
                                                             <div class="panel-body">
                                                                  <!-- <div class="row">
                                                                       <div class="col-sm-2">
@@ -165,7 +167,7 @@ if(isset($mensaje))
                                                                       </div>
                                                                  </div>
                                                                  <br> -->
-                                                                 <div class="row">
+                                                                 <div class="row" style="display:none">
                                                                       <label class="control-label col-sm-3" for="cta cont. gato">Cta Cont. Gato: &nbsp;&nbsp;<a class="glyphicon glyphicon-search" data-toggle="modal" data-target="#myModalCuentasBeneficiario"></a></label>
                                                                            <div class="col-sm-2">
                                                                                 <input type="text" class="form-control"  value="<?php echo isset($datos[0]['no_cta']) ? $datos[0]['no_cta'] : '' ?>" id="no_cta" name="no_cta">     
@@ -180,7 +182,7 @@ if(isset($mensaje))
                                                                       <br>
                                                                       <br>
                                                                   <br>
-                                                                 </div class="row">
+                                                                 </div class="row" style="display:none">
                                                                       <label class="control-label col-sm-3" for="cta cont. gato">Cta Cont. Compra: &nbsp;&nbsp;<a class="glyphicon glyphicon-search" data-toggle="modal" data-target="#myModalCuentasBeneficiario"></a></label>
                                                                       <div class="col-sm-2">
                                                                            <input type="text" class="form-control"  value="<?php echo isset($datos[0]['ctacom']) ? $datos[0]['ctacom'] : '' ?>" id="cta_com" name="cta_com">
@@ -193,7 +195,7 @@ if(isset($mensaje))
                                                                      </div>
                                                                  </div>
                                                                  <br>
-                                                                 <div class="row">
+                                                                 <div class="row" style="display:none">
                                                                  <label class="control-label col-sm-3" for="cta cont. gato">Cta Cont. Terc: &nbsp;&nbsp;<a class="glyphicon glyphicon-search" data-toggle="modal" data-target="#myModalCuentasBeneficiario"></a></label>
                                                                       <div class="col-sm-2">
                                                                            <input type="text" class="form-control"  value="<?php echo isset($datos[0]['no_cta3']) ? $datos[0]['no_cta3'] : '' ?>" id="no_cta3" name="no_cta3">
@@ -211,7 +213,7 @@ if(isset($mensaje))
                                                                            <label for="">Vencimiento:</label>
                                                                            <input type="text" class="form-control" value="<?php echo isset($datos[0]['venci']) ? $datos[0]['venci'] : '' ?>" id="venci" name="venci">
                                                                       </div>
-                                                                      <div class="col-sm-8">
+                                                                      <div class="col-sm-8" style="display:none">
                                                                            <label for="">Concepto: </label>
                                                                            <input type="text" class="form-control" value="<?php echo isset($datos[0]['concepto']) ? $datos[0]['concepto'] : '' ?>" id="concep" name="concep">
                                                                       </div>

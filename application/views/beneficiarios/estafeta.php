@@ -391,7 +391,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                        <label for="">Proveedor</label>
                        <input type="text" class="form-control" readonly id="provee_provisi" name="provee_provisi">
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-1">
                        <label for="">Póliza de pago</label>
                        <input type="text" class="form-control" readonly id="pago_provision" name="pago_provision">
                   </div>
@@ -402,6 +402,10 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                   <div class="col-md-1">
                         <label for=""></label>
                         <input type="text" class="form-control" readonly id="serie_provisi" name="serie_provisi">
+                  </div>
+                  <div class="col-md-1">
+                        <label for="">Referencia</label>
+                        <input type="text" class="form-control" readonly id="referencia_provisi" name="referencia_provisi">
                   </div>
                </div>
 
@@ -580,6 +584,7 @@ function aceptarasiento(tableID)
      var num_fact_pro = document.getElementById('num_factur_provisi').value;
      var serie_provisi = document.getElementById('serie_provisi').value;
      var tol = document.getElementById('totalpoliza').value;
+     var referencia = document.getElementById('referencia_provisi').value;
      
      var mes = '<?php echo $_SESSION["mes"];?>';
      var ano = '<?php echo $_SESSION["ano"];?>';
@@ -617,7 +622,7 @@ function aceptarasiento(tableID)
                     type:"POST",
                     url: baseurl + "catalogos/Beneficiarios/insert_poliza_provision",
                     data: {tipo:tipo_pro,mov:mov_pro,uuid:uuid_pro,fecha:fecha_pro,provee:prove_provi,pago:pago_provi,ssub_cta:ssub_cta,
-                    num_fact:num_fact_pro,serie_provisi:serie_provisi,total:tol,cuenta:cuenta,sub_cta:sub_cta,nom:nom,conce:conce,
+                    num_fact:num_fact_pro,serie_provisi:serie_provisi,total:tol,cuenta:cuenta,sub_cta:sub_cta,nom:nom,conce:conce,referencia:referencia,
                     mon:mon,c_a:c_a},
                     dataType:"html",
                     success:function(msg)
@@ -735,6 +740,8 @@ function aceptarasiento(tableID)
     }
     function recorrercuentas()
     {
+
+      document.getElementById('referencia_provisi').value = document.getElementById('referencia').value;
       var cajadeta = [];
 
       if ($('#btnbuscar').length) 
