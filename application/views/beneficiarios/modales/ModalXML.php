@@ -33,15 +33,12 @@
        <div class="col-md-3"></div>
        <div class="col-md-1">
 
-         <?php 
-            if($_SESSION['referenciamarca'] == 1)
-            {
-         ?>
+ 
+           <div style="<?php echo $_SESSION['referenciamarca'] == 1 ? '' : 'display:none' ?>" >
             <label for="">Referencia</label> <a class="glyphicon glyphicon-search" onclick="nomas()"></a>
            <input type="text" class="form-control" readonly id="referencia" name="referencia">
-           <?php
-           }
-           ?>
+          </div>
+           
        </div>
         <div class="col-md-2">
             <label for="">Departamento</label>
