@@ -62,14 +62,14 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
        $conf = $CI->configcon->getConfig();
 
-    //    if(ENVIRONMENT == 'development')
-    //    {
-    //      $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
-    //    }
-    //    else
-    //    {
+       if(ENVIRONMENT == 'development')
+       {
+         $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
+       }
+       else
+       {
          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
-    //    }
+        }
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -285,6 +285,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         ];
                 }
 
+
                 $totalgastos = 0;
                 $totalcompras = 0;
 
@@ -301,16 +302,12 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         $repeat=false;
                         for($i=0;$i<count($result);$i++)
                         {
-                          
                             if($result[$i]['clave']==$t['clave'])
                             {
-                                $result[$i]['importe']+=$t['importe'];     
-                                
-                                
+                                $result[$i]['importe']+=$t['importe'];        
                                 $repeat=true;
                                 break;
                             }
-                            
                         }
                         if($repeat==false)
 
@@ -340,8 +337,9 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                            
                     }
 
-                    foreach($result as $t)
+                    foreach($ordenado as $t)
                     {
+
 
                          if($t['impuestoiva'] == '002')
                                             {
@@ -389,9 +387,11 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                             {
                                                $totalgastos= $totalgastos+ $t['importe'];
                                                $gDescuento = $gDescuento + $t['descuento'];
+                                            
                                                 if($t['tasaiva'] ==  '0.080000')
                                                 {
                                                     $sumaimpueiva8g = $sumaimpueiva8g + $t['importeiva'];
+                                                 //   var_dump($sumaimpueiva8g);
                                                 }
                                                 else if($t['tasaiva'] == '0.160000')
                                                 {
@@ -459,16 +459,15 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
 
 
-                    $sumatotalimpuestosg = ($sumaimpueiva8g + $sumaimpueiva16g + ($emisordatos[0]['traslada_ieps'] == 1 ? $sumaimpueeipsg : 0));
+                    $sumatotalimpuestosg = ($sumaimpueiva8g + $sumaimpueiva16g + ($emisordatos[0]['traslada_ieps'] == 1 ? 0 : $sumaimpueeipsg));
                     $sumatotalretencionesg = $sumaretenivag + $sumaretenisrg + $sumaretenisr4porfleteg;
                     $totalrealproacreg = $sumatotalimpuestosg - $sumatotalretencionesg;
 
 
-
-                    $sumatotalimpuestosc = ($sumaimpueiva8c + $sumaimpueiva16c + ($emisordatos[0]['traslada_ieps'] == 1 ? $sumaimpueeipsc : 0));
+                    $sumatotalimpuestosc = ($sumaimpueiva8c + $sumaimpueiva16c + ($emisordatos[0]['traslada_ieps'] == 1 ? 0 : $sumaimpueeipsc));
                     $sumatotalretencionesc = $sumaretenivac + $sumaretenisrc + $sumaretenisr4porfletec;
                     $totalrealproacrec = $sumatotalimpuestosc - $sumatotalretencionesc;
-                
+
                     //SI LA FACTURA TIENE IVA al 8%
 
                     if($porpaga == 1 && $poli == '')

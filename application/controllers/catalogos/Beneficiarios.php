@@ -304,14 +304,14 @@ class Beneficiarios extends MY_Controller
 
       //  var_dump($autorizado);
 
-        // if(ENVIRONMENT == 'development')
-        // {
-        //   $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago."&autorizado=".$autorizado);
-        // }
-        // else
-        // {
+        if(ENVIRONMENT == 'development')
+        {
+          $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago."&autorizado=".$autorizado);
+        }
+        else
+        {
           $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago."&autorizado=".$autorizado);
-       // }
+        }
 
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -376,14 +376,14 @@ class Beneficiarios extends MY_Controller
     {
         $rfc =  $this->input->post('rfc');
         
-        // if(ENVIRONMENT == 'development')
-        // {
-        //     $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/pendientes?empresa=".$rfc);
-        // }
-        // else
-        // {
+        if(ENVIRONMENT == 'development')
+        {
+            $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/pendientes?empresa=".$rfc);
+        }
+        else
+        {
             $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/pendientes?empresa=".$rfc);
-      //  }
+        }
 
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -604,14 +604,14 @@ class Beneficiarios extends MY_Controller
     {
         $uuid = $this->input->post('uuid');
 
-        //  if(ENVIRONMENT == 'development')
-        //  {
-        //      $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
-        //  }
-        //  else
-        //  {
+         if(ENVIRONMENT == 'development')
+         {
+             $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
+         }
+         else
+         {
             $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
-        // }
+         }
 
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
