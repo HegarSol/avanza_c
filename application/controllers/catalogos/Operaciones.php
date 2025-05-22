@@ -91,6 +91,7 @@ class Operaciones extends MY_Controller
 
         foreach($datosprevi as $valor)
         {
+
             $algo = $this->conficta->getcuenta_sub($valor['cuenta'],$valor['sub_cta'],$valor['ssub_cta']);
 
                if(isset($algo[0]['idcuentaconfi']) == 28)
@@ -264,6 +265,7 @@ class Operaciones extends MY_Controller
 
                }            
         }
+
 
         $this->opera->CrearTablaTemporal($datas);
        // $response = array('status' => true, 'data' => $datas);

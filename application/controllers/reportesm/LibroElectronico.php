@@ -115,7 +115,7 @@ class LibroElectronico extends MY_Controller
              $renglon = $this->Rowpdf(array(
                             $vf['tipo_mov'].'-'.$vf['no_banco'].'-'.$vf['no_mov'],
                             date('d-m-Y',strtotime($vf['fecha'])),
-                            utf8_decode($vf['beneficia'])
+                            utf8_decode($vf['beneficia'].' - '. $vf['concepto']),
              ));
               $this->pdf->SetY($renglon-3.5);
               $this->pdf->Ln(4);
@@ -131,7 +131,8 @@ class LibroElectronico extends MY_Controller
                     {
 
                          $this->pdf->Cell(15,5,$vf['cuenta'].'-'.$vf['sub_cta'].'-'.$vf['ssub_cta'],0,0,'',false);
-                         $this->pdf->Cell(100,5,utf8_decode($vf['nombre_cuenta']),0,0,'',false);
+                         $this->pdf->Cell(90,5,utf8_decode($vf['nombre_cuenta']),0,0,'',false);
+                         $this->pdf->Cell(10,5,utf8_decode($vf['referencia']),0,0,'L',false);
                          $this->pdf->Cell(28,5,number_format($vf['monto'],2,'.',','),0,0,'R',false);
                          $this->pdf->Cell(120,5,'',0,0,'',false);
 
@@ -142,7 +143,8 @@ class LibroElectronico extends MY_Controller
                     else
                     {
                          $this->pdf->Cell(15,5,$vf['cuenta'].'-'.$vf['sub_cta'].'-'.$vf['ssub_cta'],0,0,'',false);
-                         $this->pdf->Cell(100,5,utf8_decode($vf['nombre_cuenta']),0,0,'',false);
+                         $this->pdf->Cell(90,5,utf8_decode($vf['nombre_cuenta']),0,0,'',false);
+                         $this->pdf->Cell(10,5,utf8_decode($vf['referencia']),0,0,'L',false);
                          $this->pdf->Cell(28,5,'',0,0,'',false);
                          $this->pdf->Cell(25,5,number_format($vf['monto'],2,'.',','),0,0,'R',false);
 
@@ -289,7 +291,7 @@ class LibroElectronico extends MY_Controller
             $numero3++;
             $objsheet->setCellValue('A'.$numero3,$vf['tipo_mov'].'-'.$vf['no_banco'].'-'.$vf['no_mov']);
             $objsheet->setCellValue('B'.$numero3,date('d-m-Y',strtotime($vf['fecha'])));
-            $objsheet->setCellValue('C'.$numero3,$vf['beneficia']);
+            $objsheet->setCellValue('C'.$numero3,$vf['beneficia'].' - '. $vf['concepto']);
 
             $totalcargo = 0;
             $totalabono = 0;

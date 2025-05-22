@@ -50,7 +50,7 @@
                                                   </div>
                                              </div>
                                              <br>
-                                             <div class="row">
+                                             <div class="row" style="display:none;">
                                                 <div class="col-sm-2">
                                                    <input type="radio" name="tipoprove" id="radiogastos"  value="radiogastos">Gastos
                                                 </div>
@@ -133,7 +133,7 @@
                                         <div class="col-sm-10">
                                              <div class="panel-group">
                                                   <div class="panel panel-default">
-                                                       <div class="panel-heading"><b>Datos Contables</b></div>
+                                                       <div class="panel-heading"><b>Otros datos</b></div>
                                                             <div class="panel-body">
                                                                  <!-- <div class="row">
                                                                       <div class="col-sm-2">
@@ -142,7 +142,7 @@
                                                                       </div>
                                                                  </div>
                                                                  <br> -->
-                                                                 <div class="row">
+                                                                 <div class="row" style="display:none;">
 
                                                                  <label class="control-label col-sm-2" for="cta cont. gato">Cta Cont. Gato:</label>
                                                                       <div class="col-sm-2">
@@ -161,7 +161,7 @@
 
                                                                  </div>
                                                                  <br>
-                                                                 <div class="row">
+                                                                 <div class="row" style="display:none;">
                                                                  <label class="control-label col-sm-2" for="cta cont. gato">Cta Cont. Terc:</label>
                                                                       <div class="col-sm-2">
                                                                       <input type="text" class="form-control"  id="no_cta3" name="no_cta3">
@@ -176,7 +176,7 @@
                                                                            <label for="">Vencimiento:</label>
                                                                            <input type="text" class="form-control"  id="venci2" name="venci2">
                                                                       </div>
-                                                                      <div class="col-sm-8">
+                                                                      <div class="col-sm-8" style="display:none;">
                                                                            <label for="">Concepto: </label>
                                                                            <input type="text" class="form-control" id="concep2" name="concep2">
                                                                       </div>
@@ -343,31 +343,35 @@
                 if(no_prov != '')
                 {
                 
-                    if(tipo == 1 && ((no_cta == '' && sub_cta == '') || (cta_com != '' && sub_com != '')  || (no_cta3 != '' && sub_cta3 != '')))
-                    {
-                         var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Cuando el tipo de beneficiario o proveedor sea GASTOS, entonces debe existir la cuenta contable de gasto.'});
-                    }
-                    else if(tipo == 2 && ((no_cta != '' && sub_cta != '') || (cta_com == '' && sub_com == '') || (no_cta3 != '' && sub_cta3 != '')))
-                    {
-                         var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Cuando el tipo de beneficiario o proveedor sea COMPRAS, entonces debe existir la cuenta contable de compra.'});
-                    }
-                    else if(tipo == 3 && ((no_cta == '' && sub_cta == '') || (cta_com == '' && sub_com == '') || (no_cta3 != '' && sub_cta3 != '')))
-                    {
-                         var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Cuando el tipo de beneficiario o proveedor sea GASTOS y COMPRAS, entonces debe existir la cuenta contable de gatos y compra.'});
-                    }
-                    else if(tipo == 4 && ((no_cta != '' && sub_cta != '') || (cta_com != '' && sub_com != '') || (no_cta3 != '' && sub_cta3 != '')))
-                    {
-                         var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Cuando el tipo de beneficiario o proveedor sea BENEFICIARIO, entonces no debe existir la cuenta contable de gatos , compra y tercero.'});
-                    }
-                    else if(tipo == 5 && ((no_cta != '' && sub_cta != '') || (cta_com != '' && sub_com != '') || (no_cta3 == '' && sub_cta3 == '')))
-                    {
-                         var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Cuando el tipo de beneficiario o proveedor sea CORRESPONSAL, entonces debe existir la cuenta contable de tercero.'});
-                    }
-                    else
-                    {
+                    // if(tipo == 1 && ((no_cta == '' && sub_cta == '') || (cta_com != '' && sub_com != '')  || (no_cta3 != '' && sub_cta3 != '')))
+                    // {
+                    //      var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Cuando el tipo de beneficiario o proveedor sea GASTOS, entonces debe existir la cuenta contable de gasto.'});
+                    // }
+                    // else if(tipo == 2 && ((no_cta != '' && sub_cta != '') || (cta_com == '' && sub_com == '') || (no_cta3 != '' && sub_cta3 != '')))
+                    // {
+                    //      var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Cuando el tipo de beneficiario o proveedor sea COMPRAS, entonces debe existir la cuenta contable de compra.'});
+                    // }
+                    // else if(tipo == 3 && ((no_cta == '' && sub_cta == '') || (cta_com == '' && sub_com == '') || (no_cta3 != '' && sub_cta3 != '')))
+                    // {
+                    //      var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Cuando el tipo de beneficiario o proveedor sea GASTOS y COMPRAS, entonces debe existir la cuenta contable de gatos y compra.'});
+                    // }
+                    // else if(tipo == 4 && ((no_cta != '' && sub_cta != '') || (cta_com != '' && sub_com != '') || (no_cta3 != '' && sub_cta3 != '')))
+                    // {
+                    //      var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Cuando el tipo de beneficiario o proveedor sea BENEFICIARIO, entonces no debe existir la cuenta contable de gatos , compra y tercero.'});
+                    // }
+                    // else if(tipo == 5 && ((no_cta != '' && sub_cta != '') || (cta_com != '' && sub_com != '') || (no_cta3 == '' && sub_cta3 == '')))
+                    // {
+                    //      var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Cuando el tipo de beneficiario o proveedor sea CORRESPONSAL, entonces debe existir la cuenta contable de tercero.'});
+                    // }
+                    // else
+                    // {
                     if(nombre == '')
                     {
                         var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Ingrese el nombre del beneficiario.'});
+                    }
+                    else if(rfc == '')
+                    {
+                          var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'Ingrese el RFC del beneficiario.'});
                     }
                     // else if(rfc == '')
                     // {
@@ -420,7 +424,7 @@
                                 }
                         });
                     }
-                }
+               // }
                 }
                 else
                 {

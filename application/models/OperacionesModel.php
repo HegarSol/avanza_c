@@ -254,7 +254,7 @@ class OperacionesModel extends MY_Model
     }
     public function libro($tipo,$fechaini,$fechafin)
     {
-         $this->db2->select('t.tipo_mov,t.no_banco,t.no_mov,t.fecha,t.beneficia,t.concepto,ac.cuenta,ac.sub_cta,ac.ssub_cta,ac.nombre_cuenta,ac.monto,ac.c_a,ac.num_reg')
+         $this->db2->select('t.tipo_mov,t.no_banco,ac.referencia,t.no_mov,t.fecha,t.beneficia,t.concepto,ac.cuenta,ac.sub_cta,ac.ssub_cta,ac.nombre_cuenta,ac.monto,ac.c_a,ac.num_reg')
          ->from('opera_banco_encabe t')
          ->join('opera_banco_detalle ac','ac.tipo_mov = t.tipo_mov AND ac.no_banco = t.no_banco AND ac.no_mov = t.no_mov','right');
         //  ->join('catalogocta cat','ac.cuenta = cat.cuenta AND ac.sub_cta = cat.sub_cta','right');
