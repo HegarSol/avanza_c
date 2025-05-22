@@ -217,6 +217,8 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                 $row =  $CI->dicuentas->buscariguales($cClave);
 
 
+
+
                                 $cCuenta = $row[0]['cuenta'];
                                 $cSub_Cta = $row[0]['sub_cta'];
                                 $cSsub_Cta = $row[0]['ssub_cta'];
@@ -459,12 +461,12 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
 
 
-                    $sumatotalimpuestosg = ($sumaimpueiva8g + $sumaimpueiva16g + ($emisordatos[0]['traslada_ieps'] == 1 ? 0 : $sumaimpueeipsg));
+                    $sumatotalimpuestosg = ($sumaimpueiva8g + ($sumaimpueiva16g + $sumaimpueeipsg));
                     $sumatotalretencionesg = $sumaretenivag + $sumaretenisrg + $sumaretenisr4porfleteg;
                     $totalrealproacreg = $sumatotalimpuestosg - $sumatotalretencionesg;
 
 
-                    $sumatotalimpuestosc = ($sumaimpueiva8c + $sumaimpueiva16c + ($emisordatos[0]['traslada_ieps'] == 1 ? 0 : $sumaimpueeipsc));
+                    $sumatotalimpuestosc = ($sumaimpueiva8c + ($sumaimpueiva16c + $sumaimpueeipsc));
                     $sumatotalretencionesc = $sumaretenivac + $sumaretenisrc + $sumaretenisr4porfletec;
                     $totalrealproacrec = $sumatotalimpuestosc - $sumatotalretencionesc;
 
@@ -603,13 +605,14 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                 if($porpaga == 1 && $poli == '')
                 {
-                    
+
                 }
                 else
                 {
 
                     if($conf[0]['rfc'] == $rfcReceptor)
                     {
+
                       //  var_dump($sumaimpueeips);
                         $activo = $CI->configene->getcxpprovpropios();
                         $propios = $CI->conficue->getidcuentaconfi(29);
@@ -654,6 +657,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                     }
                     else
                     {
+
                         
                         $activo = $CI->configene->getcxpprovterceros();
                         $terceros = $CI->conficue->getidcuentaconfi(35);

@@ -184,6 +184,7 @@ function seleccionarcuneta(cuenta,subcta,nombre,ssubcta)
     document.getElementById('nom_cuenta').value = nombre;
     document.getElementById('ssub_cuenta').value = ssubcta;
     $('#myModalCuentas').modal('hide');
+    document.getElementById('ssub_cuenta').focus();
 }
 function abrircuentaspagar()
 {
