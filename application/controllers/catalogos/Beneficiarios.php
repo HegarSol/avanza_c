@@ -121,6 +121,32 @@ class Beneficiarios extends MY_Controller
             redirect('inicio/login','refresh');
         }
     }
+    public function descargarxml()
+    {
+        $this->load->helper('download');
+         $uuid = $this->input->get('uuid');
+
+        if(ENVIRONMENT == 'development')
+        {
+          $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
+        }
+        else
+        {
+          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
+        }
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $resu = curl_exec($ch);
+        $response = json_decode($resu);
+
+       header('Content-Type: text/xml; charset=UTF-8');
+    
+        force_download($uuid.'.xml',$response->xmlContent);   
+
+
+    }
     public function buscarconcurso()
     {
         // Inicializar cURL
@@ -296,32 +322,49 @@ class Beneficiarios extends MY_Controller
         $conf = $this->empresas->datosEmpresa($_SESSION['idEmpresa']);
         $rfc = $this->input->post('rfc');
         $rfcemisor = $this->input->post('rfcemisor');
-        $poliza = '';
         $historico = $this->input->post('historico');
         $formaDePago = $this->input->post('formapago');
         $autorizado = $conf[0]['autorizacion'];
 
+        $tipo = $this->input->post('tipo');
+        $no_banco = $this->input->post('no_banco');
+        $no_mov = $this->input->post('mov');
 
-      //  var_dump($autorizado);
 
-        if(ENVIRONMENT == 'development')
+        if($tipo == null && $no_banco == null && $no_mov == null)
         {
-          $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago."&autorizado=".$autorizado);
+            $poliza = '';
         }
         else
         {
-          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago."&autorizado=".$autorizado);
+            $poliza = $tipo.'  '.$no_banco.'        '.$no_mov;
         }
+       
+
+      //  var_dump($autorizado);
+
+        // if(ENVIRONMENT == 'development')
+        // {
+        //   $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago."&autorizado=".$autorizado);
+        // }
+        // else
+        // {
+          $url = str_replace(' ', '%20',"http://avanzab.hegarss.com/api/Comprobantes/list_by_proveedor_poliza?empresa=".$rfc."&proveedor=".$rfcemisor."&poliza=".$poliza."&historico=".$historico."&formaDePago=".$formaDePago."&autorizado=".$autorizado); 
+
+          $ch = curl_init($url);
+       // }
 
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
        $resu = curl_exec($ch);
        $response = json_decode($resu);
+
    
       if($response->status == true)
       {
         $data['comprobantes'] = $response->data;
+        $data['poliza'] = $poliza;
         $this->load->view('beneficiarios/comprobantes_pendientes_pago/tabla',$data);
       }
       else

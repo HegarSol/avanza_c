@@ -69,7 +69,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
        else
        {
          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
-        }
+       }
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -287,6 +287,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         ];
                 }
 
+//var_Dump($ordenado);
 
                 $totalgastos = 0;
                 $totalcompras = 0;
@@ -302,16 +303,18 @@ defined('BASEPATH') or exit('No direct script access alloed');
                     foreach($ordenado as $t) {
 
                         $repeat=false;
-                        for($i=0;$i<count($result);$i++)
-                        {
-                            if($result[$i]['clave']==$t['clave'])
-                            {
-                                $result[$i]['importe']+=$t['importe'];        
-                                $repeat=true;
-                                break;
-                            }
-                        }
-                        if($repeat==false)
+                        // for($i=0;$i<count($result);$i++)
+                        // {
+                        //     if($result[$i]['clave']==$t['clave'])
+                        //     {
+
+                        //         $result[$i]['importe']+=$t['importe'];        
+                        //         $repeat=true;
+                        //         break;
+                        //     }
+                        // }
+                                                      //  var_dump($result[$i]['importe']);
+                       // if($repeat==false)
 
                             $result[] = array('clave' => $t['clave'], 
                                               'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? number_format(doubleval($t['importe']),2,'.',''): number_format(doubleval($t['importe']),2,'.','')+ doubleval($t['importeieps']),
@@ -457,7 +460,6 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                             }
 
                     }
-
 
 
 
