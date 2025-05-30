@@ -54,7 +54,7 @@
               <tbody>
             <?php foreach($comprobantes as $comprobante): ?>
                 <tr>
-                    <td><input type="checkbox" class="form-control" onclick="checartodo()"></td>
+                    <td><input type="checkbox" <?php echo $comprobante->poliza_pago == $poliza ? 'checked' : '' ?> class="form-control" onclick="checartodo()"></td>
                     <td><?php echo $comprobante->version; ?></td>
                     <td><?php echo $comprobante->uuid; ?></td>
                     <td style="display:none"><?php echo $comprobante->tipo_comprobante; ?></td>

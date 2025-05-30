@@ -29,6 +29,7 @@
 
         <button class="btn btn-primary" onclick="editarpoliza()"><span class="fa fa-pencil-square-o"></span> Editar póliza</button>
         <button class="btn btn-primary" onclick="verdetalle()"><span class="fa fa-eye"></span> Ver Docs</button>
+        <button class="btn btn-info" onclick="descargarxml()"><span class="fa fa-download"></span> Descargar xml</button>
 
         <?php
         if($CXP == 'bene')
@@ -504,14 +505,16 @@
       //                       row.appendChild(td3);
       //                       row.appendChild(td4);
       //                       row.appendChild(td5);
-      //                       row.appendChild(td6);
+      //                       row.appendChild(td6);798
       //                       row.appendChild(td7);
       //                       row.appendChild(td8);
       //                       tbody.appendChild(row);
    }
 function sin()
 {
-   var formapago = '<?php echo $tipo_letra ?>';
+            var formapago = '<?php echo $tipo_letra ?>';
+            var no_banco = '<?php echo isset($id) ? $id : '' ?>';
+            var mov = '<?php echo isset($datospoliza[0]['no_mov']) ? $datospoliza[0]['no_mov'] : '' ?>';
             var rfc = '<?php echo $rfc ?>';
             if(formapago == 'O')
             {
@@ -533,7 +536,7 @@ function sin()
             var historico = '';
             var forma = '0';
 
-            tablacue(rfc,rfcemisor,historico,forma);
+            tablacue(rfc,rfcemisor,historico,forma,formapago, no_banco, mov);
 
             document.getElementById('sinchecar').style.display = 'none';
             document.getElementById('conchecar').style.display = 'block';
@@ -543,6 +546,8 @@ function con()
 {
 
             var formapago = '<?php echo $tipo_letra ?>';
+            var no_banco = '<?php echo isset($id) ? $id : '' ?>';
+            var mov = '<?php echo isset($datospoliza[0]['no_mov']) ? $datospoliza[0]['no_mov'] : '' ?>';
             var rfc = '<?php echo $rfc ?>';
             
             if(formapago == 'O')
@@ -581,7 +586,7 @@ function con()
                var forma = '04';
             }
 
-            tablacue(rfc,rfcemisor,historico,forma);
+            tablacue(rfc,rfcemisor,historico,forma,formapago, no_banco, mov);
 
             document.getElementById('sinchecar').style.display = 'block';
             document.getElementById('conchecar').style.display = 'none';
@@ -1429,6 +1434,8 @@ function historicofalse()
     var rfcemisor = document.getElementById('rfcprov').innerHTML;
     var historico = '';
     var formapago = '<?php echo $tipo_letra ?>';
+    var no_banco = '<?php echo isset($id) ? $id : '' ?>';
+    var mov = '<?php echo isset($datospoliza[0]['no_mov']) ? $datospoliza[0]['no_mov'] : '' ?>';
 
     if(formapago == 'C')
       {
@@ -1450,11 +1457,13 @@ function historicofalse()
    document.getElementById("historicofalse").style.display = "none";
    document.getElementById("historicotrue").style.display = "block";
 
-   tablacue(rfc,rfcemisor,historico,forma);
+   tablacue(rfc,rfcemisor,historico,forma,formapago,no_banco,mov);
 }
 function formaspago()
 {
       var valor = document.getElementById('mostrar_formas_pago').checked;
+      var no_banco = '<?php echo isset($id) ? $id : '' ?>';
+      var mov = '<?php echo isset($datospoliza[0]['no_mov']) ? $datospoliza[0]['no_mov'] : '' ?>';
       if(valor == true)
       {
             var formapago = '<?php echo $tipo_letra ?>';
@@ -1522,7 +1531,7 @@ function formaspago()
             }
       }
 
-      tablacue(rfc,rfcemisor,historico,forma);
+      tablacue(rfc,rfcemisor,historico,forma,formapago,no_banco,mov);
       
 }
 function historicotrue()
@@ -1532,6 +1541,8 @@ function historicotrue()
     var rfcemisor = document.getElementById('rfcprov').innerHTML;
     var historico = true;
     var formapago = '<?php echo $tipo_letra ?>';
+    var no_banco = '<?php echo isset($id) ? $id : '' ?>';
+    var mov = '<?php echo isset($datospoliza[0]['no_mov']) ? $datospoliza[0]['no_mov'] : '' ?>';
 
       if(formapago == 'C')
       {
@@ -1553,16 +1564,20 @@ function historicotrue()
     document.getElementById("historicotrue").style.display = "none";
     document.getElementById("historicofalse").style.display = "block";
 
-    tablacue(rfc,rfcemisor,historico,forma);
+    tablacue(rfc,rfcemisor,historico,forma,formapago,no_banco,mov);
 
 }
-function tablacue(rfc,rfcemisor,historico,formapago)
+function tablacue(rfc,rfcemisor,historico,formapago,tipo,no_banco,mov)
 {
+   // console.log(tipo);
+   // console.log(no_banco);
+   // console.log(mov);
+
    document.getElementById('total_pagar').value = '0.00';
    jQuery.ajax({
        url: baseurl+"catalogos/Beneficiarios/getpendientesPagar",
        type:"POST",
-       data:{rfc:rfc,rfcemisor:rfcemisor,historico:historico,formapago:formapago},
+       data:{rfc:rfc,rfcemisor:rfcemisor,historico:historico,formapago:formapago,tipo:tipo,no_banco:no_banco,mov:mov},
        dataType:"html",
        success:function(data)
        {
@@ -1677,6 +1692,21 @@ function quitarpago()
                    }
                }
            });
+      }
+}
+function descargarxml()
+{
+    var oTT = $.fn.dataTable.TableTools.fnGetInstance("tblCuentasPagar");
+    var aData = oTT.fnGetSelectedData();   
+    var uuid = aData[0][2];
+
+    if(aData.length != 1)
+      {  
+          var n = noty({ layout: 'topRight', type: 'warning', theme: 'relax', text: 'Seleccione un registro.'});
+      }
+      else
+      {
+         window.open(baseurl + "catalogos/Beneficiarios/descargarxml?uuid="+uuid, '_blank');
       }
 }
 function verdetalle()
