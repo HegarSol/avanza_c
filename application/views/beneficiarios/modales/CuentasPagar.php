@@ -31,7 +31,7 @@
 
         <button class="btn btn-primary" onclick="editarpoliza()"><span class="fa fa-pencil-square-o"></span> Editar póliza</button>
         <button class="btn btn-primary" onclick="verdetalle()"><span class="fa fa-eye"></span> Ver Docs</button>
-        <button class="btn btn-info" onclick="descargarxml()"><span class="fa fa-download"></span> Descargar xml</button>
+        <button class="btn btn-info" onclick="descargarxml()"><span class="fa fa-download"></span> Descargar pdf</button>
 
         <?php
         if($CXP == 'bene')
