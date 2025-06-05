@@ -24,6 +24,8 @@
         <button type="button" class="btn btn-warning" id="sinchecar" onclick="sin()">Mostrar todas las formas de pagos</button>
         <button type="button" class="btn btn-warning" style="display:none" id="conchecar" onclick="con()">Mostrar forma de pago actual</button>
 
+        <button type="button" class="btn btn-warning" id="mostrarpendientespago" onclick="mostrarpendientespago()">Mostrar pendientes pago</button>
+
         <br>
         <br>
 
@@ -510,6 +512,26 @@
       //                       row.appendChild(td8);
       //                       tbody.appendChild(row);
    }
+function mostrarpendientespago()
+{
+      var formapago = '<?php echo $tipo_letra ?>';
+      var no_banco = '<?php echo isset($id) ? $id : '' ?>';
+      var mov = '<?php echo isset($datospoliza[0]['no_mov']) ? $datospoliza[0]['no_mov'] : '' ?>';
+      var rfc = '<?php echo $rfc ?>';   
+      if(formapago == 'O')
+            {
+               var rfcemisor = 'TODOS';
+            }
+            else
+            {
+              var rfcemisor = 'TODOS';
+            }
+
+            var historico = '';
+            var forma = '0';
+
+            tablacue(rfc,rfcemisor,historico,forma,formapago, no_banco, mov);
+}
 function sin()
 {
             var formapago = '<?php echo $tipo_letra ?>';
