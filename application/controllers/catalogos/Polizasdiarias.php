@@ -306,6 +306,8 @@ class Polizasdiarias extends MY_Controller
 
             $ssub_cta = $this->input->post('ssub_cta');
 
+            $no_prov_fac = $this->input->post('no_prov_fac');
+
             $monto = $this->input->post('monto');
 
             $c_a = $this->input->post('c_a');
@@ -337,7 +339,7 @@ class Polizasdiarias extends MY_Controller
                     'fecha' => $fecha[$i],
                     'concepto' => $concepto[$i],
                     'referencia' => $referencia[$i],
-                    'no_prov' => 0,
+                    'no_prov' => $no_prov_fac[$i] = '' ? $no_prov_fac[$i] : 0,
                     'factrefe' => 0,
                     'nombre_cuenta' => $nombre_cuenta[$i],
                     'ssub_cta' => $ssub_cta[$i]

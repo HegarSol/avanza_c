@@ -35,10 +35,17 @@
 function cuentaautomaticabanco(tableID)
 {
    var table = x(tableID);
-   
-   var monto = document.getElementById('montopoli').value;
-   var nom_prov = document.getElementById('noprov').value;
- 
+   var tipomovs = '<?php echo $tipo;?>';
+   if('<?php echo $tipo;?>' == '4')
+      {
+         var monto = 1;
+         var nom_prov = '';
+      }
+      else
+      {
+           var monto = document.getElementById('montopoli').value;
+           var nom_prov = document.getElementById('noprov').value;
+      }
   // console.log(poli);
    var clasi = 1;
 
@@ -49,12 +56,12 @@ function cuentaautomaticabanco(tableID)
    else
    {
 
-       var no_banco = '<?php echo $datos[0]["no_banco"]; ?>';
+       var no_banco = '<?php echo isset($datos[0]["no_banco"]) ? $datos[0]["no_banco"] : '' ?>';
 
        jQuery.ajax({
           type:"POST",
           url: baseurl+"catalogos/bancos/getbanco",
-          data:{id:no_banco,clasi:clasi},
+          data:{id:no_banco,clasi:clasi,tipomovs:tipomovs},
           dataType:"html",
           success:function(response)
           {

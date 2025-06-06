@@ -365,7 +365,7 @@ class Reportes extends MY_Controller
         $this->pdf->Cell(200,5,'ASIENTO CONTABLE',0,1,'C',1);
         $this->pdf->Ln(10);
         $this->pdf->SetWidths(array(15,30,13,32,60,20,40,20));
-        $this->Rowpdf(array('Cta-Subcta','Referencia','Fact','Nombre de cuenta','Concepto','Cargos','Abonos'));
+        $this->Rowpdf(array('Cta-Sub-Ssub','Referencia','Fact','Nombre de cuenta','Concepto','Cargos','Abonos'));
         $this->pdf->Ln(10);
 
         $totalcargos = 0;
@@ -375,13 +375,13 @@ class Reportes extends MY_Controller
         {
             if($this->detalle[$i]['c_a'] == '+')
             {
-               $renglony = $this->Rowpdf(array($this->detalle[$i]['cuenta'].'-'.$this->detalle[$i]['sub_cta'],$this->detalle[$i]['referencia'],$this->detalle[$i]['factrefe'],$this->detalle[$i]['nombre_cuenta'],$this->detalle[$i]['concepto'],number_format($this->detalle[$i]['monto'],2,'.',','),''));
+               $renglony = $this->Rowpdf(array($this->detalle[$i]['cuenta'].'-'.$this->detalle[$i]['sub_cta'].'-'.$this->detalle[$i]['ssub_cta'],$this->detalle[$i]['referencia'],$this->detalle[$i]['factrefe'],$this->detalle[$i]['nombre_cuenta'],$this->detalle[$i]['concepto'],number_format($this->detalle[$i]['monto'],2,'.',','),''));
                $totalcargos = $totalcargos + $this->detalle[$i]['monto'];
                $this->pdf->SetY($renglony-3.5);
             }
             else
             {
-               $renglony = $this->Rowpdf(array($this->detalle[$i]['cuenta'].'-'.$this->detalle[$i]['sub_cta'],$this->detalle[$i]['referencia'],$this->detalle[$i]['factrefe'],$this->detalle[$i]['nombre_cuenta'],$this->detalle[$i]['concepto'],'',number_format($this->detalle[$i]['monto'],2,'.',',')));
+               $renglony = $this->Rowpdf(array($this->detalle[$i]['cuenta'].'-'.$this->detalle[$i]['sub_cta'].'-'.$this->detalle[$i]['ssub_cta'],$this->detalle[$i]['referencia'],$this->detalle[$i]['factrefe'],$this->detalle[$i]['nombre_cuenta'],$this->detalle[$i]['concepto'],'',number_format($this->detalle[$i]['monto'],2,'.',',')));
                $totalabono = $totalabono + $this->detalle[$i]['monto'];
                $this->pdf->SetY($renglony-3.5);
             }

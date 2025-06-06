@@ -626,6 +626,7 @@ function checartodo()
                 var monto = parseFloat($(this).parent().parent().find('td').eq(20).html());
                 total += monto;             
                 campos+= tipo+',';
+                console.log(campos);
 
             });
             document.getElementById('uuidpagar').value = campos;
@@ -729,7 +730,14 @@ function agregarpoliza()
 
       var poliza = tipo_mov + ' ' + no_banco + '       ' + no_mov;
 
-      document.getElementById('montopoli').value = document.getElementById('total_pagar').value;
+      if('<?php echo $tipo;?>' == '4')
+      {
+         
+      }
+      else
+      {
+           document.getElementById('montopoli').value = document.getElementById('total_pagar').value;
+      }
       $("#myClasifica tbody").empty();
       for(var i in chek)
       {

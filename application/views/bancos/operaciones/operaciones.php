@@ -1259,10 +1259,10 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
                 }
                 else
                 {
-                    if(document.getElementById('asiento_conta').tBodies[0].rows[1-1].cells[8].innerHTML == '-')
+                    if(document.getElementById('asiento_conta').tBodies[0].rows[1-1].cells[9].innerHTML == '-')
                     {
                         var nega = parseFloat(document.getElementById('negativo').value);
-                        var valor = document.getElementById('asiento_conta').tBodies[0].rows[1-1].cells[7].innerHTML;
+                        var valor = document.getElementById('asiento_conta').tBodies[0].rows[1-1].cells[8].innerHTML;
 
                         var total = nega - valor;
                         document.getElementById('negativo').value = total.toFixed(2);
@@ -1270,7 +1270,7 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
                         var nuevonega = parseFloat(document.getElementById('negativo').value);
 
 
-                        document.getElementById('asiento_conta').tBodies[0].rows[1-1].cells[7].innerHTML = monto;
+                        document.getElementById('asiento_conta').tBodies[0].rows[1-1].cells[8].innerHTML = monto;
 
                         var total2 = nuevonega + parseFloat(monto);
                         document.getElementById('negativo').value = total2.toFixed(2);
@@ -1288,8 +1288,11 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
                     }
                     else
                     {
+
+                        
+                        
                         var nega = parseFloat(document.getElementById('positivo').value);
-                        var valor = document.getElementById('asiento_conta').tBodies[0].rows[1-1].cells[7].innerHTML;
+                        var valor = document.getElementById('asiento_conta').tBodies[0].rows[1-1].cells[8].innerHTML;
 
                         var total = nega - valor;
                         document.getElementById('positivo').value = total.toFixed(2);
@@ -1297,7 +1300,7 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
                         var nuevonega = parseFloat(document.getElementById('positivo').value);
 
 
-                        document.getElementById('asiento_conta').tBodies[0].rows[1-1].cells[7].innerHTML = monto;
+                        document.getElementById('asiento_conta').tBodies[0].rows[1-1].cells[8].innerHTML = monto;
 
                         var total2 = nuevonega + parseFloat(monto);
                         document.getElementById('positivo').value = total2.toFixed(2);
