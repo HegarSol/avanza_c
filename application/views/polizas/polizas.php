@@ -344,17 +344,18 @@ function editRow(tableID)
            x("cuenta").value = table.rows[i].cells[1].innerHTML;
            x("sub_cuenta").value = table.rows[i].cells[2].innerHTML;
            x("ssub_cuenta").value = table.rows[i].cells[3].innerHTML;
-           x("referen").value = table.rows[i].cells[4].innerHTML;
-           x("nom_cuenta").value = table.rows[i].cells[5].innerHTML;
-           x("concep").value = table.rows[i].cells[6].innerHTML;
-           x("monto").value = table.rows[i].cells[7].innerHTML.replaceAll(",", "");
-           x("signo").value = table.rows[i].cells[8].innerHTML;
+           x("no_prov_factu").value = table.rows[i].cells[4].innerHTML;
+           x("referen").value = table.rows[i].cells[5].innerHTML;
+           x("nom_cuenta").value = table.rows[i].cells[6].innerHTML;
+           x("concep").value = table.rows[i].cells[7].innerHTML;
+           x("monto").value = table.rows[i].cells[8].innerHTML.replaceAll(",", "");
+           x("signo").value = table.rows[i].cells[9].innerHTML;
            
-          var signo = row.cells[8].innerHTML;
+          var signo = row.cells[9].innerHTML;
           var posit = parseFloat(document.getElementById('positivo').value);
           var nega = parseFloat(document.getElementById('negativo').value);
           
-          var monto = row.cells[7].innerHTML;
+          var monto = row.cells[8].innerHTML;
           var monto = parseFloat(monto.replaceAll(",", ""));     
         //  console.log(monto);     
           
@@ -394,11 +395,11 @@ function deleteRow(tableID)
       if(null != chkbox && true == chkbox.checked)
       {
 
-          var signo = row.cells[8].innerHTML;
+          var signo = row.cells[9].innerHTML;
           var posit = parseFloat(document.getElementById('positivo').value);
           var nega = parseFloat(document.getElementById('negativo').value);
           
-          var monto = row.cells[7].innerHTML;
+          var monto = row.cells[8].innerHTML;
           var monto = parseFloat(monto.replaceAll(",", ""));               
           
           if(signo == '+')
@@ -504,6 +505,22 @@ function agregarasiento()
                         var element1 = document.createElement("input");
                         element1.type = "checkbox";
                         element1.name="chkbox[]"; 
+
+                        if(document.getElementById('monto').value == '' || document.getElementById('monto').value == 0)
+                        {
+                            var posit = parseFloat(document.getElementById('positivo').value);
+                            var nega = parseFloat(document.getElementById('negativo').value);
+                            if(posit > nega)
+                            {
+                                var neu = document.getElementById('totalpoliza').value;
+                                var sig = '-';
+                            }
+                            else
+                            {
+                                var neu = (-1) * document.getElementById('totalpoliza').value;
+                                var sig = '+';
+                            }
+                        }
                         
                         
                         var td0 = document.createElement("TD")
@@ -540,34 +557,35 @@ function agregarasiento()
                         row.appendChild(td8);
                         tbody.appendChild(row);
 
-                        var signo = document.getElementById('signo').value;
+                        var signo = document.getElementById('signo').value == '' ? sig : document.getElementById('signo').value;
                         var posit = parseFloat(document.getElementById('positivo').value);
                         var nega = parseFloat(document.getElementById('negativo').value);
                         
-                        var monto = parseFloat(document.getElementById('monto').value);
+                        var monto = document.getElementById('monto').value == '' ? parseFloat(neu) : parseFloat(document.getElementById('monto').value);
+       
+                            if(signo == '+')
+                            {
+                                var total = posit + monto;
+                                document.getElementById('positivo').value = total.toFixed(2);
+                            }
+                            else
+                            {
+                                var total = nega + monto;
+                                document.getElementById('negativo').value = total.toFixed(2);
+                            }
 
-                        if(signo == '+')
-                        {
-                            var total = posit + monto;
-                            document.getElementById('positivo').value = total.toFixed(2);
-                        }
-                        else
-                        {
-                            var total = nega + monto;
-                            document.getElementById('negativo').value = total.toFixed(2);
-                        }
+                            var posit2 = parseFloat(document.getElementById('positivo').value);
+                            var nega2 = parseFloat(document.getElementById('negativo').value);
 
-                        var posit2 = parseFloat(document.getElementById('positivo').value);
-                        var nega2 = parseFloat(document.getElementById('negativo').value);
-
-                        var total2 = posit2-nega2;
-                        
-                        document.getElementById('totalpoliza').value = total2.toFixed(2);
+                            var total2 = posit2-nega2;
+                            
+                            document.getElementById('totalpoliza').value = total2.toFixed(2);
                         
 
                         document.getElementById('cuenta').value = '';
                         document.getElementById('sub_cuenta').value = '';
                         document.getElementById('ssub_cuenta').value = '';
+                        document.getElementById('no_prov_factu').value = '0';
                         document.getElementById('referen').value = '';
                         document.getElementById('nom_cuenta').value = '';
                         document.getElementById('concep').value = '';
