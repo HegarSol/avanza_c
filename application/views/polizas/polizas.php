@@ -8,6 +8,9 @@ $this->load->view('beneficiarios/modales/CuentasPagar');
 $this->load->view('beneficiarios/modales/RegistroPagos');
 $this->load->view('beneficiarios/modales/TablaCuentas');
 $this->load->view('beneficiarios/modales/TablaClientes');
+$this->load->view('beneficiarios/modales/TablaClasifica');
+$this->load->view('beneficiarios/modales/TablaCuentasOperaciones');
+$this->load->view('beneficiarios/modales/ModalXML');
 ?>
 
 <input type="hidden" id="identi" name="identi" readonly value="<?php echo isset($datos[0]['id']) ? $datos[0]['id'] : '0'?>">
@@ -57,11 +60,13 @@ $this->load->view('beneficiarios/modales/TablaClientes');
   </div>
 </div>
 
+<input type="hidden" class="form-control" id="uuidpagar" name="uuidpagar">
+
 <div class="panel-group">
     <div class="panel panel-default">
     <div class="panel-heading"><center><b><font size="5">Asiento Contable</font></b></center></div>
     <div class="panel-body">
-
+<input type="hidden" class="form-control" id="valorporpagar" name="valorporpagar" readonly value="1">
     <div class="row">
         <div class="col-sm-2">
             <label for="">Cuenta</label>&nbsp;&nbsp;<a class="glyphicon glyphicon-search" data-toggle="modal" data-target="#myModalCuentas"></a>
@@ -75,8 +80,10 @@ $this->load->view('beneficiarios/modales/TablaClientes');
              <label for="">Ssub Cuenta</label>
              <input type="text" class="form-control" onblur="agregarcuentas()" id="ssub_cuenta">
         </div>
- 
-        
+ <div class="col-sm-2">
+        <label for="">No prov</label>
+        <input type="text" class="form-control" id="no_prov_factu">
+</div>
         <div class="col-sm-2">
              <label for="">Referencia</label>
              <input type="text" class="form-control" id="referen">
@@ -121,6 +128,7 @@ $this->load->view('beneficiarios/modales/TablaClientes');
                   <th>Cuenta</th>
                   <th>Sub Cta</th>
                   <th>Ssub Cta</th>
+                  <th>No. prov</th>
                   <th>Referencia</th>
                   <th>Nombre Cuenta</th>
                   <th>Concepto</th>
@@ -137,6 +145,7 @@ $this->load->view('beneficiarios/modales/TablaClientes');
                     echo ('<td>'.$row['cuenta'].'</td>');
                     echo ('<td>'.$row['sub_cta'].'</td>');
                     echo ('<td>'.$row['ssub_cta'].'</td>');
+                    echo ('<td>'.$row['no_prov'].'</td>');
                     echo ('<td>'.$row['referencia'].'</td>');
                     echo ('<td>'.$row['nombre_cuenta'].'</td>');
                     echo ('<td>'.$row['concepto'].'</td>');
@@ -179,18 +188,34 @@ $this->load->view('beneficiarios/modales/TablaClientes');
 <script>
 function seleccionarcuneta(cuenta,subcta,nombre,ssubcta)
 {
-    document.getElementById('cuenta').value = cuenta;
-    document.getElementById('sub_cuenta').value = subcta;
-    document.getElementById('nom_cuenta').value = nombre;
-    document.getElementById('ssub_cuenta').value = ssubcta;
-    $('#myModalCuentas').modal('hide');
-    document.getElementById('ssub_cuenta').focus();
-}
+     $('#myModalCuentas').modal('hide');
+
+        var p = document.getElementById('renglon').value;
+        document.getElementById('table').tBodies[0].rows[p-1].cells[1].innerHTML = cuenta;
+        document.getElementById('table').tBodies[0].rows[p-1].cells[2].innerHTML = subcta;
+        document.getElementById('table').tBodies[0].rows[p-1].cells[4].innerHTML = nombre;  
+        document.getElementById('table').tBodies[0].rows[p-1].cells[3].innerHTML = ssubcta;
+
+        $('#myModalxml').modal('show');
+}   
 function abrircuentaspagar()
 {
     verTabla('<?php echo $rfc ?>','<?php echo $tipo_letra?>');
     $('#myModalCuentasPagar').modal('show');
 }
+    function seleccionarcunetaoperaciones(cuenta,subcta,nombre,ssubcta)
+    {
+        document.getElementById('cuenta').value = cuenta;
+        document.getElementById('sub_cuenta').value = subcta;
+        document.getElementById('nom_cuenta').value = '';
+        document.getElementById('ssub_cuenta').value = ssubcta;
+
+        document.getElementById('no_prov_factu').value = '';
+        document.getElementById('concep').value = '';
+        
+        document.getElementById('ssub_cuenta').focus();
+        $('#myModalCuentasOperaciones').modal('hide');
+    }
 function abrirregistropago()
 {
    // document.getElementById('monto_pago').value = document.getElementById('montopoli').value;
@@ -226,6 +251,7 @@ function recogerDatosPoliza(tableID)
                 var monto = [];     var c_a = [];           var fecha = [];
                 var concepto = [];  var referencia = [];    var nombre_cuenta = [];
                 var rowCount = table.rows.length;           var ssub_cta = [];
+                var no_prov_fac = [];
 
                 for(var i = 0; i < rowCount; i++)
                 {
@@ -236,12 +262,13 @@ function recogerDatosPoliza(tableID)
                     cuenta[i] = table.rows[i].cells[1].innerHTML;
                     sub_cta[i] = table.rows[i].cells[2].innerHTML;
                     ssub_cta[i] = table.rows[i].cells[3].innerHTML;
-                    monto[i] = table.rows[i].cells[7].innerHTML;
-                    c_a[i] = table.rows[i].cells[8].innerHTML;
+                    no_prov_fac[i] = table.rows[i].cells[4].innerHTML;
+                    monto[i] = table.rows[i].cells[8].innerHTML;
+                    c_a[i] = table.rows[i].cells[9].innerHTML;
                     fecha[i] = fechapoli;
-                    concepto[i] = table.rows[i].cells[6].innerHTML;
-                    referencia[i] = table.rows[i].cells[4].innerHTML;
-                    nombre_cuenta[i] = table.rows[i].cells[5].innerHTML;
+                    concepto[i] = table.rows[i].cells[7].innerHTML;
+                    referencia[i] = table.rows[i].cells[5].innerHTML;
+                    nombre_cuenta[i] = table.rows[i].cells[6].innerHTML;
                 }
                 if(rowCount==1)
                 {
@@ -255,7 +282,7 @@ function recogerDatosPoliza(tableID)
                         type:"POST",
                         url: baseurl+"catalogos/Polizasdiarias/guardarpoliza",
                         data: {id:id,tipo_movimiento:tipo_movimiento,numero_movimiento:numero_movimiento,fechapoli:fechapoli,
-                        conceptopoli:conceptopoli,tipo_mov:tipo_mov,no_banco:no_banco,no_mov:no_mov,ren:ren,ssub_cta:ssub_cta,
+                        conceptopoli:conceptopoli,tipo_mov:tipo_mov,no_banco:no_banco,no_mov:no_mov,ren:ren,ssub_cta:ssub_cta,no_prov_fac:no_prov_fac,
                         cuenta:cuenta,sub_cta:sub_cta,monto:monto,c_a:c_a,fecha:fecha,concepto:concepto,referencia:referencia,nombre_cuenta:nombre_cuenta},
                         dataType:"html",
                         success:function(msg)
@@ -488,6 +515,8 @@ function agregarasiento()
                         td2.appendChild(document.createTextNode(document.getElementById('sub_cuenta').value))
                         var td3 = document.createElement("TD")
                         td3.appendChild(document.createTextNode(document.getElementById('ssub_cuenta').value))
+                        var td9 = document.createElement("TD")
+                        td9.appendChild(document.createTextNode(document.getElementById('no_prov_factu').value))
                         var td4 = document.createElement("TD")
                         td4.appendChild(document.createTextNode(document.getElementById('referen').value))
                         var td5 = document.createElement("TD")
@@ -503,6 +532,7 @@ function agregarasiento()
                         row.appendChild(td1);
                         row.appendChild(td2);
                         row.appendChild(td3);
+                        row.appendChild(td9);
                         row.appendChild(td4);
                         row.appendChild(td5);
                         row.appendChild(td6);

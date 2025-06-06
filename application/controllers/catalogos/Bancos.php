@@ -670,14 +670,24 @@ class Bancos extends MY_Controller
         //$clasi = 0;
         $clasi = $this->input->post('clasi');
 
+        $tipomovs = $this->input->post('tipomovs');
+
 
         if($clasi == 1)
         {
 
                 $datos=$this->bancos->datosBancos($id);
 
-                $data2 = array('cta'=>$datos[0]['cta'],'sub_cta'=>$datos[0]['sub_cta'],'ssub_cta'=>$datos[0]['ssub_cta'],'banco'=>$datos[0]['banco'],'c_a'=>'+','monto'=>0,'val'=>1);
-    
+
+                 if($tipomovs == 4)
+                 {
+
+                 }
+                 else
+                 {
+                     $data2 = array('cta'=>$datos[0]['cta'],'sub_cta'=>$datos[0]['sub_cta'],'ssub_cta'=>$datos[0]['ssub_cta'],'banco'=>$datos[0]['banco'],'c_a'=>'+','monto'=>0,'val'=>1);
+
+                 }
                  $datostemporal = $this->opera->obtenerTablaTemporal();
                  $dats = [];
                  foreach($datostemporal as $dat)
@@ -693,9 +703,23 @@ class Bancos extends MY_Controller
      
                       );
                  }
-                 array_push($dast, $data2);
 
+                 if($tipomovs == 4)
+                 {
 
+                 }
+                 else
+                 {                 
+                    array_push($dast, $data2);
+
+                    foreach ($dast as $key => $row) 
+                    {
+                        $aux[$key] = $row['cta'];
+
+                    }
+
+                    array_multisort($aux, SORT_ASC, $dast);
+                }
         }
         else
         {
