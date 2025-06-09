@@ -151,4 +151,11 @@ class BancosModel extends MY_Model
         $row = $this->db2->select('*')->from('catalogo_banco')->where('no_banco',$id)->get();
         return $row->result_array();
     }
+    public function get_bancos()
+    {
+        $this->dbEmpresa->select('*');
+        $this->dbEmpresa->from('catalogo_banco');
+        $query = $this->dbEmpresa->get();
+        return $query->result_array();
+    }
 }
