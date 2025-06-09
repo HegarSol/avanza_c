@@ -38,4 +38,3 @@ application/public
 application/config/database.php
 application/config/config.php
 
-# Ignore the following files in the application/config directory    
