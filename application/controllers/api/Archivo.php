@@ -19,6 +19,7 @@ class Archivo extends REST_Controller
         parent::__construct('rest_api');
         $this->load->model('CuentasModel','cuentas');
         $this->load->model('PagosModel','pagos');
+        $this->load->model('BancosModel','bancos');
     }
     public function actualizarpago_post()
     {
@@ -58,6 +59,22 @@ class Archivo extends REST_Controller
         else
         {
             $this->response(array('status' => false, 'data' => $datos));
+        }
+
+    }
+    public function traerbancos_get()
+    {
+        $idempre = $this->get('idempre');
+
+        if($idempre)
+        {
+            $this->bancos->set_database($idempre);
+            $datos = $this->bancos->get_bancos();
+            $this->response(array('status' => true, 'data' => $datos));
+        }
+        else
+        {
+            $this->response(array('status' => false, 'data' => 'ID de empresa no proporcionado o no existe.'));
         }
 
     }
