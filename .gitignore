@@ -1,5 +1,5 @@
 .DS_Store
-application/config/.gitignore
+
 application/cache/*
 !application/cache/index.html
 
@@ -30,11 +30,9 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /tests/tests/
 /tests/results/
 
-
 .htaccess
-
 application/public
-
-application/config/database.php
 application/config/config.php
+application/config/database.php
+
 
