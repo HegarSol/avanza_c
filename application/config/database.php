@@ -72,7 +72,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $active_group = 'default';
 $query_builder = TRUE;
-
+/// Database connection settings for CodeIgniter
+// You can set up multiple database connections by adding more groups
 $db['default'] = array(
 	'dsn'	=> '',
 	// 'hostname' => 'master.c5c40qtzadgb.us-east-2.rds.amazonaws.com',
