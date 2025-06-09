@@ -23,7 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost:85/git_hub_repo/avanza_contabilidad_github/';
+$config['base_url'] = 'http://localhost:85/avanza_contabilidad/avanza_c/';
+//C:\xampp\htdocs\avanza_contabilidad\avanza_c
 //$config['base_url'] = 'http://avanzac.hegarss.com/';
 
 /*
