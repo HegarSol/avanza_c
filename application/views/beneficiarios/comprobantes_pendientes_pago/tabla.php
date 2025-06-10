@@ -8,7 +8,7 @@
                     <th>Seleccionar</th>
                     <th>Version</th>
                     <th>UUID</th>
-                    <th style="display:none">Tipo Comprobantes</th>
+                    <th>Tipo</th>
                     <th>Folio</th>
                     <th>Serie</th>
                     <th>Fecha</th>
@@ -57,7 +57,7 @@
                     <td><input type="checkbox" <?php echo $comprobante->poliza_pago == $poliza ? 'checked' : '' ?> class="form-control" onclick="checartodo()"></td>
                     <td><?php echo $comprobante->version; ?></td>
                     <td><?php echo $comprobante->uuid; ?></td>
-                    <td style="display:none"><?php echo $comprobante->tipo_comprobante; ?></td>
+                    <td><?php echo $comprobante->tipo_comprobante; ?></td>
                     <td><?php echo $comprobante->folio; ?></td>
                     <td><?php echo $comprobante->serie; ?></td>
                     <td><?php echo $comprobante->fecha; ?></td>
