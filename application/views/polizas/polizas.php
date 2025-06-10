@@ -248,6 +248,7 @@ function seleccionarcuneta(cuenta,subcta,nombre,ssubcta)
 function abrircuentaspagar()
 {
     verTabla('<?php echo $rfc ?>','<?php echo $tipo_letra?>');
+    document.getElementById('uuidpagar').value = '';
     $('#myModalCuentasPagar').modal('show');
 }
     function seleccionarcunetaoperaciones(cuenta,subcta,nombre,ssubcta)
@@ -271,6 +272,7 @@ function abrirregistropago()
 }
 function recogerDatosPoliza(tableID)
 {
+    var uuidpoliza = document.getElementById('uuidpagar').value;
     var tol = document.getElementById('totalpoliza').value;
     var mes = '<?php echo $_SESSION["mes"]?>';
     var ano = '<?php echo $_SESSION["ano"]?>';
@@ -330,7 +332,7 @@ function recogerDatosPoliza(tableID)
                         url: baseurl+"catalogos/Polizasdiarias/guardarpoliza",
                         data: {id:id,tipo_movimiento:tipo_movimiento,numero_movimiento:numero_movimiento,fechapoli:fechapoli,
                         conceptopoli:conceptopoli,tipo_mov:tipo_mov,no_banco:no_banco,no_mov:no_mov,ren:ren,ssub_cta:ssub_cta,no_prov_fac:no_prov_fac,
-                        cuenta:cuenta,sub_cta:sub_cta,monto:monto,c_a:c_a,fecha:fecha,concepto:concepto,referencia:referencia,nombre_cuenta:nombre_cuenta},
+                        cuenta:cuenta,sub_cta:sub_cta,monto:monto,c_a:c_a,fecha:fecha,concepto:concepto,referencia:referencia,nombre_cuenta:nombre_cuenta,uuidpoliza:uuidpoliza},
                         dataType:"html",
                         success:function(msg)
                         {
