@@ -226,10 +226,17 @@ class Polizasdiarias extends MY_Controller
         //cabezera poliza
 
         $id = $this->input->post('id');
+        $uuidpoliza = $this->input->post('uuidpoliza');
         $tipo_movimiento = $this->input->post('tipo_movimiento');
         $numero_movimiento = $this->input->post('numero_movimiento');
         $fechapoli = $this->input->post('fechapoli');
         $conceptopoli = $this->input->post('conceptopoli');
+
+        $poliza_contble = $tipo_movimiento.' '.$numero_movimiento;
+
+        $uuidsep = substr($uuidpoliza, 0, -1);
+
+        $uuidsep = explode(',',$uuidsep);
 
         if($id > 0)
         {
@@ -290,6 +297,33 @@ class Polizasdiarias extends MY_Controller
                                     'modulo' => 'Catalogos -> Pólizas diarias');
                 $this->bitacora->operacion($crearopera);
                 $correcto = true;
+
+                if($uuidpoliza != '')
+                {
+                    foreach($uuidsep as $uid)
+                    {
+                     
+                        if(ENVIRONMENT == 'development')
+                        {
+                            $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/poliza_pago");
+                        }
+                        else
+                        {
+                            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/poliza_pago");
+                        }
+                
+                
+                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uid."&fecha=".$fechapoli."&poliza=".$poliza_contble);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                        $resu = curl_exec($ch);
+                        $response = json_decode($resu);
+                     
+                    }
+                 
+                }
             }
         }
         if($correcto == true)
