@@ -32,6 +32,12 @@
      </tr>
    </thead>
    <tbody>
+      
+      <?php if(empty($comprobantes)): ?>
+         <tr>
+            <td colspan="25" style="text-align:center">No hay comprobantes pendientes</td>
+         </tr>
+      <?php else: ?>
       <?php foreach($comprobantes as $comprobante): ?>
           <tr>
              <td><?php echo $comprobante->version; ?></td>
@@ -63,5 +69,6 @@
              <td style="display:none"><?php echo $comprobante->poliza_pago?></td>
           </tr>
       <?php endforeach;?>
+      <?php endif; ?>
    </tbody>
 </table>
