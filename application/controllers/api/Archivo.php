@@ -2,6 +2,8 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+header('Access-Control-Allow-Origin: *');
+
 /**
  * API ARCHIVO
  * 
@@ -80,19 +82,7 @@ class Archivo extends REST_Controller
     }
     public function insertarapipoliza_post()
     {
-        $idempre = $_POST['idempre'];
-        $id_banco = $_POST['id_banco'];
-        $fecha = $_POST['fecha'];
-        $cuenta = $_POST['cuenta'];
-        $monto = $_POST['monto'];
-
-        $datos = array(
-            'id_empresa' => $idempre,
-            'cuenta' => $cuenta,
-            'monto' => $monto,
-            'id_banco' => $id_banco,
-            'fecha' => $fecha,
-        );
+        $datos = $_POST['datos'];
 
         $this->response(array('status' => true, 'data' => $datos));     
     }

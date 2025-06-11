@@ -250,7 +250,7 @@ $this->load->view('beneficiarios/modales/ModalAsientoContable');
             {
             ?>
              <label for="">No prov</label>&nbsp;&nbsp;<a class="glyphicon glyphicon-search" data-toggle="modal" data-target="#myModalBenefi3"></a>
-             <input type="text" class="form-control" id="no_prov_factu">
+             <input type="text" class="form-control" id="no_prov_factu" onblur="buscarprovconcep()">
              <?php
             }
             else
@@ -1075,7 +1075,30 @@ function deleteRow(tableID)
     }
   } catch(e) { alert(e); }
 }
+function buscarprovconcep()
+{
+    var id = document.getElementById('no_prov_factu').value;
+    jQuery.ajax({
+         type:"POST",
+         url: baseurl + "catalogos/Beneficiarios/getbeneficiario",
+         data: {id:id},
+         dataType:"html",
+         success:function(response)
+         {
+             response=JSON.parse(response);
+              if(response == 0)
+              {
+                $("#myModalClientes").modal('show');                
+              }
+              else
+              {
 
+                    document.getElementById('no_prov_factu').value = id;
+                    document.getElementById('concep').value = response[0].nombre;
+              }
+         }
+    });
+}
 function buscarprov()
 {
     var id = document.getElementById('noprov').value;
