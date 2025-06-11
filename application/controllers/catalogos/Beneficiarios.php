@@ -990,6 +990,44 @@ class Beneficiarios extends MY_Controller
 
         $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
+    public function quitaraceptacion()
+    {
+        date_default_timezone_set("America/Mexico_City");
+
+        $uuid = $this->input->post('uuid');
+        
+        if(ENVIRONMENT == 'development')
+        {
+             $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/desacepta");
+        }
+        else
+        {
+            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/desacepta");
+        }        
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uuid);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $resu = curl_exec($ch);
+        $response = json_decode($resu);
+
+        if($response->status == true)
+        {
+            $opera = array('usuario' => $_SESSION['nombreU'],
+            'tipo_mov' => '',
+            'no_banco' => '',
+            'no_mov' => '',
+            'accion' => 'Des-aceptar',
+            'cuando' => date('Y-m-d H:i:s'),
+            'comentario' => 'Des-acepto la factura con UUID: '.$uuid,
+            'modulo' => 'Catalogos -> Beneficiario -> Cuentas por pagar');
+             $this->bitacora->operacion($opera);
+        }
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
     public function eliminarfactura()
     {
 

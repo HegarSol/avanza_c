@@ -31,7 +31,7 @@
 
         <button class="btn btn-primary" onclick="editarpoliza()"><span class="fa fa-pencil-square-o"></span> Editar póliza</button>
         <button class="btn btn-primary" onclick="verdetalle()"><span class="fa fa-eye"></span> Ver Docs</button>
-        <button class="btn btn-info" onclick="descargarxml()"><span class="fa fa-download"></span> Descargar pdf</button>
+        <button class="btn btn-success" onclick="descargarxml()"><span class="fa fa-download"></span> Descargar pdf</button>
 
         <?php
         if($CXP == 'bene')
@@ -80,7 +80,7 @@
         <?php
         }
         ?>
-
+        <button class="btn btn-info" onclick="quitaraceptacion()"><span class="fa fa-thumbs-o-down"></span> Quitar aceptación</button>
        
        <?php 
        if($CXP == 'BAN')
@@ -724,13 +724,13 @@ function agregarpoliza()
    {
       var fecha_poliza = document.getElementById('fechatrabajo').value;
       var tipo_mov = '<?php if(isset($tipo) == 1){echo 'T';}else if(isset($tipo) == 2){ echo 'C'; } ?>';
-      var no_banco = '<?php echo isset($datos[0]["no_banco"]);?>';
+      var no_banco = '<?php echo isset($datos[0]["no_banco"]) ? $datos[0]["no_banco"] : '' ;?>';
       var no_mov = document.getElementById('no_mov').value;
       var no_prov = document.getElementById('numprov').innerHTML;
 
       var poliza = tipo_mov + ' ' + no_banco + '       ' + no_mov;
 
-      if('<?php echo $tipo;?>' == '4')
+      if( '<?php echo isset($tipo) ? $tipo : '';?>' == '4')
       {
          
       }
@@ -1350,7 +1350,7 @@ function editarpoliza()
       }
       else if(aData[0][27] == '')
       {
-         var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: 'No se puede editar la factura por que no tiene pólisa.'});
+         var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: 'No se puede editar la factura por que no tiene póliza.'});
       }
       else
       {
@@ -1659,6 +1659,38 @@ function borarpoliza()
               }
            });
       }
+}
+function quitaraceptacion()
+{
+    var oTT = $.fn.dataTable.TableTools.fnGetInstance("tblCuentasPagar");
+       var aData = oTT.fnGetSelectedData();
+       if(aData.length != 1)
+       {
+           var n = noty({ layout: 'topRight', type:"warning", theme: 'relax', text: 'Seleccione un registro.'});
+       }
+       else
+       {
+// console.log(aData[0][5]);
+            jQuery.ajax({
+                 type:"POST",
+                 url: baseurl + "catalogos/Beneficiarios/quitaraceptacion",
+                 data: {uuid:aData[0][2]},
+                 dataType: "html",
+                 success:function(response)
+                 {
+                    response=JSON.parse(response);
+                    if(response.status == true)
+                    {
+                      verTabla('<?php echo $rfc ?>','<?php echo $tipo_letra ?>');
+                      swal("Correcto","Desaceptado satisfactoriamente.","success");                      
+                    }
+                    else
+                    {
+                      swal("Advertencia",response.error,"warning");
+                    }
+                 }
+            });
+       }   
 }
 function borarfactura()
 {
