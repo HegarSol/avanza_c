@@ -423,14 +423,14 @@ class Beneficiarios extends MY_Controller
     {
         $rfc =  $this->input->post('rfc');
         
-        if(ENVIRONMENT == 'development')
-        {
-            $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/pendientes?empresa=".$rfc);
-        }
-        else
-        {
+        //if(ENVIRONMENT == 'development')
+       // {
+        //     $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/pendientes?empresa=".$rfc);
+        // }
+        // else
+        // {
             $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/pendientes?empresa=".$rfc);
-        }
+       // }
 
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -438,11 +438,19 @@ class Beneficiarios extends MY_Controller
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         $resu = curl_exec($ch);
         $response = json_decode($resu);
-
+        if($response->status == false)
+        {
+             $data['comprobantes'] = [];    
+        }
+        else
+        {
         $data['comprobantes'] = $response->data;
+        }
+        $this->load->view('beneficiarios/comprobantes_pendientes/tabla',$data);
+           
        
 
-        $this->load->view('beneficiarios/comprobantes_pendientes/tabla',$data);
+        
     }
     public function guardarasientoprovicion()
     {
@@ -651,14 +659,14 @@ class Beneficiarios extends MY_Controller
     {
         $uuid = $this->input->post('uuid');
 
-         if(ENVIRONMENT == 'development')
-         {
-             $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
-         }
-         else
-         {
+       //  if(ENVIRONMENT == 'development')
+        // {
+        //      $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
+        //  }
+        //  else
+        //  {
             $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
-         }
+        // }
 
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
