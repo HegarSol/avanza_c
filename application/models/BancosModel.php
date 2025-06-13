@@ -158,4 +158,12 @@ class BancosModel extends MY_Model
         $query = $this->dbEmpresa->get();
         return $query->result_array();
     }
+    public function getIdbanco($id)
+    {
+        $this->dbEmpresa->select('*');
+        $this->dbEmpresa->from('catalogo_banco');
+        $this->dbEmpresa->where('id_banco',$id);
+        $query = $this->dbEmpresa->get();
+        return $query->result_array();
+    }
 }

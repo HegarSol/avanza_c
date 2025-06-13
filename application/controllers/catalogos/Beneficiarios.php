@@ -31,7 +31,7 @@ class Beneficiarios extends MY_Controller
                $CXP = 'bene';
                $tipopermiso = $_SESSION['tipo'];
                $permisos=$this->permisosforma($_SESSION['id'],8);
-               $data = array('titulo' => 'Beneficiario','tipo_letra' => 'T','permisotipo' => $tipopermiso,'CXP' => $CXP,'rfc' => $rfc[0]['rfc'], 'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores' => $errores, 'permisosGrupo' => $permisos);
+               $data = array('titulo' => 'Beneficiario','tipo_letra' => '','permisotipo' => $tipopermiso,'CXP' => $CXP,'rfc' => $rfc[0]['rfc'], 'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores' => $errores, 'permisosGrupo' => $permisos);
                $items=$this->menuModel->menus($_SESSION['tipo']);
                $this->multi_menu->set_items($items);
                $this->load->view('templates/header');

@@ -82,9 +82,24 @@ class Archivo extends REST_Controller
     }
     public function insertarapipoliza_post()
     {
-        $datos = $_POST['datos'];
+        $body = file_get_contents('php://input');
 
-        $this->response(array('status' => true, 'data' => $datos));     
+        $object = json_decode($body);
+
+        foreach($object->datos as $valores)
+        {
+            $this->bancos->set_database($valores->idempre);
+            $datosbanco = $this->bancos->getIdbanco($valores->id_banco);
+            var_dump($datosbanco);
+            // var_dump($valores->idempre);
+            // var_dump($valores->id_banco);
+            // var_dump($valores->fecha);
+            // var_dump($valores->cuenta);
+            // var_dump($valores->monto);
+            // var_dump($valores->usuario);
+        }
+
+        //$this->response(array('status' => true, 'data' => $object));     
     }
     public function buscarcuentaextranjera_post()
     {
