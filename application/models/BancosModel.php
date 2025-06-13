@@ -166,4 +166,9 @@ class BancosModel extends MY_Model
         $query = $this->dbEmpresa->get();
         return $query->result_array();
     }
+    public function crearPoliza($datos)
+    {
+        $this->dbEmpresa->insert('opera_banco_encabe',$datos);
+        return $this->dbEmpresa->insert_id();
+    }
 }
