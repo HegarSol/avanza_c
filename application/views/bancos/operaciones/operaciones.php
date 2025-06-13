@@ -1286,6 +1286,7 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
                     {
                         var nega = parseFloat(document.getElementById('negativo').value);
                         var valor = document.getElementById('asiento_conta').tBodies[0].rows[1-1].cells[8].innerHTML;
+                         var valor = parseFloat(valor.replaceAll(",", "")); 
 
                         var total = nega - valor;
                         document.getElementById('negativo').value = total.toFixed(2);
@@ -1316,6 +1317,7 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
                         
                         var nega = parseFloat(document.getElementById('positivo').value);
                         var valor = document.getElementById('asiento_conta').tBodies[0].rows[1-1].cells[8].innerHTML;
+                        var valor = parseFloat(valor.replaceAll(",", "")); 
 
                         var total = nega - valor;
                         document.getElementById('positivo').value = total.toFixed(2);

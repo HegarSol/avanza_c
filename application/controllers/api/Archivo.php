@@ -90,13 +90,40 @@ class Archivo extends REST_Controller
         {
             $this->bancos->set_database($valores->idempre);
             $datosbanco = $this->bancos->getIdbanco($valores->id_banco);
-            var_dump($datosbanco);
             // var_dump($valores->idempre);
             // var_dump($valores->id_banco);
             // var_dump($valores->fecha);
             // var_dump($valores->cuenta);
             // var_dump($valores->monto);
             // var_dump($valores->usuario);
+
+                   $datos = array(
+                        'tipo_mov' => 'D',
+                        'no_banco' => $datosbanco[0]['no_banco'],
+                        'no_mov' => $datosbanco[0]['depositos']+1,
+                        'fecha' => $valores->fecha,
+                        'beneficia' => 0,
+                        'concepto' => '',
+                        'monto' => number_format($valores->monto,2,'.',''),
+                        'c_a' => '+',
+                        'cobrado' => 1,
+                        'cerrado' => 0,
+                        'no_prov' => 0,
+                        'fechaCobro' => date('Y-m-d'),
+                        'impreso' => 0,
+                        'afectar' => 0,
+                        'bancosat' => '',
+                        'bene_ctaban' => '',
+                        'tieneCxP_pagos' => 0,
+                        'cta_banco' => '',
+                        'tipo_proveedor' => ''
+                    );
+                 // $id = $this->bancos->crearPoliza($datos);
+                 if($id > 0)
+                 {
+
+                 }
+                   
         }
 
         //$this->response(array('status' => true, 'data' => $object));     
