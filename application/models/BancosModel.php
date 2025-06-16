@@ -171,4 +171,38 @@ class BancosModel extends MY_Model
         $this->dbEmpresa->insert('opera_banco_encabe',$datos);
         return $this->dbEmpresa->insert_id();
     }
+    public function operacion($datos)
+    {
+        $this->dbEmpresa->insert('bitacora',$datos);
+        return $this->dbEmpresa->insert_id();
+    }
+    public function guardarDetalle($detalle)
+    {
+        $this->dbEmpresa->insert('opera_banco_detalle', $detalle);
+        return $this->dbEmpresa->insert_id();
+    }
+    public function actualizarmovimiento($numero_banco,$tipo_movimento,$numero_movimento)
+    {
+        if($tipo_movimento == 'T')
+        {
+            $datos = array('movimiento' => $numero_movimento);
+
+            $this->dbEmpresa->where('no_banco',$numero_banco);
+            $this->dbEmpresa->update('catalogo_banco',$datos);
+        }
+        else if($tipo_movimento == "C")
+        {
+            $datos = array('cheques' => $numero_movimento);
+
+            $this->dbEmpresa->where('no_banco',$numero_banco);
+            $this->dbEmpresa->update('catalogo_banco',$datos);
+        }
+        else
+        {
+            $datos = array('depositos' => $numero_movimento);
+
+            $this->dbEmpresa->where('no_banco',$numero_banco);
+            $this->dbEmpresa->update('catalogo_banco',$datos);
+        }
+    }
 }

@@ -97,12 +97,14 @@ class Archivo extends REST_Controller
             // var_dump($valores->monto);
             // var_dump($valores->usuario);
 
+            $mov = $datosbanco[0]['depositos']+1;
+
                    $datos = array(
                         'tipo_mov' => 'D',
                         'no_banco' => $datosbanco[0]['no_banco'],
-                        'no_mov' => $datosbanco[0]['depositos']+1,
+                        'no_mov' => $mov,
                         'fecha' => $valores->fecha,
-                        'beneficia' => 0,
+                        'beneficia' => '',
                         'concepto' => '',
                         'monto' => number_format($valores->monto,2,'.',''),
                         'c_a' => '+',
@@ -118,15 +120,96 @@ class Archivo extends REST_Controller
                         'cta_banco' => '',
                         'tipo_proveedor' => ''
                     );
-                 // $id = $this->bancos->crearPoliza($datos);
+                  //  $id= 1;
+                  $id = $this->bancos->crearPoliza($datos);
                  if($id > 0)
                  {
 
+                   $this->bancos->actualizarmovimiento($datosbanco[0]['no_banco'],'D',$mov);
+                       $detalle = array(
+                            'id_encabezado' => $id,
+                            'tipo_mov' => 'D',
+                            'no_banco' => $datosbanco[0]['no_banco'],
+                            'no_mov' => $mov,
+                            'ren' => 0,
+                            'cuenta' => $datosbanco[0]['cta'],
+                            'sub_cta' => $datosbanco[0]['sub_cta'],
+                            'monto' => $valores->monto,
+                            'c_a' => '+',
+                            'fecha' => $valores->fecha,
+                            'concepto' => '',
+                            'referencia' => '',
+                            'no_prov' => 0,
+                            'factrefe' => 0,
+                            'nombre_cuenta' => $datosbanco[0]['banco'],
+                            'ssub_cta' => $datosbanco[0]['ssub_cta']
+                        );
+
+                     //   $detalle = 1;
+                      $detalle= $this->bancos->guardarDetalle($detalle);
+
+                     $detalle2 = array(
+                            'id_encabezado' => $id,
+                            'tipo_mov' => 'D',
+                            'no_banco' => $datosbanco[0]['no_banco'],
+                            'no_mov' => $mov,
+                            'ren' => 0,
+                            'cuenta' => 103,
+                            'sub_cta' => 1,
+                            'monto' => $valores->monto,
+                            'c_a' => '-',
+                            'fecha' => $valores->fecha,
+                            'concepto' => '',
+                            'referencia' => '',
+                            'no_prov' => 0,
+                            'factrefe' => 0,
+                            'nombre_cuenta' => 'CLIENTES DIVERSOS',
+                            'ssub_cta' => 9990
+                        );
+                    $detalle2= $this->bancos->guardarDetalle($detalle2);
+                   //   $detalle2 = 1;
+
+                      if($detalle > 0 && $detalle2 > 0)
+                      {
+
+                            $crearopera = array('usuario' => $valores->usuario,
+                                   'tipo_mov' => 'D',
+                                   'no_banco' => $datosbanco[0]['no_banco'],
+                                   'no_mov' => $mov, 
+                                   'accion' => 'Agregar', 
+                                   'cuando' => date('Y-m-d H:i:s'), 
+                                   'comentario' => 'Creo la operacion de tipo: '.$mov.' del numero de banco: '.$datosbanco[0]['no_banco'].' del movimiento: D',
+                                   'modulo' => 'Api');
+                            $this->bancos->operacion($crearopera);
+
+                        $ret = 1;
+
+                      }
+                      else
+                      {
+                        $ret = 2;
+                      }
+                 }
+                 else
+                 {
+                      $ret = 3;
                  }
                    
         }
 
-        //$this->response(array('status' => true, 'data' => $object));     
+        if($ret == 1)
+        {
+            $this->response(array('status' => true, 'data' => 'Póliza guardada correctamente.'));
+        }
+        else if($ret == 2)
+        {
+            $this->response(array('status' => false, 'data' => 'Error al crear la poliza detalle.'));
+        }
+        else if($ret == 3)
+        {
+            $this->response(array('status' => false, 'data' => 'Error al crear la poliza encabezado.'));
+        }
+
     }
     public function buscarcuentaextranjera_post()
     {
