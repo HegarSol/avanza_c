@@ -37,6 +37,11 @@
             $_SESSION['tipo']=$this->aauth->get_user_var('tipo',$_SESSION['id']);
             $_SESSION['nombreU']=$usuario->name;
             $empresas=$this->validaempresas->validaE();
+
+            $this->load->model('EmpresasModel','empresas');
+            $empresa= $this->empresas->datosEmpresa($_SESSION['idEmpresa']);
+            $_SESSION['referenciamarca']=$empresa[0]['referenciamarca'];
+            
             if(isset($_SESSION['idEmpresa']))
             {
                 redirect('Welcome/index');
