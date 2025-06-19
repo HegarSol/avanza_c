@@ -38,12 +38,12 @@
             $_SESSION['nombreU']=$usuario->name;
             $empresas=$this->validaempresas->validaE();
 
-            $this->load->model('EmpresasModel','empresas');
-            $empresa= $this->empresas->datosEmpresa($_SESSION['idEmpresa']);
-            $_SESSION['referenciamarca']=$empresa[0]['referenciamarca'];
             
             if(isset($_SESSION['idEmpresa']))
             {
+                $this->load->model('EmpresasModel','empresas');
+                $empresa= $this->empresas->datosEmpresa($_SESSION['idEmpresa']);
+                $_SESSION['referenciamarca']=$empresa[0]['referenciamarca'];
                 redirect('Welcome/index');
             }
             else if(!isset($_SESSION['idEmpresa']) && $_SESSION['tipo'] != 'SU')
