@@ -331,7 +331,7 @@ class OperacionesModel extends MY_Model
     }
     public function cancelarPolizas($id)
     {
-        $datos = array('concepto' => 'CANCELADO '. date('d-m-Y H:i:s'));
+        $datos = array('concepto' => 'CANCELADO '. date('d-m-Y H:i:s'),'monto' => 0);
 
         $this->db2->where('id',$id);
         $this->db2->update('opera_banco_encabe',$datos);
