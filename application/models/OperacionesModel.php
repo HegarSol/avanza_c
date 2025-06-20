@@ -329,5 +329,30 @@ class OperacionesModel extends MY_Model
     {
         $query = $this->db2->query('DROP TABLE IF EXISTS builtemporal');
     }
+    public function cancelarPolizas($id)
+    {
+        $datos = array('concepto' => 'CANCELADO '. date('d-m-Y H:i:s'));
+
+        $this->db2->where('id',$id);
+        $this->db2->update('opera_banco_encabe',$datos);
+        return true;
+    }
+    public function cancelarDetalle($id)
+    {
+         $this->db2->where('id_encabezado',$id);
+         $this->db2->where('cuenta !=','103');
+
+         $this->db2->delete('opera_banco_detalle');
+         return true;
+    }
+    public function actualizarcancelado($id)
+    {
+        $datos = array('monto' => 0);
+
+        $this->db2->where('id_encabezado',$id);
+        $this->db2->where('cuenta','103');
+        $this->db2->update('opera_banco_detalle',$datos);
+        return true;
+    }
 
 }

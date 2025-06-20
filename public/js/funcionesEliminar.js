@@ -165,13 +165,13 @@ function EliminarPolizaDiaria(id)
 function EliminarPoliza(id,n_banco,tipo)
 {
    swal({
-       title: "¿Desea eliminar la Poliza?",
+       title: "¿Desea cancelar la Poliza?",
        text: "No se podrá recuperar la información.",
        type: "warning",
        showCancelButton: true,
        confirmButtonColor: "#DD6B55",
-       confirmButtonText: "Borrar",
-       cancelButtonText: "No, Cancelar",
+       confirmButtonText: "Cancelar",
+       cancelButtonText: "No",
        closeOnConfirm: false,
        closeOnCancel: false
    },
@@ -183,7 +183,7 @@ function EliminarPoliza(id,n_banco,tipo)
       }
       else
       {
-         swal("Cancelado","No se eliminó la Poliza","error");
+         swal("Cancelado","No se cancelado la Poliza","error");
       }
 
    });
