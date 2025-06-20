@@ -11,6 +11,7 @@ class Operaciones extends MY_Controller
         $this->load->model('OperacionesModel','opera');
         $this->load->model('BitacoraModel','bitacora');
         $this->load->model('ConfigCuentasModel','conficta');
+        $this->load->model('Configuraciones_model','confi');
         $this->load->helper('hegarss');
 
     }
@@ -539,7 +540,7 @@ class Operaciones extends MY_Controller
                $row[] = $opera->beneficia.' - '.$opera->concepto;
                $row[] = '$'.number_format($opera->monto,2,'.',',');
                $row[] = '<a href="'.base_url().'catalogos/Bancos/editaroperacion/'.$opera->id.'/'.$opera->tipo_mov.'/'.$opera->no_banco.'" class="btn btn-primary" title="Editar '.$title.'"><i class="fa fa-pencil-square-o"></i></a>
-               <a href="#"  onClick="EliminarPoliza(\''.$opera->id.'\',\''.$id.'\',\''.$tipo.'\')" class="btn btn-danger" title="Eliminar '.$title.'"><i class="fa fa-times"></i></a>
+               <a href="#"  onClick="EliminarPoliza(\''.$opera->id.'\',\''.$id.'\',\''.$tipo.'\')" class="btn btn-danger" title="Cancelar '.$title.'"><i class="fa fa-times"></i></a>
                <a href="'.base_url().'Reportes/ReportePoliza/'.$opera->id.'/'.$opera->tipo_mov.'" target="_blank" class="btn btn-info" title="Imprimir"> <i class="fa fa-print"></i></a>';
                $data[] = $row;
 
@@ -588,23 +589,52 @@ class Operaciones extends MY_Controller
                 $tipo_mo = 'Chequera';
             }
 
-             $res = $this->opera->borrarPoliza($id);
-             $res2 = $this->opera->borrarDetalle($id);
+            $res = $this->opera->cancelarPolizas($id);
+            $res2 = $this->opera->cancelarDetalle($id);
+            $res = $this->opera->actualizarcancelado($id);
+
+             $getrfcempresa = $this->confi->getConfig();
+           
+           
              if($res == true && $res2 == true)
              {
+
+                $uuid = '';
+                $poliza = $datosope[0]['tipo_mov'].'  '.$datosope[0]['no_banco'].'        '.$datosope[0]['no_mov'];
+                $empresa = $getrfcempresa[0]['rfc'];
+
+                if(ENVIRONMENT == 'development')
+                {
+                    $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/quita_poliza_pago");
+                }
+                else
+                {
+                    $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/quita_poliza_pago");
+                }
+
+
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uuid."&poliza=".$poliza."&empresa=".$empresa);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                $resu = curl_exec($ch);
+                $response = json_decode($resu);
+
+
                 $crearopera = array('usuario' => $_SESSION['nombreU'],
                                     'tipo_mov' => $datosope[0]['tipo_mov'],
                                     'no_banco' => $datosope[0]['no_banco'],
                                     'no_mov' => $datosope[0]['no_mov'], 
-                                    'accion' => 'Eliminar', 
+                                    'accion' => 'Cancelado', 
                                     'cuando' => date('Y-m-d H:i:s'), 
-                                    'comentario' => 'Elimino la operacion de tipo: '.$datosope[0]['tipo_mov'].' del numero de banco: '.$datosope[0]['no_banco'].' del movimiento: '.$datosope[0]['no_mov'],
+                                    'comentario' => 'Cancelo la operacion de tipo: '.$datosope[0]['tipo_mov'].' del numero de banco: '.$datosope[0]['no_banco'].' del movimiento: '.$datosope[0]['no_mov'],
                                     'modulo' => 'Catalogos -> Bancos -> '.$tipo_mo);
                 $this->bitacora->operacion($crearopera);
 
                 header('Location:'.base_url()."catalogos/bancos/operaciones/".$tipo."/".$n_banco,301);
                 exit();
-             }
+            }
         }
         else
         {
