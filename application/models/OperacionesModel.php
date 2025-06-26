@@ -226,11 +226,11 @@ class OperacionesModel extends MY_Model
 
        return $this->db2->get()->result();
     }
-    public function balanza($inicial,$final,$cuentasmayor)
+    public function balanza($inicial,$final)
     {
-        if($cuentasmayor == 1)
-        {
-            $this->db2->select('opera_banco_detalle.cuenta,opera_banco_detalle.sub_cta,opera_banco_detalle.ssub_cta,nombre,SUM(IF(fecha < "'.$inicial.'",IF(c_a = "+",monto,monto*-1),0.00)) as sini,
+        // if($cuentasmayor == 1)
+        // {
+            $this->db2->select('opera_banco_detalle.cuenta,opera_banco_detalle.sub_cta,opera_banco_detalle.ssub_cta,MIN(nombre) as nombre,SUM(IF(fecha < "'.$inicial.'",IF(c_a = "+",monto,monto*-1),0.00)) as sini,
             SUM(IF(c_a = "+" AND fecha BETWEEN "'.$inicial.' "AND" '.$final.'",monto,0.00 )) as cargos,
             SUM(IF(c_a = "-" AND fecha BETWEEN "'.$inicial.' "AND" '.$final.'",monto,0.00 )) as abonos')
             ->from('opera_banco_detalle')
@@ -238,17 +238,17 @@ class OperacionesModel extends MY_Model
             ->where('fecha <=',$final)
             ->order_by('cuenta,sub_cta,ssub_cta','asc')
             ->group_by('cuenta,sub_cta,ssub_cta');
-        }
-        else
-        {
-            $this->db2->select('opera_banco_detalle.cuenta,opera_banco_detalle.sub_cta,opera_banco_detalle.ssub_cta,nombre,SUM(IF(fecha < "'.$inicial.'",IF(c_a = "+",monto,monto*-1),0.00)) as sini,
-            SUM(IF(c_a = "+" AND fecha BETWEEN "'.$inicial.' "AND" '.$final.'",monto,0.00 )) as cargos,
-            SUM(IF(c_a = "-" AND fecha BETWEEN "'.$inicial.' "AND" '.$final.'",monto,0.00 )) as abonos')
-            ->from('opera_banco_detalle')
-            ->join('catalogocta','catalogocta.cuenta = opera_banco_detalle.cuenta AND catalogocta.sub_cta = opera_banco_detalle.sub_cta AND catalogocta.ssub_cta = opera_banco_detalle.ssub_cta','left')
-            ->where('fecha <=',$final)
-            ->order_by('cuenta,sub_cta,ssub_cta','asc');
-        }
+        // }
+        // else
+        // {
+        //     $this->db2->select('opera_banco_detalle.cuenta,opera_banco_detalle.sub_cta,opera_banco_detalle.ssub_cta,nombre,SUM(IF(fecha < "'.$inicial.'",IF(c_a = "+",monto,monto*-1),0.00)) as sini,
+        //     SUM(IF(c_a = "+" AND fecha BETWEEN "'.$inicial.' "AND" '.$final.'",monto,0.00 )) as cargos,
+        //     SUM(IF(c_a = "-" AND fecha BETWEEN "'.$inicial.' "AND" '.$final.'",monto,0.00 )) as abonos')
+        //     ->from('opera_banco_detalle')
+        //     ->join('catalogocta','catalogocta.cuenta = opera_banco_detalle.cuenta AND catalogocta.sub_cta = opera_banco_detalle.sub_cta AND catalogocta.ssub_cta = opera_banco_detalle.ssub_cta','left')
+        //     ->where('fecha <=',$final)
+        //     ->order_by('cuenta,sub_cta,ssub_cta','asc');
+        // }
 
         return $this->db2->get()->result_array();
     }

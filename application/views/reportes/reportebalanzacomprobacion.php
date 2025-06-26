@@ -22,20 +22,9 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                    <div id="meses">
                     <label for="">Mes:</label>
                     <select name="mese" id="mese" class="form-control">
-                            <option value="" selected> -Seleccione- </option>
-                            <option value="01">Enero</option>
-                            <option value="02">Febrero</option>
-                            <option value="03">Marzo</option>
-                            <option value="04">Abril</option>
-                            <option value="05">Mayo</option>
-                            <option value="06">Junio</option>
-                            <option value="07">Julio</option>
-                            <option value="08">Agosto</option>
-                            <option value="09">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
-                            <option value="13">Mes 13 cierre</option>
+                            <?php foreach($meses as $key => $mes): ?>
+                                <option value="<?php echo $key; ?>"><?php echo $mes; ?></option>
+                            <?php endforeach; ?>
                     </select>
                     </div>
                  </div>
@@ -65,20 +54,13 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                      <input type="date" id="fecha_fin" name="fecha_fin" class="form-control">
                    </div>
                  </div>
+                
                  <div class="col-md-1">
                      <label for="">Año: </label>
                      <select name="anol" id="anol" class="form-control">
-                        <option value="2015">2015</option>
-                        <option value="2016">2016</option>
-                        <option value="2017">2017</option>
-                        <option value="2018">2018</option>
-                        <option value="2019">2019</option>
-                        <option value="2020">2020</option>
-                        <option value="2021">2021</option>
-                        <option value="2022">2022</option>
-                        <option value="2023">2023</option>
-                        <option value="2024">2024</option>
-                        <option value="2025" selected>2025</option>
+                        <?php foreach($anios as $anio): ?>
+                            <option value="<?php echo $anio; ?>" <?php if($anio == date('Y')) echo 'selected'; ?>><?php echo $anio; ?></option>
+                        <?php endforeach; ?>
                      </select>
                  </div>
             </div>
@@ -88,16 +70,16 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                 </div>
                  <div class="col-md-3">
                     <label for="">Tipo de envío (N - Normal,C - Complementario):</label>
-                    <input type="text" id="tipoenvio" name="tipoenvio" onkeypress="return soloSignos(event);" readonly value="N" maxlength="1" style="width: 20%" class="form-control"><b>*Solo para SAT</b>
+                    <input type="text" id="tipoenvio" name="tipoenvio" onkeypress="return soloSignos(event);" value="N" maxlength="1" style="width: 20%" class="form-control"><b>*Solo para SAT</b>
                  </div>
-                 <div class="col-md-1">
+                 <!-- <div class="col-md-1">
                  <br>
                     <input type="radio" id="ctasubcta" value="1" checked value="ctasub" name="radiocuenta">Cuenta-subcta
                  </div>
                  <div class="col-md-1">
                  <br>
                     <input type="radio" id="ctamyo" value="2" value="ctamyo" name="radiocuenta">Cta mayor
-                 </div>
+                 </div> -->
             </div>
 
             <br>
@@ -118,7 +100,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                <button type="button" class="btn btn-info" onclick="buscarbalanza()" ><span class="glyphicon glyphicon-check"></span> Aceptar</button>
                <button type="button" class="btn btn-primary" onclick="document.form1.action='<?php echo base_url();?>reportesm/BalanzaComprobacion/imprimir'; document.form1.submit()"; ><span class="glyphicon glyphicon-print"></span> Imprimir</button>
                <button type="button" class="btn btn-success" onclick="document.form1.action='<?php echo base_url();?>reportesm/BalanzaComprobacion/Excelexport'; document.form1.submit()"; ><span class="glyphicon glyphicon-file"></span> Exportar excel</button>
-               <button type="button" class="btn btn-warning" disabled id="xmlsat" name="xmlsat" onclick="document.form1.action='<?php echo base_url();?>reportesm/BalanzaComprobacion/xml'; document.form1.submit()"; ><span class="glyphicon glyphicon-qrcode"></span> SAT</button>
+               <button type="button" class="btn btn-warning" id="xmlsat" name="xmlsat" onclick="document.form1.action='<?php echo base_url();?>reportesm/BalanzaComprobacion/xml'; document.form1.submit()"; ><span class="glyphicon glyphicon-qrcode"></span> SAT</button>
              </div>
 </center>
 
@@ -221,18 +203,18 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
     }
 function buscarbalanza()
 {
-   var mes = document.getElementById('mese').value;
-   var bim = document.getElementById('bimes').value;
-   var fechafin = document.getElementById('fecha_fin').value;
-   var fechaini = document.getElementById('fecha_ini').value;
-   var perio = document.getElementById('periodo').value;
-   var ano = document.getElementById('anol').value;
+   var mese = document.getElementById('mese').value;
+   var bimes = document.getElementById('bimes').value;
+   var fecha_fin = document.getElementById('fecha_fin').value;
+   var fecha_ini = document.getElementById('fecha_ini').value;
+   var periodo = document.getElementById('periodo').value;
+   var anol = document.getElementById('anol').value;
    var tipoprove = $("input:radio[name=radiocuenta]:checked").val();
 
    jQuery.ajax({
         url: baseurl + "reportesm/BalanzaComprobacion/balanza",
         type:"POST",
-        data:{mes:mes,bim:bim,ano:ano,fechafin:fechafin,fechaini:fechaini,perio:perio,radiocuenta:tipoprove},
+        data:{mese:mese,bimes:bimes,anol:anol,fecha_fin:fecha_fin,fecha_ini:fecha_ini,periodo:periodo,radiocuenta:tipoprove},
         dataType: "html",
         success:function(data)
         {

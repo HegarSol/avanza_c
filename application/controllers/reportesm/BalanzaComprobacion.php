@@ -2,6 +2,17 @@
 
 class BalanzaComprobacion extends MY_Controller
 {
+  private $data = array();
+  private $inicial;
+  private $final;
+  private $fecha;
+  private $perio;
+  private $mes;
+  private $bim;
+  private $fechaini;
+  private $fechafin;
+  private $ano;
+  
     public function __construct()
     {
         parent::__construct();
@@ -15,16 +26,39 @@ class BalanzaComprobacion extends MY_Controller
         $this->load->model('CuentasModel','cuentas');
         $this->load->model('BancosModel','bancos');
         $this->load->library('Pdf');
-        $this->load->library('PHPExcel');
+   //     require_once(APPPATH . 'libraries/funciones_locales.php');
     }
     public function index()
     {
+      // get current date and set locale to Spanish
+        date_default_timezone_set("America/Mexico_City");
+        setlocale(LC_TIME,"spanish");
+
         if($this->aauth->is_loggedin())
         {
+            
+            $years = array();
+            for ($i = 0; $i < 10; $i++) {
+                $years[] = date('Y') - $i;
+            } 
+                $months = array(
+                '01' => 'Enero',
+                '02' => 'Febrero',
+                '03' => 'Marzo',
+                '04' => 'Abril',
+                '05' => 'Mayo',
+                '06' => 'Junio',
+                '07' => 'Julio',
+                '08' => 'Agosto',
+                '09' => 'Septiembre',
+                '10' => 'Octubre',
+                '11' => 'Noviembre',
+                '12' => 'Diciembre'
+            );
             $errores=array();
             $rfc = $this->configModel->getConfig();
             $permisos=$this->permisosForma($_SESSION['id'],1);
-            $data=array('titulo'=>'Reporte balanza de comprobación','rfc' => $rfc[0]['rfc'],'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores'=>$errores,'permisosGrupo'=>$permisos);
+            $data=array('titulo'=>'Balanza de comprobación','rfc' => $rfc[0]['rfc'],'meses' => $months,'anios' => $years,'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores'=>$errores,'permisosGrupo'=>$permisos);
             $items=$this->menuModel->menus($_SESSION['tipo']);
             $this->multi_menu->set_items($items);
             $this->load->view('templates/header');
@@ -37,140 +71,24 @@ class BalanzaComprobacion extends MY_Controller
             redirect('inicio/login','refresh');
         }
     }
-    public function xml()
+    public function initialize()
     {
-
-        $this->fecha = $this->input->post('fechaenvio');
-        $this->perio = $this->input->post('periodo');
-        $this->tipoenvio = $this->input->post('tipoenvio');
+     date_default_timezone_set("America/Mexico_City");
+       setlocale(LC_TIME,"spanish");
         $this->mes = $this->input->post('mese');
         $this->bim = $this->input->post('bimes');
-        $this->fechaini = $this->input->post('fecha_ini');
         $this->fechafin = $this->input->post('fecha_fin');
+        $this->fechaini = $this->input->post('fecha_ini');
+        $this->perio = $this->input->post('periodo');
         $this->ano = $this->input->post('anol');
-        $this->radio = $this->input->post('radiocuenta');
-
+        //$cuentasubmayor = $this->input->post('radiocuenta');
         if($this->mes == '13')
         {
-          $this->mes3 = '13';
           $this->mes = '12';
         }
 
-        $rfc = $this->configModel->getConfig();
 
-        switch($this->bim)
-        {
-            case '01':
-                 $this->mes1 = '01';
-                 $this->mes2 = '02';
-              break;
-            case '02':
-                 $this->mes1 = '03';
-                 $this->mes2 = '04';
-              break;
-            case '03':
-                 $this->mes1 = '05';
-                 $this->mes2 = '06';
-              break;
-            case '04':
-                 $this->mes1 = '07';
-                 $this->mes2 = '08';
-              break;
-            case '05':
-                 $this->mes1 = '09';
-                 $this->mes2 = '10';
-              break;
-            case '06':
-                 $this->mes1 = '11';
-                 $this->mes2 = '12';
-              break;
-        }
-  
-  
-          if($this->perio == 'mensual' || $this->perio == 'bimestral')
-          {
-              if($this->perio == 'mensual')
-              {
-                  $fecha = new DateTime($this->ano.'-'.$this->mes);
-                  $fecha->modify('first day of this month');
-                  $inicial = $fecha->format('Y-m-d');
-  
-                  $fecha = new DateTime($this->ano.'-'.$this->mes);
-                  $fecha->modify('last day of this month');
-                  $final = $fecha->format('Y-m-d');
-              }
-              else
-              {
-                  $fecha = new DateTime($this->ano.'-'.$this->mes1);
-                  $fecha->modify('first day of this month');
-                  $inicial = $fecha->format('Y-m-d');
-  
-                  $fecha = new DateTime($this->ano.'-'.$this->mes2);
-                  $fecha->modify('last day of this month');
-                  $final = $fecha->format('Y-m-d');
-              }
-          }
-          else
-          {
-              if($this->perio == 'anual')
-              {
-                 $inicial = date('Y-m-d',strtotime($this->ano.'-01-01'));
-                 $final = date('Y-m-d',strtotime($this->ano.'-12-31'));
-              }
-              else
-              {
-                 $inicial = $this->fechaini;
-                 $final = $this->fechafin;
-              }
-          }
-
-        $this->datos = $this->operaciones->balanza($inicial,$final,$this->radio);
-
-        if(isset($this->mes3) == '13')
-        {
-            $this->mes = '13';
-        }
-
-        $this->load->library('ClaseXML');
-        $this->balanzaxml = NULL;
-        $this->balanzaxml = new ClaseXML();
-        $mensaje = $this->balanzaxml->CrearXMLbalanza($this->mes,$this->ano,$this->fecha,$rfc[0]['rfc'],$this->datos,$this->tipoenvio);
-
-        $zip = new ZipArchive();
-        $zip->open('XMLBalanza.zip',ZipArchive::CREATE);
-        file_put_contents('Balanza.xml',$mensaje);
-        $zip->addFile('Balanza.xml','Balanza.xml');
-        $zip->close();
-
-        header("Content-type: application/octet-stream");
-        header("Content-disposition: attachment; filename=XMLBalanza.zip");
-
-        readfile('XMLBalanza.zip');
-        unlink('Balanza.xml');
-        unlink('XMLBalanza.zip');
-
-
-    }
-    public function balanza()
-    {
-        date_default_timezone_set("America/Mexico_City");
-        setlocale(LC_TIME,"spanish");
-
-        $mes = $this->input->post('mes');
-        $bim = $this->input->post('bim');
-        $fechafi = $this->input->post('fechafin');
-        $fechaini = $this->input->post('fechaini');
-        $perio = $this->input->post('perio');
-        $ano = $this->input->post('ano');
-        $cuentasubmayor = $this->input->post('radiocuenta');
-
-        if($mes == '13')
-        {
-          $mes = '12';
-        }
-
-
-      switch($bim)
+      switch($this->bim)
       {
           case '01':
                $mes1 = '01';
@@ -198,142 +116,91 @@ class BalanzaComprobacion extends MY_Controller
             break;
       }
 
-
-        if($perio == 'mensual' || $perio == 'bimestral')
+    
+        if($this->perio == 'mensual' || $this->perio == 'bimestral')
         {
-            if($perio == 'mensual')
+            if($this->perio == 'mensual')
             {
-                $fecha = new DateTime($ano.'-'.$mes);
+                $fecha = new DateTime($this->ano.'-'.$this->mes);
                 $fecha->modify('first day of this month');
-                $inicial = $fecha->format('Y-m-d');
+                $this->inicial = $fecha->format('Y-m-d');
 
-                $fecha = new DateTime($ano.'-'.$mes);
+                $fecha = new DateTime($this->ano.'-'.$this->mes);
                 $fecha->modify('last day of this month');
-                $final = $fecha->format('Y-m-d');
+                $this->final = $fecha->format('Y-m-d');
             }
             else
             {
-                $fecha = new DateTime($ano.'-'.$mes1);
+                $fecha = new DateTime($this->ano.'-'.$mes1);
                 $fecha->modify('first day of this month');
-                $inicial = $fecha->format('Y-m-d');
+                $this->inicial = $fecha->format('Y-m-d');
 
-                $fecha = new DateTime($ano.'-'.$mes2);
+                $fecha = new DateTime($this->ano.'-'.$mes2);
                 $fecha->modify('last day of this month');
-                $final = $fecha->format('Y-m-d');
+                $this->final = $fecha->format('Y-m-d');
             }
         }
         else
         {
-            if($perio == 'anual')
+            if($this->perio == 'anual')
             {
-               $inicial = date('Y-m-d',strtotime($ano.'-01-01'));
-               $final = date('Y-m-d',strtotime($ano.'-12-31'));
+               $this->inicial = date('Y-m-d',strtotime($this->ano.'-01-01'));
+               $this->final = date('Y-m-d',strtotime($this->ano.'-12-31'));
             }
             else
             {
-               $inicial = $fechaini;
-               $final = $fechafi;
+               $this->inicial = $this->fechaini;
+               $this->final = $this->fechafin;
             }
         }
+         
+    }
+    public function xml()
+    {
+          $this->initialize();
+          $this->tipoenvio = $this->input->post('tipoenvio');
+          $rfc = $this->configModel->getConfig();
+          $this->datos = $this->operaciones->balanza($this->inicial,$this->final);
+        if(isset($this->mes3) == '13')
+        {
+            $this->mes = '13';
+        }
 
-        $datos = $this->operaciones->balanza($inicial,$final,$cuentasubmayor);
+        $this->load->library('ClaseXML');
+        $this->balanzaxml = NULL;
+        $this->balanzaxml = new ClaseXML();
+        $mensaje = $this->balanzaxml->CrearXMLbalanza($this->mes,$this->ano,$this->fecha,$rfc[0]['rfc'],$this->datos,$this->tipoenvio);
 
-        $data['balanzas'] = $datos;
+        $zip = new ZipArchive();
+        $zip->open('XMLBalanza.zip',ZipArchive::CREATE);
+        file_put_contents('Balanza.xml',$mensaje);
+        $zip->addFile('Balanza.xml','Balanza.xml');
+        $zip->close();
 
-        $this->load->view('reportes/balanza/table_balanza',$data);
+        header("Content-type: application/octet-stream");
+        header("Content-disposition: attachment; filename=XMLBalanza.zip");
+
+        readfile('XMLBalanza.zip');
+        unlink('Balanza.xml');
+        unlink('XMLBalanza.zip');
+
+
+    }
+    public function balanza()
+    {
+     
+
+        $this->initialize();
+        $data['balanzas'] = $this->operaciones->balanza($this->inicial,$this->final);
+        $this->data = $data;
+        $this->load->view('reportes/balanza/table_balanza', $this->data);
     }
     public function imprimir()
     {
 
-        date_default_timezone_set("America/Mexico_City");
-        setlocale(LC_TIME,"spanish");
-
-        $this->perio = $this->input->post('periodo');
-        $this->mes = $this->input->post('mese');
-        $this->bim = $this->input->post('bimes');
-        $this->fechaini = $this->input->post('fecha_ini');
-        $this->fechafin = $this->input->post('fecha_fin');
-        $this->ano = $this->input->post('anol');
-        $this->radio = $this->input->post('radiocuenta');
-
-
-        if($this->mes == '13')
-        {
-          $this->mes = '12';
-        }
-
-        $this->rowc = $this->configModel->getConfig();
-
-        switch($this->bim)
-        {
-            case '01':
-                 $this->mes1 = '01';
-                 $this->mes2 = '02';
-              break;
-            case '02':
-                 $this->mes1 = '03';
-                 $this->mes2 = '04';
-              break;
-            case '03':
-                 $this->mes1 = '05';
-                 $this->mes2 = '06';
-              break;
-            case '04':
-                 $this->mes1 = '07';
-                 $this->mes2 = '08';
-              break;
-            case '05':
-                 $this->mes1 = '09';
-                 $this->mes2 = '10';
-              break;
-            case '06':
-                 $this->mes1 = '11';
-                 $this->mes2 = '12';
-              break;
-        }
-  
-  
-          if($this->perio == 'mensual' || $this->perio == 'bimestral')
-          {
-              if($this->perio == 'mensual')
-              {
-                  $fecha = new DateTime($this->ano.'-'.$this->mes);
-                  $fecha->modify('first day of this month');
-                  $inicial = $fecha->format('Y-m-d');
-  
-                  $fecha = new DateTime($this->ano.'-'.$this->mes);
-                  $fecha->modify('last day of this month');
-                  $final = $fecha->format('Y-m-d');
-              }
-              else
-              {
-                  $fecha = new DateTime($this->ano.'-'.$this->mes1);
-                  $fecha->modify('first day of this month');
-                  $inicial = $fecha->format('Y-m-d');
-  
-                  $fecha = new DateTime($this->ano.'-'.$this->mes2);
-                  $fecha->modify('last day of this month');
-                  $final = $fecha->format('Y-m-d');
-              }
-          }
-          else
-          {
-              if($this->perio == 'anual')
-              {
-                 $inicial = date('Y-m-d',strtotime($this->ano.'-01-01'));
-                 $final = date('Y-m-d',strtotime($this->ano.'-12-31'));
-              }
-              else
-              {
-                 $inicial = $this->fechaini;
-                 $final = $this->fechafin;
-              }
-          }
-
-          $this->datos = $this->operaciones->balanza($inicial,$final,$this->radio);
-
-        //  var_dump($this->datos);
-
+        $this->initialize();
+          $this->rowc = $this->configModel->getConfig();
+          $this->datos = $this->operaciones->balanza($this->inicial,$this->final);
           $this->pdf->SetAutoPageBreak(true,10);
           $this->pdf->AddPage();
           $this->pdf->SetTitle('Reporte Balanza de Comprobacion');
@@ -378,67 +245,56 @@ class BalanzaComprobacion extends MY_Controller
           $total_saldo_mensual = 0;
           $final = 0;
 
-          $str = count($this->datos);
           $i = 0;
-
-          while($i < $str)
-          {
-
-            $valors = $this->datos[$i]['cuenta'];
-
-
-            $total_inicialsub = 0;
+         
+         $total_inicialsub = 0;
             $total_cargossub = 0;
             $total_abonossub = 0;
             $finalsub = 0;
             $algosub = 0;
-            while($valors == $this->datos[$i]['cuenta'] AND $i < $str)
-            {
-              $cuen = $this->datos[$i];
+         foreach ($this->datos as $key => $value)
+          {
+           
                 $this->pdf->SetCol(0);
-                $this->pdf->Cell(17,0,$cuen['cuenta'].' - '.$cuen['sub_cta']. ' - ' .$cuen['ssub_cta'],0,1,'L');
+                $this->pdf->Cell(17,0,$value['cuenta'].' - '.$value['sub_cta']. ' - ' .$value['ssub_cta'],0,1,'L');
                 $this->pdf->SetCol(0.3);
-                $this->pdf->Cell(17,0,utf8_decode($cuen['nombre']),0,1,'L');
+                $this->pdf->Cell(17,0,utf8_decode($value['nombre']),0,1,'L');
                 $this->pdf->SetCol(1.4);
-                $this->pdf->Cell(17,0,number_format($cuen['sini'],2,'.',','),0,1,'R');
+                $this->pdf->Cell(17,0,number_format($value['sini'],2,'.',','),0,1,'R');
                 $this->pdf->SetCol(1.7);
-                $this->pdf->Cell(17,0,number_format($cuen['cargos'],2,'.',','),0,1,'R');
+                $this->pdf->Cell(17,0,number_format($value['cargos'],2,'.',','),0,1,'R');
                 $this->pdf->SetCol(2.1);
-                $this->pdf->Cell(17,0,number_format($cuen['abonos'],2,'.',','),0,1,'R');
+                $this->pdf->Cell(17,0,number_format($value['abonos'],2,'.',','),0,1,'R');
                 $this->pdf->SetCol(2.4);
-                $this->pdf->Cell(17,0,number_format($cuen['cargos']-$cuen['abonos'],2,'.',','),0,1,'R');
+                $this->pdf->Cell(17,0,number_format($value['cargos']-$value['abonos'],2,'.',','),0,1,'R');
                 $this->pdf->SetCol(2.8);
-                $this->pdf->Cell(17,0,number_format(($cuen['sini'] + $cuen['cargos']) - $cuen['abonos'],2,'.',','),0,1,'R');
-              
+                $this->pdf->Cell(17,0,number_format(($value['sini'] + $value['cargos']) - $value['abonos'],2,'.',','),0,1,'R');
 
-                $total_inicial = $total_inicial + $this->datos[$i]['sini']; 
-                $total_cargos = $total_cargos + $this->datos[$i]['cargos'];
-                $total_abonos = $total_abonos + $this->datos[$i]['abonos'];
-                $nada = $this->datos[$i]['cargos'] - $this->datos[$i]['abonos'];
+                $total_inicial = $total_inicial + $value['sini']; 
+                $total_cargos = $total_cargos + $value['cargos'];
+                $total_abonos = $total_abonos + $value['abonos'];
+                $nada = $value['cargos'] - $value['abonos'];
                 $total_saldo_mensual = $total_saldo_mensual + $nada;
-                $algo = ($this->datos[$i]['sini']+$this->datos[$i]['cargos'])-$this->datos[$i]['abonos'];
+                $algo = ($value['sini']+$value['cargos'])-$value['abonos'];
                 $final = $final + $algo;
 
-                $total_inicialsub = $total_inicialsub + $cuen['sini']; 
-                $total_cargossub = $total_cargossub + $cuen['cargos'];
-                $total_abonossub = $total_abonossub + $cuen['abonos'];
-                $algosub = ($cuen['sini']+$cuen['cargos'])-$cuen['abonos'];
+                $total_inicialsub = $total_inicialsub + $value['sini']; 
+                $total_cargossub = $total_cargossub + $value['cargos'];
+                $total_abonossub = $total_abonossub + $value['abonos'];
+                $algosub = ($value['sini']+$value['cargos'])-$value['abonos'];
                 $finalsub = $finalsub + $algosub;
-
                 $this->pdf->Ln(4);
-  
-
-                $i = $i + 1;
-
                 
-            }
+                $nextvalue = isset($this->datos[$i+1]) ? $this->datos[$i+1] : null;
+              
+                $valors = isset($nextvalue['cuenta']) ? $nextvalue['cuenta'] : '';
 
-           
-                          $this->pdf->SetCol(0);
+                if ($valors != $value['cuenta'])
+                {
+                    $this->pdf->SetCol(0);
                           $this->pdf->Cell(94,0);
                           $this->pdf->Cell(10,-7,'__________________________________________________________________');
-                         
-                          $cutsn = $this->cuentas->buscarcuentamayor($valors);
+                          $cutsn = $this->cuentas->buscarcuentamayor($value['cuenta']);
                           $this->pdf->SetCol(0);
                           $this->pdf->Cell(17,0,'',0,1,'C');
                           $this->pdf->SetCol(0.3);
@@ -457,16 +313,19 @@ class BalanzaComprobacion extends MY_Controller
                           $this->pdf->SetCol(0);
                           $this->pdf->Cell(10,1,'______________________________________________________________________________________________________________________________');
                           $this->pdf->Ln(4);
+                   //$valors = $value['cuenta'];
+           $total_inicialsub = 0;
+            $total_cargossub = 0;
+            $total_abonossub = 0;
+            $finalsub = 0;
+            $algosub = 0;
 
+                }
+
+                $i ++;
                          
           }
 
-             
-              $this->pdf->Ln(4);
-              
-
-         
-          $this->pdf->Ln(5);
           $this->pdf->SetCol(0.0);
           $this->pdf->Line(7,260,210,260);
           $this->pdf->Cell(65);
@@ -483,91 +342,12 @@ class BalanzaComprobacion extends MY_Controller
     }
     public function Excelexport()
     {
-        $objPHPExcel = new PHPExcel();
 
-        $this->rowc = $this->configModel->getConfig();
-
-        $this->perio = $this->input->post('periodo');
-        $this->mes = $this->input->post('mese');
-        $this->bim = $this->input->post('bimes');
-        $this->fechaini = $this->input->post('fecha_ini');
-        $this->fechafin = $this->input->post('fecha_fin');
-        $this->ano = $this->input->post('anol');
-        $this->radio = $this->input->post('radiocuenta');
-
-        if($this->mes == '13')
-        {
-          $this->mes = '12';
-        }
-
-        switch($this->bim)
-        {
-            case '01':
-                 $this->mes1 = '01';
-                 $this->mes2 = '02';
-              break;
-            case '02':
-                 $this->mes1 = '03';
-                 $this->mes2 = '04';
-              break;
-            case '03':
-                 $this->mes1 = '05';
-                 $this->mes2 = '06';
-              break;
-            case '04':
-                 $this->mes1 = '07';
-                 $this->mes2 = '08';
-              break;
-            case '05':
-                 $this->mes1 = '09';
-                 $this->mes2 = '10';
-              break;
-            case '06':
-                 $this->mes1 = '11';
-                 $this->mes2 = '12';
-              break;
-        }
-  
-  
-          if($this->perio == 'mensual' || $this->perio == 'bimestral')
-          {
-              if($this->perio == 'mensual')
-              {
-                  $fecha = new DateTime($this->ano.'-'.$this->mes);
-                  $fecha->modify('first day of this month');
-                  $inicial = $fecha->format('Y-m-d');
-  
-                  $fecha = new DateTime($this->ano.'-'.$this->mes);
-                  $fecha->modify('last day of this month');
-                  $final = $fecha->format('Y-m-d');
-              }
-              else
-              {
-                  $fecha = new DateTime($this->ano.'-'.$this->mes1);
-                  $fecha->modify('first day of this month');
-                  $inicial = $fecha->format('Y-m-d');
-  
-                  $fecha = new DateTime($this->ano.'-'.$this->mes2);
-                  $fecha->modify('last day of this month');
-                  $final = $fecha->format('Y-m-d');
-              }
-          }
-          else
-          {
-              if($this->perio == 'anual')
-              {
-                 $inicial = date('Y-m-d',strtotime($this->ano.'-01-01'));
-                 $final = date('Y-m-d',strtotime($this->ano.'-12-31'));
-              }
-              else
-              {
-                 $inicial = $this->fechaini;
-                 $final = $this->fechafin;
-              }
-          }
-
-          $this->datos = $this->operaciones->balanza($inicial,$final,$this->radio);
-
+          $this->initialize();
+          $this->rowc = $this->configModel->getConfig();
+          $this->datos = $this->operaciones->balanza($this->inicial,$this->final);
+          $this->load->library('PHPExcel');
+          $objPHPExcel = new PHPExcel();
           header("Content-Type: text/html;charset=utf-8");
           header("Content-Type: application/vnd.ms-excel");
           header('Content-Disposition: attachment;filename="balanza.xls"');
@@ -582,75 +362,47 @@ class BalanzaComprobacion extends MY_Controller
           $objsheet->setCellValue('A1',$this->rowc[0]['nombreEmpresa']);
           $objsheet->setCellValue('A2','Reporte Balanza de Comprobación');
 
+//create an array with month names in spanish
+          
+
           if($this->perio == 'mensual' || $this->perio == 'bimestral')
           {
               if($this->perio == 'mensual')
               {
-                  switch($this->mes)
-                  {
-                      case '01':
-                          $mesle = 'Enero';
-                        break;
-                      case '02':
-                          $mesle = 'Febrero';
-                        break;
-                      case '03':
-                          $mesle = 'Marzo';
-                        break;
-                      case '04':
-                          $mesle = 'Abril';
-                        break;
-                      case '05':
-                          $mesle = 'Mayo';
-                        break;
-                      case '06':
-                          $mesle = 'Junio';
-                        break;
-                      case '07':
-                          $mesle = 'Julio';
-                        break;
-                      case '08':
-                          $mesle = 'Agosto';
-                        break;
-                      case '09':
-                          $mesle = 'Septiembre';
-                        break;
-                      case '10':
-                          $mesle = 'Octubre';
-                        break;
-                      case '11':
-                          $mesle = 'Noviembre';
-                        break;
-                      case '12':
-                          $mesle = 'Diciembre';
-                        break;
-                  }
-                $objsheet->setCellValue('A3','Periodo: Mensual');
-                $objsheet->setCellValue('A4',$mesle);
+                $meses = array(
+              '01' => 'Enero',
+              '02' => 'Febrero',
+              '03' => 'Marzo',
+              '04' => 'Abril',
+              '05' => 'Mayo',
+              '06' => 'Junio',
+              '07' => 'Julio',
+              '08' => 'Agosto',
+              '09' => 'Septiembre',
+              '10' => 'Octubre',
+              '11' => 'Noviembre',
+              '12' => 'Diciembre'
+          );
+          
+          
+            $objsheet->setCellValue('A3','Periodo: '.$meses[$this->mes].' del '.$this->ano);
               }
               else
               {
+                 // concat $this->bim with the month number
+                  $bisme = '';
                   switch($this->bim)
                   {
-                      case '01':
-                        $bisme = '1er. Bimestre';
+                      case '01' || '03':
+                      $bisme = 'er';
                       break;
                       case '02':
-                        $bisme = '2do. Bimestre';
+                        $bisme = 'do';
                       break;
-                      case '03':
-                        $bisme = '3er. Bimestre';
-                      break;
-                      case '04':
-                        $bisme = '4to. Bimestre';
-                      break;
-                      case '05':
-                        $bisme = '5to. Bimestre';
-                      break;
-                      case '06':
-                        $bisme = '6to. Bimestre';
-                      break;
-                  }
+                      default:
+                        $bisme = 'to';
+                   }
+                  $bisme = substr($bisme, 0, 1).$bisme.'. Bimestre';
                   $objsheet->setCellValue('A3','Periodo: Bimestral');
                   $objsheet->setCellValue('A4',$bisme);
               }
@@ -687,12 +439,8 @@ class BalanzaComprobacion extends MY_Controller
 
           $numero=7;
           $numero2=12;
-         
           $str = count($this->datos);
           $i = 0;
-
-          $maespa = (int) $str + (int) $str;
-
           $styleArray = array(
             'borders' => array(
               'bottom' => array(
@@ -700,15 +448,6 @@ class BalanzaComprobacion extends MY_Controller
               )
             )
           );
-
-
-
-          while($i < $str)
-          {
-              $valors = $this->datos[$i]['cuenta'];
-
-            
-
               $total_inicialsub = 0;
               $total_cargossub = 0;
               $total_abonossub = 0;
@@ -717,48 +456,41 @@ class BalanzaComprobacion extends MY_Controller
               $algosub = 0;
               $nadasub = 0;
 
-              
-
-              while($valors == $this->datos[$i]['cuenta'] AND $i < $str)
-              {
-                  $cuen = $this->datos[$i];
-
+           foreach ($this->datos as $key => $value)
+          {
                   $numero++;
                   $numero2++;
-               
-                  $objsheet->setCellValue('A'.$numero,$cuen['cuenta'].' - '.$cuen['sub_cta'].' - '.$cuen['ssub_cta']);
-                  $objsheet->setCellValue('B'.$numero,utf8_decode($cuen['nombre']));
-                  $objsheet->setCellValue('C'.$numero,number_format($cuen['sini'],2,'.',','));
-                  $objsheet->setCellValue('D'.$numero,number_format($cuen['cargos'],2,'.',','));
-                  $objsheet->setCellValue('E'.$numero,number_format($cuen['abonos'],2,'.',','));
-                  $objsheet->setCellValue('F'.$numero,number_format($cuen['cargos']-$cuen['abonos'],2,'.',','));
-                  $objsheet->setCellValue('G'.$numero,number_format(($cuen['sini'] + $cuen['cargos']) - $cuen['abonos'],2,'.',','));
-                  
-                  $total_inicial = $total_inicial + $this->datos[$i]['sini']; 
-                  $total_cargos = $total_cargos + $this->datos[$i]['cargos'];
-                  $total_abonos = $total_abonos + $this->datos[$i]['abonos'];
-                  $nada = $this->datos[$i]['cargos'] - $this->datos[$i]['abonos'];
+                  $objsheet->setCellValue('A'.$numero,$value['cuenta'].' - '.$value['sub_cta'].' - '.$value['ssub_cta']);
+                  $objsheet->setCellValue('B'.$numero,utf8_decode($value['nombre']));
+                  $objsheet->setCellValue('C'.$numero,number_format($value['sini'],2,'.',','));
+                  $objsheet->setCellValue('D'.$numero,number_format($value['cargos'],2,'.',','));
+                  $objsheet->setCellValue('E'.$numero,number_format($value['abonos'],2,'.',','));
+                  $objsheet->setCellValue('F'.$numero,number_format($value['cargos']-$value['abonos'],2,'.',','));
+                  $objsheet->setCellValue('G'.$numero,number_format(($value['sini'] + $value['cargos']) - $value['abonos'],2,'.',','));
+
+                  $total_inicial = $total_inicial + $value['sini'];
+                  $total_cargos = $total_cargos + $value['cargos'];
+                  $total_abonos = $total_abonos + $value['abonos'];
+                  $nada = $value['cargos'] - $value['abonos'];
                   $total_saldo_mensual = $total_saldo_mensual + $nada;
-                  $algo = ($this->datos[$i]['sini']+$this->datos[$i]['cargos'])-$this->datos[$i]['abonos'];
+                  $algo = ($value['sini']+$value['cargos'])-$value['abonos'];
                   $final = $final + $algo;
 
-                  $total_inicialsub = $total_inicialsub + $cuen['sini']; 
-                  $total_cargossub = $total_cargossub + $cuen['cargos'];
-                  $total_abonossub = $total_abonossub + $cuen['abonos'];
-                  $nadasub = $cuen['cargos'] - $cuen['abonos'];
+                  $total_inicialsub = $total_inicialsub + $value['sini'];
+                  $total_cargossub = $total_cargossub + $value['cargos'];
+                  $total_abonossub = $total_abonossub + $value['abonos'];
+                  $nadasub = $value['cargos'] - $value['abonos'];
                   $total_saldo_mensualsub = $total_saldo_mensualsub + $nadasub;
-                  $algosub = ($cuen['sini']+$cuen['cargos'])-$cuen['abonos'];
+                  $algosub = ($value['sini']+$value['cargos'])-$value['abonos'];
                   $finalsub = $finalsub + $algosub;
-
-                  $i = $i + 1;
-              }
-
-                $cutsn = $this->cuentas->buscarcuentamayor($valors);
-
+              //}
+                $nextvalue = isset($this->datos[$i+1]) ? $this->datos[$i+1] : null;
+                $valors = isset($nextvalue['cuenta']) ? $nextvalue['cuenta'] : '';
+                if ($valors != $value['cuenta'])
+                {
+                $cutsn = $this->cuentas->buscarcuentamayor($value['cuenta']);
                 $objPHPExcel->getActiveSheet()->getStyle('C'.$numero.':G'.$numero)->applyFromArray($styleArray);
-                
                 $numero++;
-
                 $objsheet->setCellValue('A'.$numero,'');
                 $objsheet->setCellValue('B'.$numero,utf8_decode(isset($cutsn[0]['nombre']) ? $cutsn[0]['nombre'] : ''));
                 $objsheet->setCellValue('C'.$numero,number_format($total_inicialsub,2,'.',','));
@@ -768,23 +500,24 @@ class BalanzaComprobacion extends MY_Controller
                 $objsheet->setCellValue('G'.$numero,number_format($finalsub,2,'.',','));
 
                 $objPHPExcel->getActiveSheet()->getStyle('A'.$numero.':G'.$numero)->applyFromArray($styleArray);
-
-
-               
-            
+              $total_inicialsub = 0;
+              $total_cargossub = 0;
+              $total_abonossub = 0;
+              $total_saldo_mensualsub = 0;
+              $finalsub = 0;
+              $algosub = 0;
+              $nadasub = 0;
+                }
+              $i++;
           }
-
-              $objsheet->setCellValue('A'.$maespa,'');
-              $objsheet->setCellValue('B'.$maespa,'Totales: ');
-              $objsheet->setCellValue('C'.$maespa,number_format($total_inicial,2,'.',','));
-              $objsheet->setCellValue('D'.$maespa,number_format($total_cargos,2,'.',','));
-              $objsheet->setCellValue('E'.$maespa,number_format($total_abonos,2,'.',','));
-              $objsheet->setCellValue('F'.$maespa,number_format($total_saldo_mensual,2,'.',','));
-              $objsheet->setCellValue('G'.$maespa,number_format($final,2,'.',','));
-
-          
-
-
+          $numero++;
+              $objsheet->setCellValue('A'.$numero,'');
+              $objsheet->setCellValue('B'.$numero,'Totales: ');
+              $objsheet->setCellValue('C'.$numero,number_format($total_inicial,2,'.',','));
+              $objsheet->setCellValue('D'.$numero,number_format($total_cargos,2,'.',','));
+              $objsheet->setCellValue('E'.$numero,number_format($total_abonos,2,'.',','));
+              $objsheet->setCellValue('F'.$numero,number_format($total_saldo_mensual,2,'.',','));
+              $objsheet->setCellValue('G'.$numero,number_format($final,2,'.',','));
           $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);
           $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setAutoSize(true);
           $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setAutoSize(true);
@@ -792,8 +525,6 @@ class BalanzaComprobacion extends MY_Controller
           $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setAutoSize(true);
           $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setAutoSize(true);
           $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setAutoSize(true);
-
-
           $style = array(
             'alignment' => array(
                 'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -872,49 +603,24 @@ class BalanzaComprobacion extends MY_Controller
         {
             if($this->perio == 'mensual')
             {
-                switch($this->mes)
-                {
-                    case '01':
-                        $mesle = 'Enero';
-                      break;
-                    case '02':
-                        $mesle = 'Febrero';
-                      break;
-                    case '03':
-                        $mesle = 'Marzo';
-                      break;
-                    case '04':
-                        $mesle = 'Abril';
-                      break;
-                    case '05':
-                        $mesle = 'Mayo';
-                      break;
-                    case '06':
-                        $mesle = 'Junio';
-                      break;
-                    case '07':
-                        $mesle = 'Julio';
-                      break;
-                      case '08':
-                        $mesle = 'Agosto';
-                      break;
-                      case '09':
-                        $mesle = 'Septiembre';
-                      break;
-                      case '10':
-                        $mesle = 'Octubre';
-                      break;
-                      case '11':
-                        $mesle = 'Noviembre';
-                      break;
-                      case '12':
-                        $mesle = 'Diciembre';
-                      break;
-                }
-               $this->pdf->Cell(10,0,'Periodo: Mensual');
-               $this->pdf->Ln(10);
-               $this->pdf->Cell(70);
-               $this->pdf->Cell(10,0,$mesle);
+                $meses = array(
+              '01' => 'Enero',
+              '02' => 'Febrero',
+              '03' => 'Marzo',
+              '04' => 'Abril',
+              '05' => 'Mayo',
+              '06' => 'Junio',
+              '07' => 'Julio',
+              '08' => 'Agosto',
+              '09' => 'Septiembre',
+              '10' => 'Octubre',
+              '11' => 'Noviembre',
+              '12' => 'Diciembre'
+          );
+               $this->pdf->Cell(10,0,'Periodo: '.$meses[$this->mes].' del '.$this->ano);
+              //  $this->pdf->Ln(10);
+              //  $this->pdf->Cell(70);
+              //  $this->pdf->Cell(10,0,$mesle);
             }
             else
             {
