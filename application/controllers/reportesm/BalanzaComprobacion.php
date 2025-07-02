@@ -2,6 +2,7 @@
 
 class BalanzaComprobacion extends MY_Controller
 {
+  
   private $data = array();
   private $inicial;
   private $final;
@@ -18,14 +19,13 @@ class BalanzaComprobacion extends MY_Controller
         parent::__construct();
         $this->load->model('menuModel');
         $items=$this->menuModel->menus($_SESSION['tipo']);
-        $this->multi_menu->set_items($items);
+       $this->multi_menu->set_items($items);
         $this->load->view('templates/header');
         $this->load->model('Configuraciones_model','configModel');
         $this->load->model('BeneficiarioModel','beneficiario');
         $this->load->model('OperacionesModel','operaciones');
         $this->load->model('CuentasModel','cuentas');
         $this->load->model('BancosModel','bancos');
-        $this->load->library('Pdf');
    //     require_once(APPPATH . 'libraries/funciones_locales.php');
     }
     public function index()
@@ -33,8 +33,7 @@ class BalanzaComprobacion extends MY_Controller
       // get current date and set locale to Spanish
         date_default_timezone_set("America/Mexico_City");
         setlocale(LC_TIME,"spanish");
-
-        if($this->aauth->is_loggedin())
+         if($this->aauth->is_loggedin())
         {
             
             $years = array();
@@ -73,8 +72,8 @@ class BalanzaComprobacion extends MY_Controller
     }
     public function initialize()
     {
-     date_default_timezone_set("America/Mexico_City");
-       setlocale(LC_TIME,"spanish");
+    // date_default_timezone_set("America/Mexico_City");
+     //  setlocale(LC_TIME,"spanish");
         $this->mes = $this->input->post('mese');
         $this->bim = $this->input->post('bimes');
         $this->fechafin = $this->input->post('fecha_fin');
@@ -160,8 +159,11 @@ class BalanzaComprobacion extends MY_Controller
           $this->initialize();
           $this->tipoenvio = $this->input->post('tipoenvio');
           $rfc = $this->configModel->getConfig();
-          $this->datos = $this->operaciones->balanza($this->inicial,$this->final);
-        if(isset($this->mes3) == '13')
+          if(empty($this->data))
+          {
+          $this->data = $this->operaciones->balanza($this->inicial,$this->final);
+          }
+                if(isset($this->mes3) == '13')
         {
             $this->mes = '13';
         }
@@ -169,7 +171,7 @@ class BalanzaComprobacion extends MY_Controller
         $this->load->library('ClaseXML');
         $this->balanzaxml = NULL;
         $this->balanzaxml = new ClaseXML();
-        $mensaje = $this->balanzaxml->CrearXMLbalanza($this->mes,$this->ano,$this->fecha,$rfc[0]['rfc'],$this->datos,$this->tipoenvio);
+        $mensaje = $this->balanzaxml->CrearXMLbalanza($this->mes,$this->ano,$this->fecha,$rfc[0]['rfc'],$this->data,$this->tipoenvio);
 
         $zip = new ZipArchive();
         $zip->open('XMLBalanza.zip',ZipArchive::CREATE);
@@ -188,22 +190,34 @@ class BalanzaComprobacion extends MY_Controller
     }
     public function balanza()
     {
-     
-
-        $this->initialize();
-        $data['balanzas'] = $this->operaciones->balanza($this->inicial,$this->final);
-        $this->data = $data;
-        $this->load->view('reportes/balanza/table_balanza', $this->data);
+            $this->initialize();
+        
+          if(empty($this->data))
+          { 
+       
+          $this->data = $this->operaciones->balanza($this->inicial,$this->final);
+          $data['balanzas'] = $this->data ;
+          }
+          else
+          {
+        
+            $data['balanzas'] = $this->data;
+          }
+        //$this->data = $data;
+        $this->load->view('reportes/balanza/table_balanza', $data);
     }
     public function imprimir()
     {
-
+      $this->load->library('Pdf');
         $this->initialize();
           $this->rowc = $this->configModel->getConfig();
-          $this->datos = $this->operaciones->balanza($this->inicial,$this->final);
+           if(empty($this->data))
+          {
+          $this->data = $this->operaciones->balanza($this->inicial,$this->final);
+          }
           $this->pdf->SetAutoPageBreak(true,10);
           $this->pdf->AddPage();
-          $this->pdf->SetTitle('Reporte Balanza de Comprobacion');
+          $this->pdf->SetTitle('Balanza de comprobación');
           $this->pdf->SetFillColor(220,220,220);
           $this->pdf->SetDrawColor(220,220,220);
 
@@ -211,7 +225,7 @@ class BalanzaComprobacion extends MY_Controller
 
           $this->pdf->SetFont('Helvetica','B',8);
           $this->pdf->Ln(10);
-          $this->pdf->Cell(40,5,'Cuenta-Sub Cta',0,1,'',true);
+          $this->pdf->Cell(40,5,'Cuenta',0,1,'',true);
           // $this->pdf->SetY(55);
           // $this->pdf->SetCol(0.3);
           //$this->pdf->Cell(20,5,'Sub Cta',0,1,'',true);
@@ -244,15 +258,19 @@ class BalanzaComprobacion extends MY_Controller
           $total_abonos = 0;
           $total_saldo_mensual = 0;
           $final = 0;
-
-          $i = 0;
-         
-         $total_inicialsub = 0;
+         $total_inicialcta = 0;
+            $total_cargoscta = 0;
+            $total_abonoscta = 0;
+            $finalcta = 0;
+            $algocta = 0;
+           $total_inicialsub = 0;
             $total_cargossub = 0;
             $total_abonossub = 0;
             $finalsub = 0;
             $algosub = 0;
-         foreach ($this->datos as $key => $value)
+
+             $i = 0;
+         foreach ($this->data as $key => $value)
           {
            
                 $this->pdf->SetCol(0);
@@ -278,6 +296,12 @@ class BalanzaComprobacion extends MY_Controller
                 $algo = ($value['sini']+$value['cargos'])-$value['abonos'];
                 $final = $final + $algo;
 
+                $total_inicialcta = $total_inicialcta + $value['sini']; 
+                $total_cargoscta = $total_cargoscta + $value['cargos'];
+                $total_abonoscta = $total_abonoscta + $value['abonos'];
+                $algocta = ($value['sini']+$value['cargos'])-$value['abonos'];
+                $finalcta = $finalcta + $algocta;
+
                 $total_inicialsub = $total_inicialsub + $value['sini']; 
                 $total_cargossub = $total_cargossub + $value['cargos'];
                 $total_abonossub = $total_abonossub + $value['abonos'];
@@ -285,16 +309,16 @@ class BalanzaComprobacion extends MY_Controller
                 $finalsub = $finalsub + $algosub;
                 $this->pdf->Ln(4);
                 
-                $nextvalue = isset($this->datos[$i+1]) ? $this->datos[$i+1] : null;
-              
+                $nextvalue = isset($this->data[$i+1]) ? $this->data[$i+1] : null;
                 $valors = isset($nextvalue['cuenta']) ? $nextvalue['cuenta'] : '';
-
-                if ($valors != $value['cuenta'])
+                $nextsub = isset($this->data[$i+1]) ? $this->data[$i+1]['sub_cta'] : null;
+                $valorssub = isset($nextvalue['sub_cta']) ? $nextvalue['sub_cta'] : '';
+      if ($valorssub != $value['sub_cta'] ) 
                 {
                     $this->pdf->SetCol(0);
                           $this->pdf->Cell(94,0);
                           $this->pdf->Cell(10,-7,'__________________________________________________________________');
-                          $cutsn = $this->cuentas->buscarcuentamayor($value['cuenta']);
+                          $cutsn = $this->cuentas->buscarcuentamayor($value['cuenta'],$value['sub_cta']);
                           $this->pdf->SetCol(0);
                           $this->pdf->Cell(17,0,'',0,1,'C');
                           $this->pdf->SetCol(0.3);
@@ -309,7 +333,6 @@ class BalanzaComprobacion extends MY_Controller
                           $this->pdf->Cell(17,0,number_format($total_cargossub-$total_abonossub,2,'.',','),0,1,'R');
                           $this->pdf->SetCol(2.8);
                           $this->pdf->Cell(17,0,number_format($finalsub,2,'.',','),0,1,'R');
-            
                           $this->pdf->SetCol(0);
                           $this->pdf->Cell(10,1,'______________________________________________________________________________________________________________________________');
                           $this->pdf->Ln(4);
@@ -319,9 +342,45 @@ class BalanzaComprobacion extends MY_Controller
             $total_abonossub = 0;
             $finalsub = 0;
             $algosub = 0;
+                }
+                if ($valors != $value['cuenta']) 
+                {
+                    $this->pdf->SetCol(0);
+                          $this->pdf->Cell(94,0);
+                          $this->pdf->Cell(10,-7,'__________________________________________________________________');
+                          $cutsn = $this->cuentas->buscarcuentamayor($value['cuenta'],0);
+                          $this->pdf->SetCol(0);
+                          $this->pdf->Cell(17,0,'',0,1,'C');
+                          $this->pdf->SetCol(0);
+                          $this->pdf->Cell(15,0,utf8_decode(isset($cutsn[0]['nombre']) ? $value['cuenta'].'     '.$cutsn[0]['nombre'] : ''),0,1,'');
+                          $this->pdf->SetCol(1.4);
+                          $this->pdf->Cell(17,0,number_format($total_inicialcta,2,'.',','),0,1,'R');
+                          $this->pdf->SetCol(1.7);
+                          $this->pdf->Cell(17,0,number_format($total_cargoscta,2,'.',','),0,1,'R');
+                          $this->pdf->SetCol(2.1);
+                          $this->pdf->Cell(17,0,number_format($total_abonoscta,2,'.',','),0,1,'R');
+                          $this->pdf->SetCol(2.4);
+                          $this->pdf->Cell(17,0,number_format($total_cargoscta-$total_abonoscta,2,'.',','),0,1,'R');
+                          $this->pdf->SetCol(2.8);
+                          $this->pdf->Cell(17,0,number_format($finalcta,2,'.',','),0,1,'R');
+            
+                          $this->pdf->SetCol(0);
+                          $this->pdf->Cell(10,1,'______________________________________________________________________________________________________________________________');
+                          $this->pdf->Ln(4);
+                   //$valors = $value['cuenta'];
+           $total_inicialcta = 0;
+            $total_cargoscta = 0;
+            $total_abonoscta = 0;
+            $finalcta = 0;
+            $algocta = 0;
+               $total_inicialsub = 0;
+            $total_cargossub = 0;
+            $total_abonossub = 0;
+            $finalsub = 0;
+            $algosub = 0;
 
                 }
-
+          
                 $i ++;
                          
           }
@@ -345,7 +404,7 @@ class BalanzaComprobacion extends MY_Controller
 
           $this->initialize();
           $this->rowc = $this->configModel->getConfig();
-          $this->datos = $this->operaciones->balanza($this->inicial,$this->final);
+          $this->data = $this->operaciones->balanza($this->inicial,$this->final);
           $this->load->library('PHPExcel');
           $objPHPExcel = new PHPExcel();
           header("Content-Type: text/html;charset=utf-8");
@@ -383,8 +442,6 @@ class BalanzaComprobacion extends MY_Controller
               '11' => 'Noviembre',
               '12' => 'Diciembre'
           );
-          
-          
             $objsheet->setCellValue('A3','Periodo: '.$meses[$this->mes].' del '.$this->ano);
               }
               else
@@ -439,7 +496,7 @@ class BalanzaComprobacion extends MY_Controller
 
           $numero=7;
           $numero2=12;
-          $str = count($this->datos);
+          $str = count($this->data);
           $i = 0;
           $styleArray = array(
             'borders' => array(
@@ -448,6 +505,14 @@ class BalanzaComprobacion extends MY_Controller
               )
             )
           );
+          $total_inicialcta = 0;
+          $total_cargoscta = 0;
+              $total_abonoscta = 0;
+              $total_saldo_mensualcta = 0;
+              $finalcta = 0;
+              $algocta = 0;
+              $nadacta = 0;
+
               $total_inicialsub = 0;
               $total_cargossub = 0;
               $total_abonossub = 0;
@@ -456,7 +521,7 @@ class BalanzaComprobacion extends MY_Controller
               $algosub = 0;
               $nadasub = 0;
 
-           foreach ($this->datos as $key => $value)
+           foreach ($this->data as $key => $value)
           {
                   $numero++;
                   $numero2++;
@@ -476,6 +541,14 @@ class BalanzaComprobacion extends MY_Controller
                   $algo = ($value['sini']+$value['cargos'])-$value['abonos'];
                   $final = $final + $algo;
 
+                  $total_inicialcta = $total_inicialcta + $value['sini'];
+                  $total_cargoscta = $total_cargoscta + $value['cargos'];
+                  $total_abonoscta = $total_abonoscta + $value['abonos'];
+                  $nadacta = $value['cargos'] - $value['abonos'];
+                  $total_saldo_mensualcta = $total_saldo_mensualcta + $nadacta;
+                  $algocta = ($value['sini']+$value['cargos'])-$value['abonos'];
+                  $finalcta = $finalcta + $algocta;
+
                   $total_inicialsub = $total_inicialsub + $value['sini'];
                   $total_cargossub = $total_cargossub + $value['cargos'];
                   $total_abonossub = $total_abonossub + $value['abonos'];
@@ -484,11 +557,13 @@ class BalanzaComprobacion extends MY_Controller
                   $algosub = ($value['sini']+$value['cargos'])-$value['abonos'];
                   $finalsub = $finalsub + $algosub;
               //}
-                $nextvalue = isset($this->datos[$i+1]) ? $this->datos[$i+1] : null;
+                $nextvalue = isset($this->data[$i+1]) ? $this->data[$i+1] : null;
                 $valors = isset($nextvalue['cuenta']) ? $nextvalue['cuenta'] : '';
-                if ($valors != $value['cuenta'])
+                $nextsub = isset($this->data[$i+1]) ? $this->data[$i+1]['sub_cta'] : null;
+                $valorssub = isset($nextvalue['sub_cta']) ? $nextvalue['sub_cta'] : '';
+              if ($valorssub != $value['sub_cta'])
                 {
-                $cutsn = $this->cuentas->buscarcuentamayor($value['cuenta']);
+                $cutsn = $this->cuentas->buscarcuentamayor($value['cuenta'],$value['sub_cta']);
                 $objPHPExcel->getActiveSheet()->getStyle('C'.$numero.':G'.$numero)->applyFromArray($styleArray);
                 $numero++;
                 $objsheet->setCellValue('A'.$numero,'');
@@ -500,6 +575,37 @@ class BalanzaComprobacion extends MY_Controller
                 $objsheet->setCellValue('G'.$numero,number_format($finalsub,2,'.',','));
 
                 $objPHPExcel->getActiveSheet()->getStyle('A'.$numero.':G'.$numero)->applyFromArray($styleArray);
+              $total_inicialsub = 0;
+              $total_cargossub = 0;
+              $total_abonossub = 0;
+              $total_saldo_mensualsub = 0;
+              $finalsub = 0;
+              $algosub = 0;
+              $nadasub = 0;
+                }
+
+
+                if ($valors != $value['cuenta'])
+                {
+                $cutsn = $this->cuentas->buscarcuentamayor($value['cuenta'],0);
+                $objPHPExcel->getActiveSheet()->getStyle('C'.$numero.':G'.$numero)->applyFromArray($styleArray);
+                $numero++;
+                $objsheet->setCellValue('A'.$numero,$value['cuenta']);
+                $objsheet->setCellValue('B'.$numero,utf8_decode(isset($cutsn[0]['nombre']) ? $cutsn[0]['nombre'] : ''));
+                $objsheet->setCellValue('C'.$numero,number_format($total_inicialcta,2,'.',','));
+                $objsheet->setCellValue('D'.$numero,number_format($total_cargoscta,2,'.',','));
+                $objsheet->setCellValue('E'.$numero,number_format($total_abonoscta,2,'.',','));
+                $objsheet->setCellValue('F'.$numero,number_format($total_saldo_mensualcta,2,'.',','));
+                $objsheet->setCellValue('G'.$numero,number_format($finalcta,2,'.',','));
+
+                $objPHPExcel->getActiveSheet()->getStyle('A'.$numero.':G'.$numero)->applyFromArray($styleArray);
+              $total_inicialcta = 0;
+              $total_cargoscta = 0;
+              $total_abonoscta = 0;
+              $total_saldo_mensualcta = 0;
+              $finalcta = 0;
+              $algocta = 0;
+              $nadacta = 0;
               $total_inicialsub = 0;
               $total_cargossub = 0;
               $total_abonossub = 0;
@@ -567,7 +673,7 @@ class BalanzaComprobacion extends MY_Controller
     }
     public function encabezado()
     {
-        date_default_timezone_set("America/Mexico_City");
+      //  date_default_timezone_set("America/Mexico_City");
         // $img = $this->rowc[0]['imgName'];
         // $formato = explode(".",$this->rowc[0]['imgName']);
         // $imagen = $this->rowc[0]['img'];

@@ -50,11 +50,12 @@
             $this->db2->where('idcuenta',$id);
             return $this->db2->update('catalogocta',$datos);
         }
-        public function buscarcuentamayor($data)
+        public function buscarcuentamayor($cta,$scta)
         {
-            $row = $this->db2->select('*')->from('catalogocta')->where('cuenta',$data)->where('sub_cta',0)->get();
+            $row = $this->db2->select('*')->from('catalogocta')->where('cuenta',$cta)->where('sub_cta',$scta)->where('ssub_cta',0)->get();
             return $row->result_array();            
         }
+        
         public function datosCuentas($id)
         {
             $row = $this->db2->select('*')->from('catalogocta')->where('idcuenta',$id)->get();
