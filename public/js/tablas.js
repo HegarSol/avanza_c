@@ -92,6 +92,16 @@ $(function () {
       ,"sDom": 'T<"clear">lfrtip', "oTableTools": {  "sRowSelect": "single","aButtons": ""},
     })
  });
+   //REFERENCIAS PARA CONTROL DE GASTOS
+  $(function(){
+    $('#referencias').DataTable({
+      responsive: true, filter:true, columnDefs:
+      [ { responsivePriority: 1, targets: 0 }, { responsivePriority: 2, targets: -1 }, { responsivePriority: 3, targets: 2 } ],
+      processing: true, serverSide: true,
+      ajax: {"url": baseurl + "catalogos/Referencias/ajax_list","type":"POST"}, "language" : {"url":"//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"}
+      ,"sDom": 'T<"clear">lfrtip', "oTableTools": {  "sRowSelect": "single","aButtons": ""},
+    })
+ });
 
 
 
