@@ -225,6 +225,8 @@ class BalanzaComprobacion extends MY_Controller
 
           $this->pdf->SetFont('Helvetica','B',8);
           $this->pdf->Ln(10);
+          $this->pdf->SetY(55);
+          $this->pdf->SetCol(0.0);
           $this->pdf->Cell(40,5,'Cuenta',0,1,'',true);
           // $this->pdf->SetY(55);
           // $this->pdf->SetCol(0.3);
