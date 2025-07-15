@@ -95,7 +95,7 @@ class Beneficiarios extends MY_Controller
             $rfc = $this->configModel->getConfig();
           //  $informabene = $this->benefi->datosBenefi($id);
           $departa = $this->deparcostos->getalldepartamento();
-
+            $estoyenestafeta = 1;    
             // $conse = $this->operaciones->maxidPro();
 
             // if(count($conse) > 0)
@@ -108,7 +108,7 @@ class Beneficiarios extends MY_Controller
             // }
 
             $errores=array();
-            $data = array('titulo' => 'Listado de comprobantes pendientes','departamentos' => $departa,'rfc' => $rfc[0]['rfc'],'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores' => $errores);
+            $data = array('titulo' => 'Listado de comprobantes pendientes','departamentos' => $departa,'estoyenestafeta' => $estoyenestafeta,'rfc' => $rfc[0]['rfc'],'razon' => $this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores' => $errores);
             $items=$this->menuModel->menus($_SESSION['tipo']);
             $this->multi_menu->set_items($items);
             $this->load->view('templates/header');
@@ -551,6 +551,7 @@ class Beneficiarios extends MY_Controller
              $ssub_cta = $this->input->post('ssub_cta');
              $nom = $this->input->post('nom');
              $conce = $this->input->post('conce');
+             $refe = $this->input->post('refe');
              $mon = $this->input->post('mon');
              $c_a = $this->input->post('c_a');
 
@@ -599,7 +600,7 @@ class Beneficiarios extends MY_Controller
                             'c_a' => $c_a[$i],
                             'fecha' => $fecha,
                             'concepto' => $conce[$i],
-                            'referencia' => NULL,
+                            'referencia' => $refe[$i],
                             'no_prov' => $provee,
                             'factrefe' => 0,
                             'nombre_cuenta' => $nom[$i],

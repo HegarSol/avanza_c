@@ -419,6 +419,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                      <th>Cuenta</th>
                      <th>Sub cuenta</th>
                      <th>Ssub cuenta</th>
+                     <th>Referencia</th>
                      <th>Nombre cuenta</th>
                      <th>Concepto</th>
                      <th>Monto</th>
@@ -592,6 +593,7 @@ function aceptarasiento(tableID)
       var cuenta = [];
       var sub_cta = [];
       var ssub_cta = [];
+      var refe = [];
       var nom = [];
       var conce = [];
       var mon = [];
@@ -604,10 +606,11 @@ function aceptarasiento(tableID)
          cuenta[i] = table.rows[i].cells[0].innerHTML;
          sub_cta[i] = table.rows[i].cells[1].innerHTML;
          ssub_cta[i] = table.rows[i].cells[2].innerHTML;
-         nom[i] = table.rows[i].cells[3].innerHTML;
-         conce[i] = table.rows[i].cells[4].innerHTML;
-         mon[i] = table.rows[i].cells[5].innerHTML;
-         c_a[i] = table.rows[i].cells[6].innerHTML;
+         refe[i] = table.rows[i].cells[3].innerHTML;
+         nom[i] = table.rows[i].cells[4].innerHTML;
+         conce[i] = table.rows[i].cells[5].innerHTML;
+         mon[i] = table.rows[i].cells[6].innerHTML;
+         c_a[i] = table.rows[i].cells[7].innerHTML;
       }
 
       var fechadivi = fecha_pro.split('-');
@@ -622,7 +625,7 @@ function aceptarasiento(tableID)
                     type:"POST",
                     url: baseurl + "catalogos/Beneficiarios/insert_poliza_provision",
                     data: {tipo:tipo_pro,mov:mov_pro,uuid:uuid_pro,fecha:fecha_pro,provee:prove_provi,pago:pago_provi,ssub_cta:ssub_cta,
-                    num_fact:num_fact_pro,serie_provisi:serie_provisi,total:tol,cuenta:cuenta,sub_cta:sub_cta,nom:nom,conce:conce,referencia:referencia,
+                    num_fact:num_fact_pro,serie_provisi:serie_provisi,total:tol,cuenta:cuenta,sub_cta:sub_cta,nom:nom,conce:conce,referencia:referencia,refe:refe,
                     mon:mon,c_a:c_a},
                     dataType:"html",
                     success:function(msg)
@@ -741,7 +744,7 @@ function aceptarasiento(tableID)
     function recorrercuentas()
     {
 
-      document.getElementById('referencia_provisi').value = document.getElementById('referencia').value;
+      document.getElementById('referencia_provisi').value = document.getElementById('referencia').value == '' ? document.getElementById('refe').value : document.getElementById('referencia').value;
       var cajadeta = [];
 
       if ($('#btnbuscar').length) 
@@ -801,7 +804,7 @@ function aceptarasiento(tableID)
     {
             var oTT2 = $.fn.dataTable.TableTools.fnGetInstance("tabla_pendientes");
             var aData2 = oTT2.fnGetSelectedData();
-
+            var referencia = document.getElementById('referencia_provisi').value;
 
            $valorw = jQuery.ajax({
                url : baseurl + "catalogos/Beneficiarios/getbeneficirfc",
@@ -869,6 +872,8 @@ function aceptarasiento(tableID)
                                     td4.appendChild(document.createTextNode(sub_cta))
                                     var td10 = document.createElement("TD")
                                     td10.appendChild(document.createTextNode(ssub_cta))
+                                    var td5 = document.createElement("TD")
+                                    td5.appendChild(document.createTextNode(referencia));
                                     var td6 = document.createElement("TD")
                                     td6.appendChild(document.createTextNode(nom_cta))
                                     var td7 = document.createElement("TD")
@@ -882,6 +887,7 @@ function aceptarasiento(tableID)
                                  row.appendChild(td3);
                                  row.appendChild(td4);
                                  row.appendChild(td10);
+                                 row.appendChild(td5);
                                  row.appendChild(td6);
                                  row.appendChild(td7);
                                  row.appendChild(td8);
