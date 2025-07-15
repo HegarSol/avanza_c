@@ -189,7 +189,7 @@ function abriroperaciones(id)
 
    jQuery.ajax({
       type:"POST",
-      url:"<?php echo base_url();?>catalogos/Bancos/getbanco",
+      url:"<?php echo base_url();?>catalogos/Bancos/getoperacionesbanco",
       data:{id:id},
       dataType:"html",
       success:function(response)

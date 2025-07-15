@@ -664,6 +664,12 @@ class Bancos extends MY_Controller
     }
 
     } 
+    public function getoperacionesbanco()
+    {
+            $id = $this->input->post('id');
+                        $dast=$this->bancos->datosBancos($id);
+                                $this->output->set_content_type('application/json')->set_output(json_encode($dast));
+    }
     public function getbanco()
     {
         $id = $this->input->post('id');
@@ -671,6 +677,9 @@ class Bancos extends MY_Controller
         $clasi = $this->input->post('clasi');
 
         $tipomovs = $this->input->post('tipomovs');
+        $referencia = $this->input->post('referencia');
+
+        $uuid = $this->input->post('uuid');
 
 
         if($clasi == 1)
@@ -725,6 +734,33 @@ class Bancos extends MY_Controller
         {
             $dast=$this->bancos->datosBancos($id);
         }
+        
+                // if(ENVIRONMENT == 'development')
+                //         {
+                //             $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/actualizarreferencia");
+                //         }
+                //         else
+                //         {
+                             $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/actualizarreferencia");
+                        // }
+         //foreach($uuid as $uuids )
+         for ($i = 0; $i < count($uuid); $i++)
+         {
+            if($uuid[$i] != 'UUID')
+            {
+                            $poliza = null;
+                            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                            curl_setopt($ch, CURLOPT_POSTFIELDS,"uuid=".$uuid[$i]."&referencia=".$referencia);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                            $resu = curl_exec($ch);
+                            $response = json_decode($resu);
+                           // var_dump($resu);
+                            //var_dump($uuid[$i]);
+            }
+        }
+
 
         $this->output->set_content_type('application/json')->set_output(json_encode($dast));
     }

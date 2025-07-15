@@ -738,7 +738,7 @@ class Beneficiarios extends MY_Controller
                   //  var_dump($clave['clave']);
                    $row =  $this->dicuentas->buscariguales($clave['clave']);
                    $descrip = $this->catalogos->selectprodser($clave['clave']);
-
+                    //var_dump($descrip);
                    if(count($row) > 0)
                    {
 
