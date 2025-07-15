@@ -641,8 +641,9 @@ function checartodo()
                 var tipo = $(this).parent().parent().find('td').eq(2).html();
                 var poliza = $(this).parent().parent().find('td').eq(27).html();
                 var rfc = $(this).parent().parent().find('td').eq(21).html();
+                var refe = $(this).parent().parent().find('td').eq(42).html();
                 var eliminar = "Eliminar";
-                recibo = [tipo,poliza,rfc,eliminar];
+                recibo = [tipo,poliza,rfc,refe,eliminar];
                 detallereci.push(recibo);
             });
             return detallereci;
@@ -744,6 +745,9 @@ function agregarpoliza()
          let uuid = chek[i][0];
          let poli = chek[i][1];
          let rfc = chek[i][2];
+         let refe = chek[i][3];
+
+         document.getElementById('refe').value = refe;
 
          jQuery.ajax({
              type:"POST",
