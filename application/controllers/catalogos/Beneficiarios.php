@@ -749,7 +749,7 @@ class Beneficiarios extends MY_Controller
 
                        $noEstan[] = [ 
                                        'clave' => $clave['clave'],
-                                       'descripcionxml' => strlen($clave['descripcion']) <= 40 ? substr($clave['descripcion'],0,30) : substr($clave['descripcion'],0,45),
+                                       'descripcionxml' => strlen($clave['descripcion']) <= 40 ? substr($clave['descripcion'],0,25) : substr($clave['descripcion'],0,25),
                                        'descripcionSAT' => $descrip[0]['descripcion']
                                     ];
 
@@ -757,6 +757,8 @@ class Beneficiarios extends MY_Controller
                 }
 
               }
+
+              var_dump($noEstan);
 
               $response = array('status' => true,'data' => $noEstan);
 
