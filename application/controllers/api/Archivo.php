@@ -246,13 +246,14 @@ class Archivo extends REST_Controller
         $idempre = $_POST['idempre'];
         $cuenta = $_POST['cuenta'];
         $subcuenta = $_POST['sub_cuenta'];
+        $ssubcuenta = $_POST['ssub_cuenta'];
         $naturaleza = $_POST['naturaleza'];
         $cuentas_sat = $_POST['cuentas_sat'];
         $nombre = $_POST['nombre'];
 
         $this->cuentas->set_database($idempre);
 
-        $dat = $this->cuentas->get_cuenta_existe_empresa($cuenta,$subcuenta);
+        $dat = $this->cuentas->get_cuenta_existe_empresa($cuenta,$subcuenta,$ssubcuenta);
 
         if(count($dat) > 0)
         {
@@ -267,7 +268,7 @@ class Archivo extends REST_Controller
                'ctasat' => $cuentas_sat,
                'natur' => $naturaleza,
                'cvecobro'=> 0,
-               'ssub_cta' => 0
+               'ssub_cta' => $ssubcuenta,
             );
     
             $this->cuentas->crearCuenta($datos);
