@@ -1298,7 +1298,10 @@ function aceptarasiento(tableID)
       var files = fileinput.files;
       var formData = new FormData();
 
+      var formData2 = new FormData();
+
       for (let i = 0; i < files.length; i++) {
+         console.log(files[i]);
          formData.append('xml', files[i]);
      // }
       // var formElement = document.getElementById("formularioXML");
@@ -1306,22 +1309,30 @@ function aceptarasiento(tableID)
       formData.append('empresa','<?php echo $rfc?>');
       formData.append('aceptar',document.getElementById('aceptarxml').checked);
 
+      // formData.append('aceptar',document.getElementById('aceptarxml').checked);
      $.ajax({
         url: baseurl + "catalogos/Beneficiarios/leerxml",
         type:"POST",
         data: formData,
         processData : false,
         contentType : false,
-        success: function(data){
+        success: function(data1){
+
+      formData2.append('xml', files[i]);
+     // }
+      // var formElement = document.getElementById("formularioXML");
+      // var formData = new FormData(formElement);
+      formData2.append('empresa','<?php echo $rfc?>');
+      formData2.append('aceptar',document.getElementById('aceptarxml').checked);
 
          $.ajax({
        url : "http://avanzab.hegarss.com/api/Comprobantes/uploadxmlmulti",
-		 //url : "http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/uploadxmlmulti",
+		// url : "http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/uploadxmlmulti",
 		 type : "POST",
-		 data : formData,
+		 data : formData2,
 		 processData : false,
 		 contentType : false,
-		 success : function (data){
+		 success : function (data2){
 			var n = noty({
 			   text : "Comprobante Registrado Correctamente",
 			   theme : "relax",
