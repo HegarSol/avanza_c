@@ -272,10 +272,10 @@ class Herramientas extends MY_Controller
                         $detalle = $this->opera->guardarDetalle($detalle);                        
                     }
   
-                    //TOTAL DE LA FACTURA CON LA CONFIGURACION 2
+                    //TOTAL DE LA FACTURA CON LA CONFIGURACION 9
                     if($total > 0)
                     {
-                        $cta = $this->conficue->getidcuentaconfi(2);
+                        $cta = $this->conficue->getidcuentaconfi(9);
                         $detalle = array(
                             'id_encabezado' => $id,
                             'tipo_mov' => 'O',
