@@ -758,7 +758,7 @@ class Beneficiarios extends MY_Controller
 
               }
 
-              var_dump($noEstan);
+            //  var_dump($noEstan);
 
               $response = array('status' => true,'data' => $noEstan);
 
