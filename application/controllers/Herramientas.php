@@ -58,7 +58,7 @@ class Herramientas extends MY_Controller
 
                 for ($row = 2; $row <= $highestRow; ++ $row) 
                 {
-                    $tipo = $worksheet->getCellByColumnAndRow('0',$row)->getCalculatedValue(); //Folio
+                    $tipo = $worksheet->getCellByColumnAndRow('0',$row)->getCalculatedValue(); //Serie
                     $folio = $worksheet->getCellByColumnAndRow('1',$row)->getCalculatedValue(); //Folio
                     $fecha = $worksheet->getCellByColumnAndRow('2',$row)->getCalculatedValue(); //Fecha
                     $rfc = $worksheet->getCellByColumnAndRow('3',$row)->getCalculatedValue(); //RFC
@@ -70,6 +70,8 @@ class Herramientas extends MY_Controller
                     $ieps = $worksheet->getCellByColumnAndRow('9',$row)->getCalculatedValue(); //ieps
                     $retisr = $worksheet->getCellByColumnAndRow('10',$row)->getCalculatedValue(); //retisr
                     $total = $worksheet->getCellByColumnAndRow('11',$row)->getCalculatedValue(); //total
+                    $metodo_pago = $worksheet->getCellByColumnAndRow('12',$row)->getCalculatedValue(); //metodo de pago
+                    $objetoImp = $worksheet->getCellByColumnAndRow('13',$row)->getCalculatedValue(); //objeto de impuesto
 
                     $subtotalxtc = $tc * $subtotal;
                     $totalxtc = $tc * $total;
@@ -111,7 +113,6 @@ class Herramientas extends MY_Controller
                     if($iva16 > 0)
                     {
                         $cta = $this->conficue->getidcuentaconfi(10);
-
                         $detalle = array(
                             'id_encabezado' => $id,
                             'tipo_mov' => 'O',
@@ -209,7 +210,47 @@ class Herramientas extends MY_Controller
                     //EL SUBTTOAL DE LA FACTURA SE IRA A LA CONFIGURACION 14
                     if($subtotal > 0)
                     {
-                        $cta = $this->conficue->getidcuentaconfi(14);
+                        if($objetoImp == '2' || $objetoImp == '3')
+                        {
+                            if($iva16 > 0)
+                            {
+                                if($metodo_pago == 'PPD')
+                                {
+                                   $cta = $this->conficue->getidcuentaconfi(14);
+                                }
+                                else
+                                {
+                                    $cta = $this->conficue->getidcuentaconfi(60);
+                                }
+                                
+                            }
+                            else
+                            {
+                                if($metodo_pago == 'PPD')
+                                {
+                                $cta = $this->conficue->getidcuentaconfi(13);
+                                }
+                                else
+                                {
+                                    $cta = $this->conficue->getidcuentaconfi(61);
+                                }
+                                
+                            }
+                            
+                        }
+                        else
+                        {
+                            if($metodo_pago == 'PPD')
+                            {
+                                $cta = $this->conficue->getidcuentaconfi(59);
+                            }
+                            else
+                            {
+                                $cta = $this->conficue->getidcuentaconfi(62);
+                            }
+                            
+                        }
+                       
                         $detalle = array(
                             'id_encabezado' => $id,
                             'tipo_mov' => 'O',
