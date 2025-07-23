@@ -91,7 +91,7 @@ class Herramientas extends MY_Controller
                     $datos = array(
                         'tipo_mov' => 'I',
                         'no_banco' => 0,
-                        'no_mov' => $folio,     //$max[0]['maxmov'],
+                        'no_mov' => $max[0]['maxmov'],
                         'fecha' => $fecha, //date('Y-m-d H:i:s'),
                         'beneficia' => '',
                         'concepto' => 'Póliza de '.$serie .' de CFDI: '.$tipo.' '.$folio.' Cliente: '. $cliente,
