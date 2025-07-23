@@ -100,7 +100,7 @@ class ReporteAuxiliarContable extends MY_Controller
 
         $this->pdf->SetAutoPageBreak(true,10);
         $this->pdf->AddPAge();
-        $this->pdf->SetTitle('Reporte Auxiliar Contable');
+        $this->pdf->SetTitle('Reporte auxiliar contable');
         $this->pdf->SetFillColor(220,220,220);
         $this->pdf->SetDrawColor(220,220,220);
 
@@ -142,13 +142,6 @@ class ReporteAuxiliarContable extends MY_Controller
 //        $totalsaldo = 0;
         for($i=0;$i<count($this->datosdetalle);$i++)
         {
-            do{
-
-                if($this->datosdetalle[0]->signo == '+')
-                {
-                    if($this->datosdetalle[$i]->signo == '+')
-                    {
-                        
                         $totalsaldo=$saldo+$this->datosdetalle[$i]->monto;
                         $this->pdf->SetCol(0);
                         $this->pdf->Cell(17,0,date('d-m-Y',strtotime($this->datosdetalle[$i]->fecha)),0,1,'C');
@@ -157,133 +150,27 @@ class ReporteAuxiliarContable extends MY_Controller
                         $this->pdf->SetCol(0.6);
                         $this->pdf->Cell(17,0,$this->datosdetalle[$i]->rece,0,1,'L');
                         $this->pdf->SetCol(0.8);
-                        $this->pdf->Cell(17,0,$this->datosdetalle[$i]->concedeta,0,1,'L');
-                        $this->pdf->SetCol(2.0);
-                        $this->pdf->Cell(17,0,number_format($this->datosdetalle[$i]->monto,2,'.',','),0,1,'R');
-                        $this->pdf->SetCol(2.4);
-                        $this->pdf->Cell(17,0,'',0,1,'R');
-                        $this->pdf->SetCol(2.7);
-                        $this->pdf->Cell(17,0,number_format($totalsaldo,2,'.',','),0,1,'R');
-                        // $renglon=$this->Rowpdf(array(
-                        //     date('d-m-Y',strtotime($this->datosdetalle[$i]->fecha)),
-                        //     $this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov,
-                        //     $this->datosdetalle[$i]->rece,
-                        //     $this->datosdetalle[$i]->concedeta,
-                        //     number_format($this->datosdetalle[$i]->monto,2,'.',','),
-                        //     '',
-                        //     number_format($totalsaldo,2,'.',',')
-                        //  ));                                               
+                        $this->pdf->SetFont('Helvetica','',6);
+                        $this->pdf->Cell(17,0,substr(trim($this->datosdetalle[$i]->beneficia).' '.trim($this->datosdetalle[$i]->conceenca).' '.trim($this->datosdetalle[$i]->concedeta),0,63),0,1,'L');
+                        $this->pdf->SetFont('Helvetica','',8);
+                        if($this->datosdetalle[$i]->signo == '+')
+                        {
+                        $this->pdf->SetCol(2.0);    
                          $totalcargo=$totalcargo+$this->datosdetalle[$i]->monto;
-                         //$this->pdf->SetY($renglon-3.5);
+                        }
+                        else
+                        {
+                        $this->pdf->SetCol(2.3);    
+                         $totalabono=$totalabono-$this->datosdetalle[$i]->monto;
+                        }
+                        $this->pdf->Cell(17,0,number_format($this->datosdetalle[$i]->monto,2,'.',','),0,1,'R');
+                        $this->pdf->SetCol(2.4);
+                        $this->pdf->Cell(17,0,'',0,1,'R');
+                        $this->pdf->SetCol(2.7);
+                        $this->pdf->Cell(17,0,number_format($totalsaldo,2,'.',','),0,1,'R');
+                     
                          $this->pdf->Ln(5);
-                         break;
-                    }
-                    else
-                    {
-                        
-                       $totalsaldo=$totalsaldo-$this->datosdetalle[$i]->monto;
-
-                        $this->pdf->SetCol(0);
-                        $this->pdf->Cell(17,0,date('d-m-Y',strtotime($this->datosdetalle[$i]->fecha)),0,1,'C');
-                        $this->pdf->SetCol(0.3);
-                        $this->pdf->Cell(17,0,$this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov,0,1,'');
-                        $this->pdf->SetCol(0.6);
-                        $this->pdf->Cell(17,0,$this->datosdetalle[$i]->rece,0,1,'L');
-                        $this->pdf->SetCol(0.8);
-                        $this->pdf->Cell(17,0,$this->datosdetalle[$i]->concedeta,0,1,'L');
-                        $this->pdf->SetCol(2.0);
-                        $this->pdf->Cell(17,0,'',0,1,'R');
-                        $this->pdf->SetCol(2.4);
-                        $this->pdf->Cell(17,0,number_format($this->datosdetalle[$i]->monto,2,'.',','),0,1,'R');
-                        $this->pdf->SetCol(2.7);
-                        $this->pdf->Cell(17,0,number_format($totalsaldo,2,'.',','),0,1,'R');
-                    //    $renglon=$this->Rowpdf(array(
-                    //         date('d-m-Y',strtotime($this->datosdetalle[$i]->fecha)),
-                    //         $this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov,
-                    //         $this->datosdetalle[$i]->rece,
-                    //         $this->datosdetalle[$i]->concedeta,
-                    //         '',
-                    //         '-'.number_format($this->datosdetalle[$i]->monto,2,'.',','),
-                    //         number_format($totalsaldo,2,'.',',')
-                        
-                    //     ));                      
-                        $totalabono=$totalabono-$this->datosdetalle[$i]->monto;
-                        //$this->pdf->SetY($renglon-3.5);
-                        $this->pdf->Ln(5);
-                        break;
-                    }
-                }
-                else
-                {
-                    if($this->datosdetalle[$i]->signo == '+')
-                    {
-                        
-                        $totalsaldo=$totalsaldo+$this->datosdetalle[$i]->monto;
-                        $this->pdf->SetCol(0);
-                        $this->pdf->Cell(17,0,date('d-m-Y',strtotime($this->datosdetalle[$i]->fecha)),0,1,'C');
-                        $this->pdf->SetCol(0.3);
-                        $this->pdf->Cell(17,0,$this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov,0,1,'');
-                        $this->pdf->SetCol(0.6);
-                        $this->pdf->Cell(17,0,$this->datosdetalle[$i]->rece,0,1,'L');
-                        $this->pdf->SetCol(0.8);
-                        $this->pdf->Cell(17,0,$this->datosdetalle[$i]->concedeta,0,1,'L');
-                        $this->pdf->SetCol(2.0);
-                        $this->pdf->Cell(17,0,number_format($this->datosdetalle[$i]->monto,2,'.',','),0,1,'R');
-                        $this->pdf->SetCol(2.4);
-                        $this->pdf->Cell(17,0,'',0,1,'R');
-                        $this->pdf->SetCol(2.7);
-                        $this->pdf->Cell(17,0,number_format($totalsaldo,2,'.',','),0,1,'R');
-
-                        // $renglon=$this->Rowpdf(array(
-                        //     date('d-m-Y',strtotime($this->datosdetalle[$i]->fecha)),
-                        //     $this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov,
-                        //     $this->datosdetalle[$i]->rece,
-                        //     $this->datosdetalle[$i]->concedeta,
-                        //     number_format($this->datosdetalle[$i]->monto,2,'.',','),
-                        //     '',
-                        //     number_format($totalsaldo,2,'.',',')
-                        //  ));             
-                         $totalcargo=$totalcargo+$this->datosdetalle[$i]->monto;             
-                         //$this->pdf->SetY($renglon-3.5);
-                         $this->pdf->Ln(5);
-                         break;
-                    }
-                    else
-                    {
-                        
-                        $totalsaldo=$saldo-$this->datosdetalle[$i]->monto;
-
-                        $this->pdf->SetCol(0);
-                        $this->pdf->Cell(17,0,date('d-m-Y',strtotime($this->datosdetalle[$i]->fecha)),0,1,'C');
-                        $this->pdf->SetCol(0.3);
-                        $this->pdf->Cell(17,0,$this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov,0,1,'');
-                        $this->pdf->SetCol(0.6);
-                        $this->pdf->Cell(17,0,$this->datosdetalle[$i]->rece,0,1,'L');
-                        $this->pdf->SetCol(0.8);
-                        $this->pdf->Cell(17,0,$this->datosdetalle[$i]->concedeta,0,1,'L');
-                        $this->pdf->SetCol(2.0);
-                        $this->pdf->Cell(17,0,'',0,1,'R');
-                        $this->pdf->SetCol(2.4);
-                        $this->pdf->Cell(17,0,number_format($this->datosdetalle[$i]->monto,2,'.',','),0,1,'R');
-                        $this->pdf->SetCol(2.7);
-                        $this->pdf->Cell(17,0,number_format($totalsaldo,2,'.',','),0,1,'R');
-                        // $renglon=$this->Rowpdf(array(
-                        //     date('d-m-Y',strtotime($this->datosdetalle[$i]->fecha)),
-                        //     $this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov,
-                        //     $this->datosdetalle[$i]->rece,
-                        //     $this->datosdetalle[$i]->concedeta,
-                        //     '',
-                        //     '-'.number_format($this->datosdetalle[$i]->monto,2,'.',','),
-                        //     number_format($totalsaldo,2,'.',',')
-                        
-                        // ));                        
-                        $totalabono=$totalabono-$this->datosdetalle[$i]->monto;
-                        //$this->pdf->SetY($renglon-3.5);
-                        $this->pdf->Ln(5);
-                        break;
-                    }
-                }
-            }while(0);
+                     
         }
         $this->pdf->Ln(10);
         $this->pdf->SetCol(0.0);
@@ -378,67 +265,27 @@ class ReporteAuxiliarContable extends MY_Controller
            $numero2++;
            $numero3++;
            $numero4++;
-           do{
-             if($this->datosdetalle[0]->signo == '+')
-             {
-                    if($this->datosdetalle[$i]->signo == '+')
-                    {
                           $totalsaldo=$saldo+$this->datosdetalle[$i]->monto;
                             $objsheet->setCellValue('A'.$numero,date('d-m-Y',strtotime($this->datosdetalle[$i]->fecha)));
                             $objsheet->setCellValue('B'.$numero,$this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov);
                             $objsheet->setCellValue('C'.$numero,$this->datosdetalle[$i]->rece);
-                            $objsheet->setCellValue('D'.$numero,$this->datosdetalle[$i]->concedeta);
-                            $objsheet->setCellValue('E'.$numero,number_format($this->datosdetalle[$i]->monto,2,'.',','));
-                            $objsheet->setCellValue('F'.$numero,'');
-                            $objsheet->setCellValue('G'.$numero,number_format($totalsaldo,2,'.',','));
-
+                            $objsheet->setCellValue('D'.$numero,trim($this->datosdetalle[$i]->beneficia).' '.trim($this->datosdetalle[$i]->conceenca).' '.trim($this->datosdetalle[$i]->concedeta));
+                            if($this->datosdetalle[$i]->signo == '+')
+                            {
+                            $objsheet->setCellValue('E'.$numero,number_format($this->datosdetalle[$i]->monto,2,'.',',')); 
                             $totalcargo = $totalcargo + $this->datosdetalle[$i]->monto;
-                    }
-                    else
-                    {
-                          $totalsaldo=$totalsaldo-$this->datosdetalle[$i]->monto;
-                            $objsheet->setCellValue('A'.$numero,date('d-m-Y',strtotime($this->datosdetalle[$i]->fecha)));
-                            $objsheet->setCellValue('B'.$numero,$this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov);
-                            $objsheet->setCellValue('C'.$numero,$this->datosdetalle[$i]->rece);
-                            $objsheet->setCellValue('D'.$numero,$this->datosdetalle[$i]->concedeta);
-                            $objsheet->setCellValue('E'.$numero,'');
-                            $objsheet->setCellValue('F'.$numero,number_format($this->datosdetalle[$i]->monto,2,'.',','));
+                            }
+                            else
+                            {
+                              $objsheet->setCellValue('F'.$numero,number_format($this->datosdetalle[$i]->monto,2,'.',',')); 
+                              $totalabono = $totalabono + $this->datosdetalle[$i]->monto;
+                            }
+                           
                             $objsheet->setCellValue('G'.$numero,number_format($totalsaldo,2,'.',','));
-
-                            $totalabono = $totalabono + $this->datosdetalle[$i]->monto;
-                    }
-             }
-             else
-             {
-                    if($this->datosdetalle[$i]->signo == '+')
-                    {
-                          $totalsaldo=$totalsaldo+$this->datosdetalle[$i]->monto;
-                            $objsheet->setCellValue('A'.$numero,date('d-m-Y',strtotime($this->datosdetalle[$i]->fecha)));
-                            $objsheet->setCellValue('B'.$numero,$this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov);
-                            $objsheet->setCellValue('C'.$numero,$this->datosdetalle[$i]->rece);
-                            $objsheet->setCellValue('D'.$numero,$this->datosdetalle[$i]->concedeta);
-                            $objsheet->setCellValue('E'.$numero,number_format($this->datosdetalle[$i]->monto,2,'.',','));
-                            $objsheet->setCellValue('F'.$numero,'');
-                            $objsheet->setCellValue('G'.$numero,number_format($totalsaldo,2,'.',','));
-
-                            $totalcargo = $totalcargo + $this->datosdetalle[$i]->monto;
-                    }
-                    else
-                    {
-                         $totalsaldo=$saldo-$this->datosdetalle[$i]->monto;
-                            $objsheet->setCellValue('A'.$numero,date('d-m-Y',strtotime($this->datosdetalle[$i]->fecha)));
-                            $objsheet->setCellValue('B'.$numero,$this->datosdetalle[$i]->tipo_mov.'-'.$this->datosdetalle[$i]->no_banco.'-'.$this->datosdetalle[$i]->no_mov);
-                            $objsheet->setCellValue('C'.$numero,$this->datosdetalle[$i]->rece);
-                            $objsheet->setCellValue('D'.$numero,$this->datosdetalle[$i]->concedeta);
-                            $objsheet->setCellValue('E'.$numero,'');
-                            $objsheet->setCellValue('F'.$numero,number_format($this->datosdetalle[$i]->monto,2,'.',','));
-                            $objsheet->setCellValue('G'.$numero,number_format($totalsaldo,2,'.',','));
-
-                            $totalabono = $totalabono + $this->datosdetalle[$i]->monto;
-                    }
-             }
-           }while(0);
-
+            
+                            
+          
+}
            $objsheet->setCellValue('D'.$numero2,'Totales: ');
            $objsheet->setCellValue('E'.$numero2,'+ '.number_format($totalcargo,2,'.',''));
            $objsheet->setCellValue('F'.$numero2,'- '.number_format($totalabono,2,'.',''));
@@ -446,7 +293,7 @@ class ReporteAuxiliarContable extends MY_Controller
            $objsheet->setCellValue('F'.$numero3,'Saldo Inicial :');
            $objsheet->setCellValue('G'.$numero3,number_format($saldo,2,'.',''));
            $objsheet->setCellValue('G'.$numero4,number_format(($totalcargo-$totalabono) + $saldo,2,'.',''));
-        }
+        
 
 
         $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setAutoSize(true);

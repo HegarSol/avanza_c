@@ -278,7 +278,7 @@ class BalanzaComprobacion extends MY_Controller
                 $this->pdf->SetCol(0);
                 $this->pdf->Cell(17,0,$value['cuenta'].' - '.$value['sub_cta']. ' - ' .$value['ssub_cta'],0,1,'L');
                 $this->pdf->SetCol(0.3);
-                $this->pdf->Cell(17,0,utf8_decode($value['nombre']),0,1,'L');
+                $this->pdf->Cell(17,0,$value['nombre'],0,1,'L');
                 $this->pdf->SetCol(1.4);
                 $this->pdf->Cell(17,0,number_format($value['sini'],2,'.',','),0,1,'R');
                 $this->pdf->SetCol(1.7);
@@ -324,7 +324,7 @@ class BalanzaComprobacion extends MY_Controller
                           $this->pdf->SetCol(0);
                           $this->pdf->Cell(17,0,'',0,1,'C');
                           $this->pdf->SetCol(0.3);
-                          $this->pdf->Cell(17,0,utf8_decode(isset($cutsn[0]['nombre']) ? $cutsn[0]['nombre'] : ''),0,1,'');
+                          $this->pdf->Cell(17,0,isset($cutsn[0]['nombre']) ? $cutsn[0]['nombre'] : '',0,1,'');
                           $this->pdf->SetCol(1.4);
                           $this->pdf->Cell(17,0,number_format($total_inicialsub,2,'.',','),0,1,'R');
                           $this->pdf->SetCol(1.7);
@@ -354,7 +354,7 @@ class BalanzaComprobacion extends MY_Controller
                           $this->pdf->SetCol(0);
                           $this->pdf->Cell(17,0,'',0,1,'C');
                           $this->pdf->SetCol(0);
-                          $this->pdf->Cell(15,0,utf8_decode(isset($cutsn[0]['nombre']) ? $value['cuenta'].'     '.$cutsn[0]['nombre'] : ''),0,1,'');
+                          $this->pdf->Cell(15,0,isset($cutsn[0]['nombre']) ? $value['cuenta'].'     '.$cutsn[0]['nombre'] : '',0,1,'');
                           $this->pdf->SetCol(1.4);
                           $this->pdf->Cell(17,0,number_format($total_inicialcta,2,'.',','),0,1,'R');
                           $this->pdf->SetCol(1.7);
@@ -528,7 +528,7 @@ class BalanzaComprobacion extends MY_Controller
                   $numero++;
                   $numero2++;
                   $objsheet->setCellValue('A'.$numero,$value['cuenta'].' - '.$value['sub_cta'].' - '.$value['ssub_cta']);
-                  $objsheet->setCellValue('B'.$numero,utf8_decode($value['nombre']));
+                  $objsheet->setCellValue('B'.$numero,($value['nombre']));
                   $objsheet->setCellValue('C'.$numero,number_format($value['sini'],2,'.',','));
                   $objsheet->setCellValue('D'.$numero,number_format($value['cargos'],2,'.',','));
                   $objsheet->setCellValue('E'.$numero,number_format($value['abonos'],2,'.',','));
@@ -569,7 +569,7 @@ class BalanzaComprobacion extends MY_Controller
                 $objPHPExcel->getActiveSheet()->getStyle('C'.$numero.':G'.$numero)->applyFromArray($styleArray);
                 $numero++;
                 $objsheet->setCellValue('A'.$numero,'');
-                $objsheet->setCellValue('B'.$numero,utf8_decode(isset($cutsn[0]['nombre']) ? $cutsn[0]['nombre'] : ''));
+                $objsheet->setCellValue('B'.$numero,isset($cutsn[0]['nombre']) ? $cutsn[0]['nombre'] : '');
                 $objsheet->setCellValue('C'.$numero,number_format($total_inicialsub,2,'.',','));
                 $objsheet->setCellValue('D'.$numero,number_format($total_cargossub,2,'.',','));
                 $objsheet->setCellValue('E'.$numero,number_format($total_abonossub,2,'.',','));
@@ -593,7 +593,7 @@ class BalanzaComprobacion extends MY_Controller
                 $objPHPExcel->getActiveSheet()->getStyle('C'.$numero.':G'.$numero)->applyFromArray($styleArray);
                 $numero++;
                 $objsheet->setCellValue('A'.$numero,$value['cuenta']);
-                $objsheet->setCellValue('B'.$numero,utf8_decode(isset($cutsn[0]['nombre']) ? $cutsn[0]['nombre'] : ''));
+                $objsheet->setCellValue('B'.$numero,isset($cutsn[0]['nombre']) ? $cutsn[0]['nombre'] : '');
                 $objsheet->setCellValue('C'.$numero,number_format($total_inicialcta,2,'.',','));
                 $objsheet->setCellValue('D'.$numero,number_format($total_cargoscta,2,'.',','));
                 $objsheet->setCellValue('E'.$numero,number_format($total_abonoscta,2,'.',','));
