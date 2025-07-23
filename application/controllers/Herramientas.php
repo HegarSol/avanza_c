@@ -60,7 +60,8 @@ class Herramientas extends MY_Controller
                 {
                     $tipo = $worksheet->getCellByColumnAndRow('0',$row)->getCalculatedValue(); //Serie
                     $folio = $worksheet->getCellByColumnAndRow('1',$row)->getCalculatedValue(); //Folio
-                    $fecha = $worksheet->getCellByColumnAndRow('2',$row)->getCalculatedValue(); //Fecha
+                    $fecha = $worksheet->getCellByColumnAndRow('2',$row)->getCalculatedValue() ; //Fecha
+                    $fecha = date('Y-m-d',strtotime($fecha)); //Convertir a formato Y-m-d
                     $rfc = $worksheet->getCellByColumnAndRow('3',$row)->getCalculatedValue(); //RFC
                     $cliente = $worksheet->getCellByColumnAndRow('4',$row)->getCalculatedValue(); //Cliente
                     $tc = $worksheet->getCellByColumnAndRow('5',$row)->getCalculatedValue(); //tc
@@ -91,7 +92,7 @@ class Herramientas extends MY_Controller
                         'tipo_mov' => 'I',
                         'no_banco' => 0,
                         'no_mov' => $folio,     //$max[0]['maxmov'],
-                        'fecha' => date('Y-m-d H:i:s'),
+                        'fecha' => $fecha, //date('Y-m-d H:i:s'),
                         'beneficia' => '',
                         'concepto' => 'Póliza de '.$serie .' de CFDI: '.$tipo.' '.$folio.' Cliente: '. $cliente,
                         'monto' => 0.00,
@@ -123,7 +124,7 @@ class Herramientas extends MY_Controller
                             'sub_cta' => $cta[0]['sub_cta'],
                             'monto' => $iva16,
                             'c_a' => $serie == 'ingreso' ? '-' :'+',
-                            'fecha' => date('Y-m-d H:i:s'),
+                            'fecha' => $fecha,
                             'concepto' => $cliente,
                             'referencia' => $tipo.'-'.$folio,
                             'no_prov' =>  0,
@@ -148,7 +149,7 @@ class Herramientas extends MY_Controller
                             'sub_cta' => $cta[0]['sub_cta'],
                             'monto' => $retiva,
                             'c_a' => $serie == 'ingreso' ? '+' :'-',
-                            'fecha' => date('Y-m-d H:i:s'),
+                            'fecha' => $fecha,
                             'concepto' => $cliente,
                             'referencia' => $tipo.'-'.$folio,
                             'no_prov' => 0,
@@ -172,7 +173,7 @@ class Herramientas extends MY_Controller
                     //         'sub_cta' => $sub_cta[$i],
                     //         'monto' => $monto[$i],
                     //         'c_a' => '+',
-                    //         'fecha' => date('Y-m-d H:i:s'),
+                    //         'fecha' => $fecha,
                     //         'concepto' => $concepto[$i],
                     //         'referencia' => $referencia[$i],
                     //         'no_prov' => $no_prov_fac[$i] = '' ? $no_prov_fac[$i] : 0,
@@ -196,7 +197,7 @@ class Herramientas extends MY_Controller
                     //         'sub_cta' => $sub_cta[$i],
                     //         'monto' => $monto[$i],
                     //         'c_a' => '+',
-                    //         'fecha' => date('Y-m-d H:i:s'),
+                    //         'fecha' => $fecha,
                     //         'concepto' => $concepto[$i],
                     //         'referencia' => $referencia[$i],
                     //         'no_prov' => $no_prov_fac[$i] = '' ? $no_prov_fac[$i] : 0,
@@ -261,7 +262,7 @@ class Herramientas extends MY_Controller
                             'sub_cta' => $cta[0]['sub_cta'],
                             'monto' => $subtotalxtc,
                             'c_a' => $serie == 'ingreso' ? '-' :'+',
-                            'fecha' => date('Y-m-d H:i:s'),
+                            'fecha' => $fecha,
                             'concepto' => $cliente,
                             'referencia' => $tipo.'-'.$folio,
                             'no_prov' => 0,
@@ -294,7 +295,7 @@ class Herramientas extends MY_Controller
                             'sub_cta' => $cta[0]['sub_cta'],
                             'monto' => $totalxtc,
                             'c_a' => $serie == 'ingreso' ? '+' :'-',
-                            'fecha' => date('Y-m-d H:i:s'),
+                            'fecha' => $fecha,
                             'concepto' => $cliente,
                             'referencia' => $tipo.'-'.$folio,
                             'no_prov' => 0,
