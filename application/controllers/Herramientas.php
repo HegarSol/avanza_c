@@ -60,7 +60,8 @@ class Herramientas extends MY_Controller
                 {
                     $tipo = $worksheet->getCellByColumnAndRow('0',$row)->getCalculatedValue(); //Serie
                     $folio = $worksheet->getCellByColumnAndRow('1',$row)->getCalculatedValue(); //Folio
-                    $fecha = $worksheet->getCellByColumnAndRow('2',$row)->getCalculatedValue(); //Fecha
+                    $fecha = $worksheet->getCellByColumnAndRow('2',$row)->getCalculatedValue() ; //Fecha
+                    $fecha = date('Y-m-d',strtotime($fecha)); //Convertir a formato Y-m-d
                     $rfc = $worksheet->getCellByColumnAndRow('3',$row)->getCalculatedValue(); //RFC
                     $cliente = $worksheet->getCellByColumnAndRow('4',$row)->getCalculatedValue(); //Cliente
                     $tc = $worksheet->getCellByColumnAndRow('5',$row)->getCalculatedValue(); //tc
@@ -88,10 +89,10 @@ class Herramientas extends MY_Controller
                   //  var_dump($max);
 
                     $datos = array(
-                        'tipo_mov' => 'O',
+                        'tipo_mov' => 'I',
                         'no_banco' => 0,
-                        'no_mov' => $max[0]['maxmov'],
-                        'fecha' => date('Y-m-d H:i:s'),
+                        'no_mov' => $folio,     //$max[0]['maxmov'],
+                        'fecha' => $fecha, //date('Y-m-d H:i:s'),
                         'beneficia' => '',
                         'concepto' => 'Póliza de '.$serie .' de CFDI: '.$tipo.' '.$folio.' Cliente: '. $cliente,
                         'monto' => 0.00,
@@ -100,7 +101,7 @@ class Herramientas extends MY_Controller
                         'cerrado' => 0,
                         'no_prov' => 0,
                         'fechaCobro' => null,
-                        'impreso' => 0,
+                        'impreso' => 1,
                         'afectar' => 0,
                         'bancosat' => '',
                         'bene_ctaban' => '',
@@ -123,7 +124,7 @@ class Herramientas extends MY_Controller
                             'sub_cta' => $cta[0]['sub_cta'],
                             'monto' => $iva16,
                             'c_a' => $serie == 'ingreso' ? '-' :'+',
-                            'fecha' => date('Y-m-d H:i:s'),
+                            'fecha' => $fecha,
                             'concepto' => $cliente,
                             'referencia' => $tipo.'-'.$folio,
                             'no_prov' =>  0,
@@ -148,7 +149,7 @@ class Herramientas extends MY_Controller
                             'sub_cta' => $cta[0]['sub_cta'],
                             'monto' => $retiva,
                             'c_a' => $serie == 'ingreso' ? '+' :'-',
-                            'fecha' => date('Y-m-d H:i:s'),
+                            'fecha' => $fecha,
                             'concepto' => $cliente,
                             'referencia' => $tipo.'-'.$folio,
                             'no_prov' => 0,
@@ -172,7 +173,7 @@ class Herramientas extends MY_Controller
                     //         'sub_cta' => $sub_cta[$i],
                     //         'monto' => $monto[$i],
                     //         'c_a' => '+',
-                    //         'fecha' => date('Y-m-d H:i:s'),
+                    //         'fecha' => $fecha,
                     //         'concepto' => $concepto[$i],
                     //         'referencia' => $referencia[$i],
                     //         'no_prov' => $no_prov_fac[$i] = '' ? $no_prov_fac[$i] : 0,
@@ -196,7 +197,7 @@ class Herramientas extends MY_Controller
                     //         'sub_cta' => $sub_cta[$i],
                     //         'monto' => $monto[$i],
                     //         'c_a' => '+',
-                    //         'fecha' => date('Y-m-d H:i:s'),
+                    //         'fecha' => $fecha,
                     //         'concepto' => $concepto[$i],
                     //         'referencia' => $referencia[$i],
                     //         'no_prov' => $no_prov_fac[$i] = '' ? $no_prov_fac[$i] : 0,
@@ -261,7 +262,7 @@ class Herramientas extends MY_Controller
                             'sub_cta' => $cta[0]['sub_cta'],
                             'monto' => $subtotalxtc,
                             'c_a' => $serie == 'ingreso' ? '-' :'+',
-                            'fecha' => date('Y-m-d H:i:s'),
+                            'fecha' => $fecha,
                             'concepto' => $cliente,
                             'referencia' => $tipo.'-'.$folio,
                             'no_prov' => 0,
@@ -272,10 +273,19 @@ class Herramientas extends MY_Controller
                         $detalle = $this->opera->guardarDetalle($detalle);                        
                     }
   
-                    //TOTAL DE LA FACTURA CON LA CONFIGURACION 9
+
+                    //TOTAL DE LA FACTURA CON LA CONFIGURACION 9 (CLIENTE MXN) O 57 CLIENTE USD
                     if($total > 0)
                     {
-                        $cta = $this->conficue->getidcuentaconfi(9);
+                        if($rfc == 'XEXX010101000')
+                        {
+                            $cta = $this->conficue->getidcuentaconfi(57);
+                        }
+                        else
+                        {
+                            $cta = $this->conficue->getidcuentaconfi(9);
+                        }
+
                         $detalle = array(
                             'id_encabezado' => $id,
                             'tipo_mov' => 'O',
@@ -286,7 +296,7 @@ class Herramientas extends MY_Controller
                             'sub_cta' => $cta[0]['sub_cta'],
                             'monto' => $totalxtc,
                             'c_a' => $serie == 'ingreso' ? '+' :'-',
-                            'fecha' => date('Y-m-d H:i:s'),
+                            'fecha' => $fecha,
                             'concepto' => $cliente,
                             'referencia' => $tipo.'-'.$folio,
                             'no_prov' => 0,
