@@ -88,9 +88,9 @@ class Herramientas extends MY_Controller
                   //  var_dump($max);
 
                     $datos = array(
-                        'tipo_mov' => 'O',
+                        'tipo_mov' => 'I',
                         'no_banco' => 0,
-                        'no_mov' => $max[0]['maxmov'],
+                        'no_mov' => $folio,     //$max[0]['maxmov'],
                         'fecha' => date('Y-m-d H:i:s'),
                         'beneficia' => '',
                         'concepto' => 'Póliza de '.$serie .' de CFDI: '.$tipo.' '.$folio.' Cliente: '. $cliente,
@@ -100,7 +100,7 @@ class Herramientas extends MY_Controller
                         'cerrado' => 0,
                         'no_prov' => 0,
                         'fechaCobro' => null,
-                        'impreso' => 0,
+                        'impreso' => 1,
                         'afectar' => 0,
                         'bancosat' => '',
                         'bene_ctaban' => '',
@@ -272,10 +272,18 @@ class Herramientas extends MY_Controller
                         $detalle = $this->opera->guardarDetalle($detalle);                        
                     }
   
-                    //TOTAL DE LA FACTURA CON LA CONFIGURACION 2
+                    //TOTAL DE LA FACTURA CON LA CONFIGURACION 9 (CLIENTE MXN) O 57 CLIENTE USD
                     if($total > 0)
                     {
-                        $cta = $this->conficue->getidcuentaconfi(2);
+                        if($rfc == 'XEXX010101000')
+                        {
+                            $cta = $this->conficue->getidcuentaconfi(57);
+                        }
+                        else
+                        {
+                            $cta = $this->conficue->getidcuentaconfi(9);
+                        }
+
                         $detalle = array(
                             'id_encabezado' => $id,
                             'tipo_mov' => 'O',
