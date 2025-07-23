@@ -197,15 +197,15 @@ class OperacionesModel extends MY_Model
 
         return $row->result_array();
     }
-    public function saldoinicial($cuenta,$subcuen,$subcu2,$fechaini)
+    public function saldoinicial($cuenta,$subcuen,$ssubcue,$fechaini)
     {
-      $row = $this->db2->select('cuenta,sub_cta,SUM(IF(c_a = "+",monto,-monto)) as saldo')
+      $row = $this->db2->select('cuenta,sub_cta,ssub_cta,SUM(IF(c_a = "+",monto,-monto)) as saldo')
       ->from('opera_banco_detalle')
       ->where('cuenta',$cuenta)
       ->where('sub_cta',$subcuen)
-      ->where('ssub_cta',$subcu2)
+      ->where('ssub_cta',$ssubcue)
       ->where('fecha <',$fechaini)
-      ->group_by('cuenta,sub_cta')
+      ->group_by('cuenta,sub_cta,ssub_cta')
       ->get();
 
       return $row->result_array();
