@@ -273,6 +273,7 @@ class Herramientas extends MY_Controller
                         $detalle = $this->opera->guardarDetalle($detalle);                        
                     }
   
+
                     //TOTAL DE LA FACTURA CON LA CONFIGURACION 9 (CLIENTE MXN) O 57 CLIENTE USD
                     if($total > 0)
                     {
