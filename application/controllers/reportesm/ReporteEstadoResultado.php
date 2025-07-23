@@ -10,10 +10,10 @@ class ReporteEstadoResultado extends MY_Controller
         $this->multi_menu->set_items($items);
         $this->load->view('templates/header');
         $this->load->model('Configuraciones_model','configModel');
-        $this->load->model('BeneficiarioModel','beneficiario');
-        $this->load->model('OperacionesModel','operaciones');
+        //$this->load->model('BeneficiarioModel','beneficiario');
+        //$this->load->model('OperacionesModel','operaciones');
         $this->load->model('CuentasModel','cuentas');
-        $this->load->model('BancosModel','bancos');
+        //$this->load->model('BancosModel','bancos');
         $this->load->library('Pdf');
         $this->load->library('PHPExcel');
     }
@@ -114,8 +114,8 @@ class ReporteEstadoResultado extends MY_Controller
         $objsheet->setCellValue('A3','Periodo: '.$meseletra.' - Ejercicio: '.$anol);
 
 
-        $objsheet->setCellValue('A5','Cuenta');
-        $objsheet->setCellValue('B5','Subcuenta');
+        $objsheet->setCellValue('B5','Cuenta');
+        //$objsheet->setCellValue('B5','Subcuenta');
         $objsheet->setCellValue('C5','Nombre');
         $objsheet->setCellValue('D5','Inicial');
         $objsheet->setCellValue('E5','');
@@ -198,10 +198,9 @@ class ReporteEstadoResultado extends MY_Controller
             {
                 case 1:
 
-                    $objsheet->setCellValue('A'.$numero3,$data[$i]->cuenta);
+                    $objsheet->setCellValue('A'.$numero3,'');
                     $objsheet->setCellValue('A'.$numero4,'TOTAL INGRESOS');
-    
-                    $objsheet->setCellValue('B'.$numero3,$data[$i]->sub_cta);
+                    $objsheet->setCellValue('B'.$numero3,$data[$i]->cuenta.' - '.$data[$i]->sub_cta.' - '.$data[$i]->ssub_cta);
                     $objsheet->setCellValue('C'.$numero3,$data[$i]->nombre);
                     $objsheet->setCellValue('D'.$numero3,number_format(abs($data[$i]->sini),2,'.',','));
     
@@ -231,10 +230,10 @@ class ReporteEstadoResultado extends MY_Controller
                    break;
                 case 2:
 
-                    $objsheet->setCellValue('A'.$numero5,$data[$i]->cuenta);
+                    $objsheet->setCellValue('A'.$numero5,'');
                     $objsheet->setCellValue('A'.$numero6,'UTILIDAD BRUTA');
     
-                    $objsheet->setCellValue('B'.$numero5,$data[$i]->sub_cta);
+                    $objsheet->setCellValue('B'.$numero5,$data[$i]->cuenta.' - '.$data[$i]->sub_cta.' - '.$data[$i]->ssub_cta);
                     $objsheet->setCellValue('C'.$numero5,$data[$i]->nombre);
                     $objsheet->setCellValue('C'.$numero6,'');
                     $objsheet->setCellValue('D'.$numero5,number_format($data[$i]->sini,2,'.',','));
@@ -265,10 +264,10 @@ class ReporteEstadoResultado extends MY_Controller
                    break;
                 case 3:
 
-                    $objsheet->setCellValue('A'.$numero7,$data[$i]->cuenta);
+                    $objsheet->setCellValue('A'.$numero7,'');
                     $objsheet->setCellValue('A'.$numero8,'TOTAL GASTOS');
     
-                    $objsheet->setCellValue('B'.$numero7,$data[$i]->sub_cta);
+                    $objsheet->setCellValue('B'.$numero7,$data[$i]->cuenta.' - '.$data[$i]->sub_cta.' - '.$data[$i]->ssub_cta);
                     $objsheet->setCellValue('C'.$numero7,$data[$i]->nombre);
                     $objsheet->setCellValue('D'.$numero7,number_format($data[$i]->sini,2,'.',','));
     
@@ -298,10 +297,10 @@ class ReporteEstadoResultado extends MY_Controller
                    break;
                 case 4:
 
-                    $objsheet->setCellValue('A'.$numero9,$data[$i]->cuenta);
+                    $objsheet->setCellValue('A'.$numero9,'');
                     $objsheet->setCellValue('A'.$numero10,'GASTOS FINANCIEROS');
     
-                    $objsheet->setCellValue('B'.$numero9,$data[$i]->sub_cta);
+                    $objsheet->setCellValue('B'.$numero9,$data[$i]->cuenta.' - '.$data[$i]->sub_cta.' - '.$data[$i]->ssub_cta);
                     $objsheet->setCellValue('C'.$numero9,$data[$i]->nombre);
                     $objsheet->setCellValue('D'.$numero9,number_format($data[$i]->sini,2,'.',','));
     
@@ -352,7 +351,7 @@ class ReporteEstadoResultado extends MY_Controller
         );
 
         $lastrow = $objPHPExcel->getActiveSheet()->getHighestRow();
-
+        $objPHPExcel->getActiveSheet()->getStyle('B6:B'.$lastrow)->applyFromArray($styleleft);
         $objPHPExcel->getActiveSheet()->getStyle('C1:C'.$lastrow)->applyFromArray($styleleft);
 
         $objPHPExcel->getActiveSheet()->getStyle('D6:D'.$lastrow)->applyFromArray($styleright);
