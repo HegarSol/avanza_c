@@ -73,11 +73,11 @@ class Herramientas extends MY_Controller
                     $total = $worksheet->getCellByColumnAndRow('11',$row)->getCalculatedValue(); //total
                     $metodo_pago = $worksheet->getCellByColumnAndRow('12',$row)->getCalculatedValue(); //metodo de pago
                     $objetoImp = $worksheet->getCellByColumnAndRow('13',$row)->getCalculatedValue(); //objeto de impuesto
-
+                    $tipoPoliza = 'I'; //Tipo de poliza 
                     $subtotalxtc = $tc * $subtotal;
                     $totalxtc = $tc * $total;
 
-                    $max = $this->opera->maxid();
+                    $max = $this->opera->maxidIngreso();
                     if($tipo == 'NC')
                     {
                         $serie = 'egreso';
@@ -89,7 +89,7 @@ class Herramientas extends MY_Controller
                   //  var_dump($max);
 
                     $datos = array(
-                        'tipo_mov' => 'I',
+                        'tipo_mov' => $tipoPoliza,
                         'no_banco' => 0,
                         'no_mov' => $max[0]['maxmov'],
                         'fecha' => $fecha, //date('Y-m-d H:i:s'),
@@ -116,7 +116,7 @@ class Herramientas extends MY_Controller
                         $cta = $this->conficue->getidcuentaconfi(10);
                         $detalle = array(
                             'id_encabezado' => $id,
-                            'tipo_mov' => 'O',
+                            'tipo_mov' => $tipoPoliza,
                             'no_banco' => 0,
                             'no_mov' => $max[0]['maxmov'],
                             'ren' => 0,
@@ -141,7 +141,7 @@ class Herramientas extends MY_Controller
                         $cta = $this->conficue->getidcuentaconfi(12);
                         $detalle = array(
                             'id_encabezado' => $id,
-                            'tipo_mov' => 'O',
+                            'tipo_mov' => $tipoPoliza,
                             'no_banco' => 0,
                             'no_mov' => $max[0]['maxmov'],
                             'ren' => 0,
@@ -165,7 +165,7 @@ class Herramientas extends MY_Controller
                     //     $cta = $this->conficue->getidcuentaconfi(15);
                     //     $detalle = array(
                     //         'id_encabezado' => $id,
-                    //         'tipo_mov' => 'O',
+                    //         'tipo_mov' => $tipoPoliza,
                     //         'no_banco' => 0,
                     //         'no_mov' => $max[0]['maxmov'],
                     //         'ren' => 0,
@@ -189,7 +189,7 @@ class Herramientas extends MY_Controller
                     //     $cta = $this->conficue->getidcuentaconfi(15);
                     //     $detalle = array(
                     //         'id_encabezado' => $id,
-                    //         'tipo_mov' => 'O',
+                    //         'tipo_mov' => $tipoPoliza,
                     //         'no_banco' => 0,
                     //         'no_mov' => $max[0]['maxmov'],
                     //         'ren' => 0,
@@ -254,7 +254,7 @@ class Herramientas extends MY_Controller
                        
                         $detalle = array(
                             'id_encabezado' => $id,
-                            'tipo_mov' => 'O',
+                            'tipo_mov' => $tipoPoliza,
                             'no_banco' => 0,
                             'no_mov' => $max[0]['maxmov'],
                             'ren' => 0,
@@ -288,7 +288,7 @@ class Herramientas extends MY_Controller
 
                         $detalle = array(
                             'id_encabezado' => $id,
-                            'tipo_mov' => 'O',
+                            'tipo_mov' => $tipoPoliza,
                             'no_banco' => 0,
                             'no_mov' => $max[0]['maxmov'],
                             'ren' => 0,
