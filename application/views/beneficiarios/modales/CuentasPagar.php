@@ -723,6 +723,7 @@ function agregarpoliza()
    }
    else
    {
+      checartodo();
       var fecha_poliza = document.getElementById('fechatrabajo').value;
       var tipo_mov = '<?php if(isset($tipo) == 1){echo 'T';}else if(isset($tipo) == 2){ echo 'C'; } ?>';
       var no_banco = '<?php echo isset($datos[0]["no_banco"]) ? $datos[0]["no_banco"] : '' ;?>';
@@ -1654,12 +1655,21 @@ function borarpoliza()
       {
            jQuery.ajax({
               type: "POST",
-              url: baseurl + "",
-              data: {},
+              url: baseurl + "catalogos/Beneficiarios/borrarpoliza",
+              data: {uuid:aData[0][2],poliza:aData[0][27]},
               dataType:"html",
               success:function(response)
               {
-
+                   response=JSON.parse(response);
+                    if(response.status == true)
+                    {
+                      verTabla('<?php echo $rfc ?>','<?php echo $tipo_letra ?>');
+                      swal("Correcto","Póliza de provision eliminado correctamente.","success");                      
+                    }
+                    else
+                    {
+                      swal("Advertencia",response.error,"warning");
+                    }
               }
            });
       }

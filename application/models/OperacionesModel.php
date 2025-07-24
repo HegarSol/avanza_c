@@ -368,5 +368,10 @@ class OperacionesModel extends MY_Model
         $this->db2->update('opera_banco_detalle',$datos);
         return true;
     }
+    public function borrarprovisiondetalle($int)
+    {
+        $this->db2->where('tipo_mov','P')->where('no_banco',0)->where('no_mov',$int);
+        return $this->db2->delete('opera_banco_detalle');
+    }
 
 }
