@@ -326,7 +326,7 @@ class Operaciones extends MY_Controller
         $tipoproveedor = $this->input->post('tipoproveedor');
 
         $uuidpoliza = $this->input->post('uuidpoliza');
-        $poliza_contble = $tipo_movimento.'  '.$numero_banco.'        '.$numero_movimento;
+        $poliza_contble = $tipo_movimento.str_pad($numero_banco, 2, ' ', STR_PAD_LEFT).str_pad($numero_movimento, 8, ' ', STR_PAD_LEFT);
 
         $uuidsep = substr($uuidpoliza, 0, -1);
 
@@ -399,8 +399,9 @@ class Operaciones extends MY_Controller
                $correcto = true;
 
                $this->opera->actualizarmovimiento($numero_banco,$tipo_movimento,$numero_movimento);
-     
-                if($uuidpoliza =! '' && $ca_poli == '-' && $tipo_movimento == 'T' || $tipo_movimento == 'C')
+           }
+        }   
+           if($uuidpoliza =! '' && ($ca_poli == '-' && $tipo_movimento == 'T') || $tipo_movimento == 'C')
                 {
                     foreach($uuidsep as $uid)
                     {
@@ -425,8 +426,6 @@ class Operaciones extends MY_Controller
                      
                     }
                  }
-           }
-       }
 
        if($correcto == true)
        {
