@@ -682,6 +682,7 @@ class Bancos extends MY_Controller
         $uuid = $this->input->post('uuid');
 
 
+
         if($clasi == 1)
         {
 
@@ -735,14 +736,14 @@ class Bancos extends MY_Controller
             $dast=$this->bancos->datosBancos($id);
         }
         
-                // if(ENVIRONMENT == 'development')
-                //         {
-                //             $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/actualizarreferencia");
-                //         }
-                //         else
-                //         {
+                if(ENVIRONMENT == 'development')
+                        {
+                            $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/actualizarreferencia");
+                        }
+                        else
+                        {
                              $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/actualizarreferencia");
-                        // }
+                         }
          //foreach($uuid as $uuids )
          for ($i = 0; $i < count($uuid); $i++)
          {
