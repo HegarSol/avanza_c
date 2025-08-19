@@ -58,7 +58,7 @@ class Herramientas extends MY_Controller
 
                 for ($row = 2; $row <= $highestRow; ++ $row) 
                 {
-                    $tipo = $worksheet->getCellByColumnAndRow('0',$row)->getCalculatedValue(); //Serie
+                    $serie = $worksheet->getCellByColumnAndRow('0',$row)->getCalculatedValue(); //Serie
                     $folio = $worksheet->getCellByColumnAndRow('1',$row)->getCalculatedValue(); //Folio
                     $fecha = $worksheet->getCellByColumnAndRow('2',$row)->getCalculatedValue() ; //Fecha
                     $fecha = date('Y-m-d',strtotime($fecha)); //Convertir a formato Y-m-d
@@ -78,13 +78,13 @@ class Herramientas extends MY_Controller
                     $totalxtc = $tc * $total;
 
                     $max = $this->opera->maxidIngreso();
-                    if($tipo == 'NC')
+                    if($serie == 'NC')
                     {
-                        $serie = 'egreso';
+                        $tipo = 'egreso';
                     }
                     else
                     {
-                        $serie = 'ingreso';
+                        $tipo = 'ingreso';
                     }
                   //  var_dump($max);
 
@@ -94,7 +94,7 @@ class Herramientas extends MY_Controller
                         'no_mov' => $max[0]['maxmov'],
                         'fecha' => $fecha, //date('Y-m-d H:i:s'),
                         'beneficia' => '',
-                        'concepto' => 'Póliza de '.$serie .' de CFDI: '.$tipo.' '.$folio.' Cliente: '. $cliente,
+                        'concepto' => 'Póliza de '.$tipo .' de CFDI: '.$tipo.' '.$folio.' Cliente: '. $cliente,
                         'monto' => 0.00,
                         'c_a' => '',
                         'cobrado' => 0,
@@ -123,7 +123,7 @@ class Herramientas extends MY_Controller
                             'cuenta' => $cta[0]['cuenta'],
                             'sub_cta' => $cta[0]['sub_cta'],
                             'monto' => $iva16,
-                            'c_a' => $serie == 'ingreso' ? '-' :'+',
+                            'c_a' => $tipo == 'ingreso' ? '-' :'+',
                             'fecha' => $fecha,
                             'concepto' => $cliente,
                             'referencia' => $tipo.'-'.$folio,
@@ -148,7 +148,7 @@ class Herramientas extends MY_Controller
                             'cuenta' => $cta[0]['cuenta'],
                             'sub_cta' => $cta[0]['sub_cta'],
                             'monto' => $retiva,
-                            'c_a' => $serie == 'ingreso' ? '+' :'-',
+                            'c_a' => $tipo == 'ingreso' ? '+' :'-',
                             'fecha' => $fecha,
                             'concepto' => $cliente,
                             'referencia' => $tipo.'-'.$folio,
@@ -211,6 +211,16 @@ class Herramientas extends MY_Controller
                     //EL SUBTTOAL DE LA FACTURA SE IRA A LA CONFIGURACION 14
                     if($subtotal > 0)
                     {
+                        $ctaSer = $this->conficue->getcuentaSeries($Serie);
+                        if(!empty($ctaSer))
+                        {
+                            $subcta = $ctaSer[0]['sub_cta'];
+                        }
+                        else
+                        {
+                            $subcta = '9999';
+                        }
+                        
                         if($objetoImp == '2' || $objetoImp == '3')
                         {
                             if($iva16 > 0)
@@ -259,9 +269,9 @@ class Herramientas extends MY_Controller
                             'no_mov' => $max[0]['maxmov'],
                             'ren' => 0,
                             'cuenta' => $cta[0]['cuenta'],
-                            'sub_cta' => $cta[0]['sub_cta'],
+                            'sub_cta' => ($subcta=='9999') ? $cta[0]['sub_cta'] : $subcta,
                             'monto' => $subtotalxtc,
-                            'c_a' => $serie == 'ingreso' ? '-' :'+',
+                            'c_a' => $tipo == 'ingreso' ? '-' :'+',
                             'fecha' => $fecha,
                             'concepto' => $cliente,
                             'referencia' => $tipo.'-'.$folio,
@@ -295,7 +305,7 @@ class Herramientas extends MY_Controller
                             'cuenta' => $cta[0]['cuenta'],
                             'sub_cta' => $cta[0]['sub_cta'],
                             'monto' => $totalxtc,
-                            'c_a' => $serie == 'ingreso' ? '+' :'-',
+                            'c_a' => $tipo == 'ingreso' ? '+' :'-',
                             'fecha' => $fecha,
                             'concepto' => $cliente,
                             'referencia' => $tipo.'-'.$folio,

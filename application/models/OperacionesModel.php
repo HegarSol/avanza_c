@@ -47,6 +47,12 @@ class OperacionesModel extends MY_Model
         $row = $this->db2->select('*')->from('configctanomina')->where('cuenta',$cta)->where('sub_cta',$subcta)->get();
         return $row->result_array();
     }
+    public function getcuentaSeries($serie)
+    {
+        $row = $this->db2->select('*')->from('configctaseries')->where('serie',$serie)->get();
+        return $row->result_array();
+    }
+
     public function actualizarmovimiento($numero_banco,$tipo_movimento,$numero_movimento)
     {
         if($tipo_movimento == 'T')
