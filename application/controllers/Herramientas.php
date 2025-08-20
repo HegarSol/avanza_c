@@ -211,7 +211,7 @@ class Herramientas extends MY_Controller
                     //EL SUBTTOAL DE LA FACTURA SE IRA A LA CONFIGURACION 14
                     if($subtotal > 0)
                     {
-                        $ctaSer = $this->conficue->getcuentaSeries($Serie);
+                        $ctaSer = $this->opera->getcuentaSeries($serie);
                         if(!empty($ctaSer))
                         {
                             $subcta = $ctaSer[0]['sub_cta'];

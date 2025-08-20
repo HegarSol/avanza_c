@@ -23,7 +23,8 @@ class Polizasdiarias extends MY_Controller
            $permisos = $this->permisosForma($_SESSION['id'],9);
            if(isset($permisos) && $permisos['leer'] == "1")
            {
-                     $data = array('titulo' => 'Pólizas diario', 'permisosGrupo' => $permisos);
+                     $series = ['O','I'];
+                     $data = array('titulo' => 'Pólizas diario', 'permisosGrupo' => $permisos, 'series' => $series);
                      $this->load->view('templates/navigation',$data);
                      $this->load->view('polizas/index');
                      $this->load->view('templates/footer');
@@ -40,14 +41,16 @@ class Polizasdiarias extends MY_Controller
     }
     public function ajax_list()
     {
-        $where=array('tipo_mov' => 'O');
-        $list = $this->opera->get_datatables($where);
+       // $where=array('tipo_mov' => 'O');
+        $list = $this->opera->get_datatables();
 
         $data = array();
         foreach($list as $opera)
         {
             $row = array();
             $row[] = $opera->no_mov;
+            $row[] = $opera->tipo_mov;
+            $row[] = $opera->tipo_mov;
             $row[] = date('d-m-Y',strtotime($opera->fecha));
             $row[] = $opera->concepto;
             $row[] = '<a href="'.base_url().'catalogos/Polizasdiarias/editar/'.$opera->id.'" class="btn btn-primary" title="Editar póliza diaria"><i class="fa fa-pencil-square-o"></i></a>
@@ -62,8 +65,9 @@ class Polizasdiarias extends MY_Controller
         );
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
-    public function agregar()
+    public function agregar($tipo_mo)
     {
+
         if($this->aauth->is_loggedin())
         {
             $permisos = $this->permisosForma($_SESSION['id'],9);
@@ -72,7 +76,7 @@ class Polizasdiarias extends MY_Controller
                 $rfc = $this->configModel->getConfig();
                 $formapago = $this->cat->selectformapago();
                 $monedas = $this->cat->selectmoneda();
-                $max = $this->opera->maxid();
+                $max = $this->opera->maxid($tipo_mo);
                 //$count = $this->opera->existemesdiaria();
 
                 $concecutivo = $max[0]['maxmov'];
@@ -80,7 +84,7 @@ class Polizasdiarias extends MY_Controller
               //  var_dump($count);
 
                 $tipo = '4';
-                $tipo_letra = 'O';
+                $tipo_letra = $tipo_mo;
                 $no_banco = 0;
 
                 $CXP = 'BAN';
@@ -128,7 +132,7 @@ class Polizasdiarias extends MY_Controller
                  $totalmontopoliza = 0;
 
                  $tipo = '4';
-                 $letra = 'O';
+                 $letra = $datos[0]['tipo_mov'];
                  $no_banco = 0;
 
                  $pagos = $this->pagos->get_pagos_by_movi($datos[0]['no_mov'],$letra);

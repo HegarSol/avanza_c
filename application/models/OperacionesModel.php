@@ -109,11 +109,11 @@ class OperacionesModel extends MY_Model
         $row = $this->db2->select('*')->from('opera_banco_detalle')->where('tipo_mov','P')->where('no_banco','0')->where('no_mov',$mov)->get();
         return $row->result_array();
     }
-    public function maxid()
+    public function maxid($tipo_mo)
     {
 
         $con = '0001';
-        $tipo = 'O';
+        $tipo = $tipo_mo;
 
         $año = substr($_SESSION['ano'], -2);
         $mes = $_SESSION['mes'];

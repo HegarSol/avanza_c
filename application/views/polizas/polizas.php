@@ -24,7 +24,7 @@ $this->load->view('beneficiarios/modales/ModalXML');
               </div>
               <div class="col-sm-1">
                  <b>Tipo:</b>
-                 <input type="text" id="tipo" name="tipo" class="form-control" readonly value="O">
+                 <input type="text" id="tipo" name="tipo" class="form-control" readonly value="<?php echo $tipo_letra;?>">
               </div>
               <div class="col-sm-2">
                 <b>Consecutivo: </b>
@@ -287,7 +287,7 @@ function recogerDatosPoliza(tableID)
          {
                 //cabezara poliza
                     var id = document.getElementById('identi').value;
-                    var tipo_movimiento = 'O';
+                    var tipo_movimiento = '<?php echo $tipo_letra;?>';
                     var numero_movimiento = document.getElementById('no_mov').value;
                     var fechapoli = document.getElementById('fechatrabajo').value;
                     var conceptopoli = document.getElementById('concepto').value;

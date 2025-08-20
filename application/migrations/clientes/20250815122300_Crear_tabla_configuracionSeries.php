@@ -1,5 +1,5 @@
 <?php
-      class Migration_Crear_tabla_configuracion_series extends CI_Migration{
+      class Migration_Crear_tabla_configuracionSeries extends CI_Migration{
         public function up()
         {
           $script = "CREATE TABLE `configctaseries` (
