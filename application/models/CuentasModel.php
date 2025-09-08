@@ -120,7 +120,7 @@
         }
         public function getdiot($fechaini,$fechafin)
         {
-            $query = $this->db2->query('CALL getDiot(\''.$fechaini.'\',\''.$fechafin.'\')');
+            $query = $this->db2->query('CALL diotUltimate(\''.$fechaini.'\',\''.$fechafin.'\')');
             return $query->result();
         }
         public function getestadoresultado($tf0,$tfi,$tff)
