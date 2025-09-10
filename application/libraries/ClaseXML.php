@@ -20,13 +20,13 @@ class ClaseXML
           $xml->formatOutput = TRUE;
           $root = $xml->appendChild($root);
           $this->satxmlsv32_cargaAtt($root, array(
-              'xmlns:BCE'=>'http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/BalanzaComprobacion',
+              'xmlns:BCE'=>'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion',
               'xmlns:xsi'=>'http://www.w3.org/2001/XMLSchema-instance',
-              'xsi:schemaLocation'=>'http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/BalanzaComprobacion http://www.sat.gob.mx/esquemas/ContabilidadE/1_1/BalanzaComprobacion/BalanzaComprobacion_1_1.xsd'
+              'xsi:schemaLocation'=>'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion/BalanzaComprobacion_1_3.xsd'
           ));
 
           $this->satxmlsv32_cargaAtt($root,array(
-              'Version'=>1.1,
+              'Version'=>1.3,
               'Mes'=>$mes,
               'Anio'=>$ano,
               'RFC'=>$rfc
@@ -116,7 +116,7 @@ class ClaseXML
                    )
                 );
 
-                if($cuentas[$i]['sub_cta'] > 0 || $cuentas[$i]['ssub_cta'] > 0)
+                if(strlen($cuentas[$i]['ctasat']) > 3)
                     {
                         $this->satxmlsv32_cargaAtt(
                             $ctacuentas,
