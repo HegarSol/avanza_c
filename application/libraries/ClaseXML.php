@@ -49,7 +49,7 @@ class ClaseXML
                 $this->satxmlsv32_cargaAtt(
                     $cnt,
                     array(
-                        'NumCta'=>$datos[$i]['cuenta'].$datos[$i]['sub_cta'],
+                        'NumCta'=> str_pad($datos[$i]['cuenta'],4,"0",STR_PAD_LEFT).str_pad($datos[$i]['sub_cta'],4,"0",STR_PAD_LEFT).str_pad($datos[$i]['ssub_cta'],4,"0",STR_PAD_LEFT),
                         'SaldoIni'=>number_format($datos[$i]['sini'],2,'.',''),
                         'Debe'=>number_format($datos[$i]['cargos'],2,'.',''),
                         'Haber'=>number_format($datos[$i]['abonos'],2,'.',''),
@@ -67,7 +67,7 @@ class ClaseXML
      {
 
          $cuentas = $this->CI->cuentas->getCuentas();
-        
+             
 
          $root = '';
          $xml = new DOMdocument('1.0','UTF-8');
@@ -104,9 +104,10 @@ class ClaseXML
                $this->satxmlsv32_cargaAtt(
                    $ctacuentas,
                    array(
-                    'NumCta' => '0'.$cuentas[$i]['cuenta'].$cuentas[$i]['sub_cta'].$cuentas[$i]['ssub_cta'],
+                    'NumCta' => str_pad($cuentas[$i]['cuenta'],4,"0",STR_PAD_LEFT).str_pad($cuentas[$i]['sub_cta'],4,"0",STR_PAD_LEFT).str_pad($cuentas[$i]['ssub_cta'],4,"0",STR_PAD_LEFT) ,
                    )
                );
+
 
                $this->satxmlsv32_cargaAtt(
                    $ctacuentas,
@@ -115,44 +116,24 @@ class ClaseXML
                    )
                 );
 
-                if($cuentas[$i]['sub_cta'] == 0 && $cuentas[$i]['ssub_cta'] == 0)
-                 {
-                    
-                 }
-                 else
-                 {
-
-                    if('0'.$cuentas[$i]['cuenta'] == '0'.$cuentas[$i]['cuenta'])
+                if($cuentas[$i]['sub_cta'] > 0 || $cuentas[$i]['ssub_cta'] > 0)
                     {
                         $this->satxmlsv32_cargaAtt(
                             $ctacuentas,
                             array(
-                            'SubCtaDe' => '0'.$cuentas[$i]['cuenta'].'0000',
+                            'SubCtaDe' => str_pad($cuentas[$i]['cuenta'],4,"0",STR_PAD_LEFT).'0000',
                             )
                         );   
                     }
 
-                 }
-
-                 if($cuentas[$i]['sub_cta'] == 0 && $cuentas[$i]['ssub_cta'] == 0)
-                 {
+                 
                     $this->satxmlsv32_cargaAtt(
                         $ctacuentas,
                         array(
-                         'Nivel' => 1,
+                         'Nivel' => (strlen($cuentas[$i]['ctasat']) > 3)?2:1,
                         )
                      );
-                 }
-                 else
-                 {
-                    $this->satxmlsv32_cargaAtt(
-                        $ctacuentas,
-                        array(
-                         'Nivel' => 2,
-                        )
-                     );
-                 }
-
+                 
                  $this->satxmlsv32_cargaAtt(
                     $ctacuentas,
                     array(
@@ -164,6 +145,7 @@ class ClaseXML
             
             $xml->formatOutput = true;
             //$xml->save('XMLPruebas.xml');
+            //$oData = array('error' =>  $xml->saveXML(), 'estatus' => true);
             return $xml->saveXML();
 
      }
