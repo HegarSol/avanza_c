@@ -444,8 +444,8 @@ class Cuentas extends MY_Controller
         $this->cuentasxml = NULL;
         $this->cuentasxml = new ClaseXML();
         $mensaje = $this->cuentasxml->CrearXMLCuentas($mes, $anio, $rfc);
-         $fileName = $rfc.str_pad($mes,2,'0',STR_PAD_LEFT).str_pad($anio,4,'0',STR_PAD_LEFT).'CT.zip';
-        $fileNameXML = $rfc.str_pad($mes,2,'0',STR_PAD_LEFT).str_pad($anio,4,'0',STR_PAD_LEFT).'CT.xml';
+         $fileName = $rfc.str_pad($anio,4,'0',STR_PAD_LEFT).str_pad($mes,2,'0',STR_PAD_LEFT).'CT.zip';
+        $fileNameXML = $rfc.str_pad($anio,4,'0',STR_PAD_LEFT).str_pad($mes,2,'0',STR_PAD_LEFT).'CT.xml';
         $zip = new ZipArchive();
         $zip->open($fileName,ZipArchive::CREATE);
         file_put_contents($fileNameXML,$mensaje);

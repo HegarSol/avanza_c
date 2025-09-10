@@ -174,8 +174,8 @@ class BalanzaComprobacion extends MY_Controller
         $mensaje = $this->balanzaxml->CrearXMLbalanza($this->mes,$this->ano,$this->fecha,$rfc[0]['rfc'],$this->data,$this->tipoenvio);
         
         $zip = new ZipArchive();
-        $fileName = $rfc[0]['rfc'].str_pad($this->mes,2,'0',STR_PAD_LEFT).str_pad($this->ano,4,'0',STR_PAD_LEFT).'B'.$this->tipoenvio.'.zip';
-        $fileNameXML = $rfc[0]['rfc'].str_pad($this->mes,2,'0',STR_PAD_LEFT).str_pad($this->ano,4,'0',STR_PAD_LEFT).'B'.$this->tipoenvio.'.xml';
+        $fileName = $rfc[0]['rfc'].str_pad($this->ano,4,'0',STR_PAD_LEFT).str_pad($this->mes,2,'0',STR_PAD_LEFT).'B'.$this->tipoenvio.'.zip';
+        $fileNameXML = $rfc[0]['rfc'].str_pad($this->ano,4,'0',STR_PAD_LEFT).str_pad($this->mes,2,'0',STR_PAD_LEFT).'B'.$this->tipoenvio.'.xml';
         //$fileName = 'XMLBalanza.zip';
         $zip->open($fileName,ZipArchive::CREATE);
         file_put_contents($fileNameXML,$mensaje);
