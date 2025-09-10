@@ -20,23 +20,23 @@ class ClaseXML
           $xml->formatOutput = TRUE;
           $root = $xml->appendChild($root);
           $this->satxmlsv32_cargaAtt($root, array(
-              'xmlns:BCE'=>'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion',
+              'xsi:schemaLocation'=>'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion/BalanzaComprobacion_1_3.xsd',
               'xmlns:xsi'=>'http://www.w3.org/2001/XMLSchema-instance',
-              'xsi:schemaLocation'=>'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion/BalanzaComprobacion_1_3.xsd'
+              'xmlns:BCE'=>'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/BalanzaComprobacion',
           ));
 
           $this->satxmlsv32_cargaAtt($root,array(
               'Version'=>1.3,
+              'RFC'=>$rfc,
               'Mes'=>$mes,
               'Anio'=>$ano,
-              'RFC'=>$rfc
+              'TipoEnvio'=>$tipoenvio,
             )
           );
 
           if($tipoenvio == 'C')
           {
             $this->satxmlsv32_cargaAtt($root,array(
-                'TipoEnvio'=>$tipoenvio,
                 'FechaModBal'=>date('Y-m-d',strtotime($feche))
               )
             );  
@@ -75,9 +75,10 @@ class ClaseXML
          $xml->formatOutput = TRUE;
          $root = $xml->appendChild($root);
          $this->satxmlsv32_cargaAtt($root, array(
+            'xsi:schemaLocation'=>'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/CatalogoCuentas http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/CatalogoCuentas/CatalogoCuentas_1_3.xsd',
              'xmlns:xsi'=>'http://www.w3.org/2001/XMLSchema-instance',
              'xmlns:catalogocuentas'=>'http://www.sat.gob.mx/esquemas/contabilidad/1_3/CatalogoCuentas',
-             'xsi:schemaLocation'=>'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/CatalogoCuentas http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/CatalogoCuentas/CatalogoCuentas_1_3.xsd'
+             
          )
         );
 
