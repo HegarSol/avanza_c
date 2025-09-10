@@ -30,6 +30,11 @@
             $query=$this->db->get();
             return $query->result_array();
         }
+        public function getcuentastodas()
+        {
+            $row = $this->db2->select('*')->from('catalogocta')->get();
+            return $row->result_array();
+        }
         public function get_cuenta_existe_empresa($cuenta,$dessubcuenta,$ssub_cta)
         {
             $row = $this->dbEmpresa->select('*')->from('catalogocta')->where('cuenta',$cuenta)->where('sub_cta',$dessubcuenta)->where('ssub_cta',$ssub_cta)->get();

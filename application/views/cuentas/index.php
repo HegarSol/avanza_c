@@ -32,7 +32,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
             <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#modalGroupcuentas"><span class="fa fa-clone"></span> Agrupar cuentas</button>         
             <button type="button" onclick="imprimir()" <?php echo $permisosGrupo['print']==1 ? '':'disabled'?> class="btn btn-success btn-lg"><span class="fa fa-print"></span> Imprimir</button>                      
             <button type="button" class="btn btn-success btn-lg" <?php echo $permisosGrupo['print']==1 ? '':'disabled'?> onclick="ReporteExcel()"><span class="fa fa-file-excel-o"></span> Exportar excel</button>            
-            <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#modalXML"><span class="fa fa-file-code-o"></span> XML SAT</button>
+            <button type="button" class="btn btn-success btn-lg" onclick="generalcuentaxml()"><span class="fa fa-file-code-o"></span> XML SAT</button>
             <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#modalConfig"><span class="fa fa-gear"></span> Configuración</button>
             <a href="https://www.sat.gob.mx/personas/iniciar-sesion" class="btn btn-primary btn-lg" target="_blank"><span class="fa fa-qrcode"></span> Buzón SAT</a>
       </div>
@@ -286,6 +286,29 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                   }
               });
           }
+      }
+      function generalcuentaxml()
+      {
+         jQuery.ajax({
+                  type:'POST',
+                  url: "<?php echo base_url();?>catalogos/cuentas/validarcatalogo",
+                  data:{1:1},
+                  dataType:'html',
+                  success:function(response)
+                  {
+                      response=JSON.parse(response);
+                      console.log(response);
+                      if(response.estatus == false)
+                      {
+                         swal("Error", response.error, "error");
+
+                      }
+                      else
+                      {
+                        $('#modalXML').modal('show');
+                      }
+                  }
+                });
       }
       function buscarsubcuenta()
       {

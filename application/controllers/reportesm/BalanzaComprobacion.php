@@ -172,19 +172,22 @@ class BalanzaComprobacion extends MY_Controller
         $this->balanzaxml = NULL;
         $this->balanzaxml = new ClaseXML();
         $mensaje = $this->balanzaxml->CrearXMLbalanza($this->mes,$this->ano,$this->fecha,$rfc[0]['rfc'],$this->data,$this->tipoenvio);
-
+        
         $zip = new ZipArchive();
-        $zip->open('XMLBalanza.zip',ZipArchive::CREATE);
-        file_put_contents('Balanza.xml',$mensaje);
-        $zip->addFile('Balanza.xml','Balanza.xml');
+        $fileName = $rfc[0]['rfc'].str_pad($this->mes,2,'0',STR_PAD_LEFT).str_pad($this->ano,4,'0',STR_PAD_LEFT).'B'.$this->tipoenvio.'.zip';
+        $fileNameXML = $rfc[0]['rfc'].str_pad($this->mes,2,'0',STR_PAD_LEFT).str_pad($this->ano,4,'0',STR_PAD_LEFT).'B'.$this->tipoenvio.'.xml';
+        //$fileName = 'XMLBalanza.zip';
+        $zip->open($fileName,ZipArchive::CREATE);
+        file_put_contents($fileNameXML,$mensaje);
+        $zip->addFile($fileNameXML,$fileNameXML);
         $zip->close();
 
         header("Content-type: application/octet-stream");
-        header("Content-disposition: attachment; filename=XMLBalanza.zip");
+        header("Content-disposition: attachment; filename=$fileName");
 
-        readfile('XMLBalanza.zip');
-        unlink('Balanza.xml');
-        unlink('XMLBalanza.zip');
+        readfile($fileName);
+        unlink($fileNameXML);
+        unlink($fileName);
 
 
     }

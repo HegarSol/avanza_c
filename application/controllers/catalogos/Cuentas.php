@@ -401,6 +401,29 @@ class Cuentas extends MY_Controller
         } else{ redirect('catalogos/cuentas/index', 'refresh');}
       } else{ redirect('/inicio/login', 'refresh');}
     }
+    public function validarcatalogo()
+    {
+
+        $cuentas = $this->cuentas->getcuentastodas();
+        $oData = [];
+
+        foreach($cuentas as $key => $row) {
+                $ctasat[$key] = $row['ctasat'];
+                if ($row['ctasat'] == '') {
+                    $error = 'Falta asignar cuenta SAT a la cuenta: '.$row['cuenta'].'.'.str_pad($row['sub_cta'],4,"0",STR_PAD_LEFT).'.'.str_pad($row['ssub_cta'],4,"0",STR_PAD_LEFT).' - '.$row['nombre'];
+                    $oData = array('error' => $error,'estatus' => false);
+                    break;
+                    //return $oData;
+                }
+                if ($row['natur'] == '') {
+                    $error = 'Falta asignar la naturaleza ala cuenta: '.$row['cuenta'].'.'.str_pad($row['sub_cta'],4,"0",STR_PAD_LEFT).'.'.str_pad($row['ssub_cta'],4,"0",STR_PAD_LEFT).' - '.$row['nombre'];
+                    $oData = array('error' => $error,'estatus' => false);
+                    break;
+                    //return $oData;
+                }
+            }  
+            $this->output->set_content_type('application/json')->set_output(json_encode($oData));
+    }
     public function XMLCuentas($mes,$anio)
     {
         date_default_timezone_set("America/Mexico_City");
@@ -421,19 +444,20 @@ class Cuentas extends MY_Controller
         $this->cuentasxml = NULL;
         $this->cuentasxml = new ClaseXML();
         $mensaje = $this->cuentasxml->CrearXMLCuentas($mes, $anio, $rfc);
-
+         $fileName = $rfc.str_pad($mes,2,'0',STR_PAD_LEFT).str_pad($anio,4,'0',STR_PAD_LEFT).'CT.zip';
+        $fileNameXML = $rfc.str_pad($mes,2,'0',STR_PAD_LEFT).str_pad($anio,4,'0',STR_PAD_LEFT).'CT.xml';
         $zip = new ZipArchive();
-        $zip->open('XMLCuenta.zip',ZipArchive::CREATE);
-        file_put_contents('Cuentas.xml',$mensaje);
-        $zip->addFile('Cuentas.xml','Cuentas.xml');
+        $zip->open($fileName,ZipArchive::CREATE);
+        file_put_contents($fileNameXML,$mensaje);
+        $zip->addFile($fileNameXML,$fileNameXML);
         $zip->close();
 
         header("Content-type: application/octet-stream");
-        header("Content-disposition: attachment; filename=XMLCuenta.zip");
+        header("Content-disposition: attachment; filename=$fileName");
+        readfile($fileName);
+        unlink($fileNameXML);
+        unlink($fileName);
 
-        readfile('XMLCuenta.zip');
-        unlink('Cuentas.xml');
-        unlink('XMLCuenta.zip');
         // $this->load->helper('download');
 
         // header('Content-Type: text/xml; charset=UTF-8');
