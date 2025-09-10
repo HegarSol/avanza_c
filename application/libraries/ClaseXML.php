@@ -77,8 +77,8 @@ class ClaseXML
          $this->satxmlsv32_cargaAtt($root, array(
             'xsi:schemaLocation'=>'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/CatalogoCuentas http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/CatalogoCuentas/CatalogoCuentas_1_3.xsd',
              'xmlns:xsi'=>'http://www.w3.org/2001/XMLSchema-instance',
-             'xmlns:catalogocuentas'=>'http://www.sat.gob.mx/esquemas/contabilidad/1_3/CatalogoCuentas',
-             
+             'xmlns:catalogocuentas'=>'http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/CatalogoCuentas',
+
          )
         );
 
