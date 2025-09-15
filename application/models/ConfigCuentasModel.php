@@ -58,4 +58,17 @@ class ConfigCuentasModel extends MY_Model
              return 0;
         }
     }
+
+    public function getnaturaleza($cta)
+    {
+      $row = $this->db2->select('natur')
+        ->from('configuracion_cuentas')
+        ->where('natur IS NOT NULL', null, false)
+       ->where('cuenta <=',$cta)
+       ->where('sub_cta >=',$cta)
+        ->get();
+
+        return $row->result_array();
+    }
+
 }

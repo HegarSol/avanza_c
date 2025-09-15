@@ -66,6 +66,13 @@
             $row = $this->db2->select('*')->from('catalogocta')->where('idcuenta',$id)->get();
             return $row->result_array();
         }
+         
+        public function verificarsicuentause($cuenta,$sub_cta,$ssub_cta)
+        {
+            $row = $this->db2->select('COUNT(cuenta) as total')->from('opera_banco_detalle')->where('cuenta',$cuenta)->where('sub_cta',$sub_cta)->where('ssub_cta',$ssub_cta)->get();
+            return $row->result_array();
+        }
+
         public function get_cuenta($cuen,$subcu,$ssub_cta)
         {
             $row = $this->db2->select('*')->from('catalogocta')->where('cuenta',$cuen)->where('sub_cta',$subcu)->where('ssub_cta',$ssub_cta)->get();

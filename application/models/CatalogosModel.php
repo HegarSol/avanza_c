@@ -6,6 +6,7 @@ class CatalogosModel extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('sat_ctg_cuentas');
+        $this->db->order_by('descrip','ASC');
         $query=$this->db->get();
         return $query->result_array();
     }
