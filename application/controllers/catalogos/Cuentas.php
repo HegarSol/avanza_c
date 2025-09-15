@@ -23,7 +23,7 @@ class Cuentas extends MY_Controller
            if(isset($permisos) && $permisos['leer']=="1")
            {
                $nombrempre = $this->confi->getConfig();
-               $data = array('titulo' => 'Cuentas','permisosGrupo' =>  $permisos,'empresanombre'=>$nombrempre);
+               $data = array('titulo' => 'Cátalogo de cuentas','permisosGrupo' =>  $permisos,'empresanombre'=>$nombrempre);
                $this->load->view('templates/navigation',$data);
                $this->load->view('cuentas/index');
                $this->load->view('templates/footer');
@@ -195,7 +195,10 @@ class Cuentas extends MY_Controller
 
         $valor = $this->conficuentas->getniveles($cta);
 
-        $this->output->set_content_type('application/json')->set_output(json_encode($valor));
+        $val2 = $this->conficuentas->getnaturaleza($cta);
+
+        $array = array('niveles' => $valor, 'naturaleza' => $val2);
+        $this->output->set_content_type('application/json')->set_output(json_encode($array));
     }
     public function ajax_cuentasconfig()
     {
@@ -372,16 +375,27 @@ class Cuentas extends MY_Controller
            }
         }
     }
-    public function eliminar($id)
+    public function eliminar()
     {
+        $id = $this->input->post('id');
+        //var_dump($id);
         date_default_timezone_set("America/Mexico_City");
       if($this->aauth->is_loggedin())
       {
         $permisos= $this->permisosForma($_SESSION['id'],5);
         if(isset($permisos) && $permisos['del']=="1")
         {
+            
             $cuentas = $this->cuentas->datosCuentas($id);
-
+          //  var_dump($cuentas);
+            $resp = $this->cuentas->verificarsicuentause($cuentas[0]['cuenta'],$cuentas[0]['sub_cta'],$cuentas[0]['ssub_cta']);
+            
+             if ($resp[0]['total'] > 0) {
+                    $data = array('status' => false, 'msg' => 'No se puede eliminar la cuenta, ya que esta siendo utilizada en movimientos de banco.');
+                $this->output->set_content_type('application/json')->set_output(json_encode($data));
+             }   
+            else
+            {
           $res=$this->cuentas->borrarCuenta($id);
           if($res==true)
           {
@@ -391,15 +405,20 @@ class Cuentas extends MY_Controller
                            'no_mov' => '',
                            'accion' => 'Eliminar',
                            'cuando' => date('Y-m-d H:i:s'),
-                           'comentario' => 'Elimino la cuenta con el ID: '.$id. ' Cuenta: '.$cuentas[0]['cuenta']. ' Sub Cta: '.$cuentas[0]['sub_cta']. ' Nombre: '.$cuentas[0]['nombre'],
+                           'comentario' => 'Eliminó la cuenta con el ID: '.$id. ' Cuenta: '.$cuentas[0]['cuenta']. ' Sub Cta: '.$cuentas[0]['sub_cta'].' Ssub Cta: '.$cuentas[0]['ssub_cta'].' Nombre: '.$cuentas[0]['nombre'],
                            'modulo' => 'Catalogos -> Cuentas');
                 $this->bitacora->operacion($opera);
-                
-             header("Location:".base_url()."catalogos/cuentas/index", 301);
-            exit();
+               
+                $this->output->set_content_type('application/json')->set_output(json_encode(array('status'=>true)));
+            
           }
-        } else{ redirect('catalogos/cuentas/index', 'refresh');}
-      } else{ redirect('/inicio/login', 'refresh');}
+            }
+        } else{
+             $data = array('status' => false, 'msg' => 'No se puede eliminar, no tiene permisos.');
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    
+      } else{ $this->output->set_content_type('application/json')->set_output(json_encode(array('status'=>false)));}
     }
     public function validarcatalogo()
     {

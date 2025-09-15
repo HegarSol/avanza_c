@@ -49,10 +49,10 @@ if(isset($mensaje))
     </div>
     <br>
     <div class="row">
-    <label class="control-label col-sm-2" for="ctasat">Cuenta SAT:</label>
+    <label class="control-label col-sm-2" for="ctasat">Código agrupador SAT:</label>
         <div class="col-sm-6">
         <select name="ctasat" id="ctasat" class="form-control">
-        <option value="-" selected></option>
+        <option value="" selected></option>
              <!-- <option value="-" selected ></option> -->
               <?php foreach($cuentas as $cuenta)
               {
@@ -64,7 +64,7 @@ if(isset($mensaje))
                          echo "selected";
                       }
                   }
-                  echo '>'.$cuenta['clave']. ' - ' .$cuenta['descrip'];
+                  echo '>'.$cuenta['descrip']. ' - ' .$cuenta['clave'];
                   echo "</option>";
               }
               ?>
@@ -96,9 +96,8 @@ if(isset($mensaje))
                else
                {
                 ?>      
-                        <option value=""> -Seleccione- </option>             
                         <option value="A">A</option>
-                        <option value="D">D</option>
+                        <option value="D" selected>D</option>
                 <?php
                 }                
                 ?>
@@ -209,7 +208,11 @@ if(isset($mensaje))
               dataType:"html",
               success:function(data)
               {
-                document.getElementById('tipo').value = data;
+//                console.log(data);
+                var obj = JSON.parse(data);
+                document.getElementById('tipo').value = obj.niveles;
+                document.getElementById('natur').value = obj.naturaleza[0].natur;
+                
               }
         });
     }

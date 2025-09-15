@@ -58,7 +58,27 @@
  },
  function(isConfirm){
    if (isConfirm)
-   { location.href=baseurl+"/catalogos/cuentas/eliminar/"+id;  }
+   {
+   //  location.href=baseurl+"/catalogos/cuentas/eliminar/"+id;  
+   jQuery.ajax({
+                 type: "POST",
+                  url: baseurl+"catalogos/cuentas/eliminar",
+                  dataType: 'html',
+                  data: {id:id},
+                  success:function(response)
+                  {
+                      response = JSON.parse(response);
+                      if(response.status)
+                      {
+                          swal("Eliminado", "La Cuenta ha sido eliminada.", "success");
+                          setTimeout(function(){ location.reload(); }, 2000);
+                      }
+                      else
+                      {
+                          swal("Error", response.msg, "error");
+                      }
+                  }});
+    }
    else {
  	    swal("Cancelado", "No se eliminó la Cuenta.", "error");
    }
