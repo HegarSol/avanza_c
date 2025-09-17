@@ -110,7 +110,7 @@ class Servicio extends CI_Controller
                     'monto' => $poliza->monto,
                     'c_a' => $poliza->c_a,
                     'fecha' => $inserpo->fecha,
-                    'concepto' => $inserpo->nombreC,
+                    'concepto' => $inserpo->nombreC.'|'.$inserpo->metodoPago,
                     'ssub_cta' => $poliza->ssub_cta,
                 );
 
