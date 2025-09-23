@@ -377,7 +377,7 @@ class Polizasdiarias extends MY_Controller
                     'fecha' => $fecha[$i],
                     'concepto' => $concepto[$i],
                     'referencia' => $referencia[$i],
-                    'no_prov' => $no_prov_fac[$i] = '' ? $no_prov_fac[$i] : 0,
+                    'no_prov' => $no_prov_fac[$i] == '' ? 0 : $no_prov_fac[$i],
                     'factrefe' => 0,
                     'nombre_cuenta' => $nombre_cuenta[$i],
                     'ssub_cta' => $ssub_cta[$i]
