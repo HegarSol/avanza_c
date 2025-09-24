@@ -572,10 +572,13 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
 </script>
 
 <script>
-
+this.bandera = false;
 function aceptarasiento(tableID)
   {
-
+      if (this.bandera == true) {
+          return;
+      }
+      this.bandera = true;
      var tipo_pro = document.getElementById('tipo_provision').value;
      var mov_pro = document.getElementById('movi_provision').value;
      var uuid_pro = document.getElementById('uuid_provision').value;
