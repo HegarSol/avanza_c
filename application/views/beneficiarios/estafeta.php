@@ -575,10 +575,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
 this.bandera = false;
 function aceptarasiento(tableID)
   {
-      if (this.bandera == true) {
-          return;
-      }
-      this.bandera = true;
+
      var tipo_pro = document.getElementById('tipo_provision').value;
      var mov_pro = document.getElementById('movi_provision').value;
      var uuid_pro = document.getElementById('uuid_provision').value;
@@ -622,6 +619,10 @@ function aceptarasiento(tableID)
 
       if(mes == fechames && ano == fechaano)
       {
+         if (this.bandera == true) {
+            return;
+         }
+         this.bandera = true;
          if(tol == 0)
          {
               jQuery.ajax({
