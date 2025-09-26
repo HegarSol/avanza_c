@@ -107,17 +107,17 @@
         {
             if($data == '105.01')
             {
-                $row = $this->dbEmpresa->query('SELECT MAX(ca.sub_cta)+1 AS sub_cta  
+                $row = $this->dbEmpresa->query('SELECT cc.sub_cta as sub_cta, IF(cc.sub_cta=0, MAX(ca.sub_cta)+1,MAX(ca.ssub_cta)+1) AS valor
                 FROM catalogocta ca LEFT JOIN configuracion_cuentas cc 
-                ON ca.cuenta = cc.cuenta
+                ON ca.cuenta = cc.cuenta 
                 WHERE ctasat = "105.01"'
                 );
             }
             else
             {
-                $row = $this->dbEmpresa->query('SELECT MAX(ca.sub_cta)+1 AS sub_cta  
+                $row = $this->dbEmpresa->query('SELECT cc.sub_cta as sub_cta, IF(cc.sub_cta=0, MAX(ca.sub_cta)+1,MAX(ca.ssub_cta)+1) AS valor
                 FROM catalogocta ca LEFT JOIN configuracion_cuentas cc 
-                ON ca.cuenta = cc.cuenta
+                ON ca.cuenta = cc.cuenta 
                 WHERE ctasat = "105.02"'
                 );
             }
