@@ -151,6 +151,14 @@ class BancosModel extends MY_Model
         $row = $this->db2->select('*')->from('catalogo_banco')->where('no_banco',$id)->get();
         return $row->result_array();
     }
+    public function get_asientoByConcurso($idempre,$concurso)
+    {
+        $this->dbEmpresa->select('*');
+        $this->dbEmpresa->from('opera_banco_detalle');
+        $this->dbEmpresa->where('referencia',$concurso);
+        $query = $this->dbEmpresa->get();
+        return $query->result_array();
+    }
     public function get_bancos()
     {
         $this->dbEmpresa->select('*');

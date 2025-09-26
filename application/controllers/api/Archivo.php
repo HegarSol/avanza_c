@@ -64,6 +64,32 @@ class Archivo extends REST_Controller
         }
 
     }
+    public function getasientocontable_get()
+    {
+        $idempre = $this->get('idempre');
+        $concurso = $this->get('concurso');
+
+         if($idempre)
+        {
+            $this->bancos->set_database($idempre);
+            $datos = $this->bancos->get_asientoByConcurso($idempre,$concurso);
+            if(count($datos) > 0)
+            {
+                $this->response(array('status' => true, 'data' => $datos));
+            }
+            else
+            {
+                $this->response(array('status' => false, 'data' => 'No se encontraron asientos contables para el concurso proporcionado.'));
+            }
+        }
+        else
+        {
+            $this->response(array('status' => false, 'data' => 'ID de empresa no proporcionado o no existe.'));
+        }
+
+
+
+    }
     public function traerbancos_get()
     {
         $idempre = $this->get('idempre');
@@ -138,7 +164,7 @@ class Archivo extends REST_Controller
                             'c_a' => '+',
                             'fecha' => $valores->fecha,
                             'concepto' => '',
-                            'referencia' => '',
+                            'referencia' => $valores->concurso,
                             'no_prov' => 0,
                             'factrefe' => 0,
                             'nombre_cuenta' => $datosbanco[0]['banco'],
@@ -160,7 +186,7 @@ class Archivo extends REST_Controller
                             'c_a' => '-',
                             'fecha' => $valores->fecha,
                             'concepto' => '',
-                            'referencia' => '',
+                            'referencia' => $valores->concurso,
                             'no_prov' => 0,
                             'factrefe' => 0,
                             'nombre_cuenta' => 'CLIENTES DIVERSOS',
