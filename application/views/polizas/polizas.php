@@ -304,10 +304,10 @@ function recogerDatosPoliza(tableID)
 
                 for(var i = 0; i < rowCount; i++)
                 {
-                    tipo_mov[i] = 'O';
-                    no_banco[i] = 0;
+                    // tipo_mov[i] = 'O';
+                    // no_banco[i] = 0;
                     no_mov[i] = document.getElementById('no_mov').value;
-                    ren[i] = '';
+                    //ren[i] = '';
                     cuenta[i] = table.rows[i].cells[1].innerHTML;
                     sub_cta[i] = table.rows[i].cells[2].innerHTML;
                     ssub_cta[i] = table.rows[i].cells[3].innerHTML;
@@ -331,7 +331,7 @@ function recogerDatosPoliza(tableID)
                         type:"POST",
                         url: baseurl+"catalogos/Polizasdiarias/guardarpoliza",
                         data: {id:id,tipo_movimiento:tipo_movimiento,numero_movimiento:numero_movimiento,fechapoli:fechapoli,
-                        conceptopoli:conceptopoli,tipo_mov:tipo_mov,no_banco:no_banco,no_mov:no_mov,ren:ren,ssub_cta:ssub_cta,no_prov_fac:no_prov_fac,
+                        conceptopoli:conceptopoli,no_mov:no_mov,ssub_cta:ssub_cta,no_prov_fac:no_prov_fac,
                         cuenta:cuenta,sub_cta:sub_cta,monto:monto,c_a:c_a,fecha:fecha,concepto:concepto,referencia:referencia,nombre_cuenta:nombre_cuenta,uuidpoliza:uuidpoliza},
                         dataType:"html",
                         success:function(msg)

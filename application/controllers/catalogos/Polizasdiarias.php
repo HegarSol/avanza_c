@@ -334,9 +334,9 @@ class Polizasdiarias extends MY_Controller
         {
             $this->opera->borrarDetalle($id);
 
-            $tipo_mov = $this->input->post('tipo_mov');
+            // $tipo_mov = $this->input->post('tipo_mov');
 
-            $no_banco = $this->input->post('no_banco');
+            // $no_banco = $this->input->post('no_banco');
 
             $cuenta = $this->input->post('cuenta');
 
@@ -360,16 +360,16 @@ class Polizasdiarias extends MY_Controller
 
             $mensaje = array();
 
-            for($i=1; $i<count($tipo_mov); $i++)
+            for($i=1; $i<count($cuenta); $i++)
             {
 
                 $monto[$i] = str_replace(',', '', $monto[$i]);
                 $detalle = array(
                     'id_encabezado' => $id,
-                    'tipo_mov' => $tipo_mov[$i],
-                    'no_banco' => $no_banco[$i],
+                    'tipo_mov' => 'O',
+                    'no_banco' => 0,
                     'no_mov' => $numero_movimiento,
-                    'ren' => 0,
+                    //'ren' => 0,
                     'cuenta' => $cuenta[$i],
                     'sub_cta' => $sub_cta[$i],
                     'monto' => $monto[$i],
@@ -378,7 +378,7 @@ class Polizasdiarias extends MY_Controller
                     'concepto' => $concepto[$i],
                     'referencia' => $referencia[$i],
                     'no_prov' => $no_prov_fac[$i] == '' ? 0 : $no_prov_fac[$i],
-                    'factrefe' => 0,
+                   // 'factrefe' => 0,
                     'nombre_cuenta' => $nombre_cuenta[$i],
                     'ssub_cta' => $ssub_cta[$i]
                 );
