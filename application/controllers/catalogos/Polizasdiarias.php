@@ -341,26 +341,35 @@ class Polizasdiarias extends MY_Controller
 
              foreach($array as $row)
              {
-                $monto = str_replace(',', '', $row['monto']);
-                $detalle = array(
-                    'id_encabezado' => $id,
-                    'tipo_mov' => 'O',
-                    'no_banco' => 0,
-                    'no_mov' => $numero_movimiento,
-                    //'ren' => 0,
-                    'cuenta' => $row['cuenta'],
-                    'sub_cta' => $row['sub_cta'],
-                    'monto' => $monto,
-                    'c_a' => $row['c_a'],
-                    'fecha' => $fechapoli,
-                    'concepto' => $row['concepto'],
-                    'referencia' => $row['referencia'],
-                    'no_prov' => $row['no_prov_fac'] == '' ? 0 : $row['no_prov_fac'],
-                   // 'factrefe' => 0,
-                    'nombre_cuenta' => $row['nombre_cuenta'],
-                    'ssub_cta' => $row['ssub_cta']
-                );
-               $detalle = $this->opera->guardarDetalle($detalle);
+
+                if($row['cuenta'] == 'Cuenta')
+                {
+
+                }
+                else
+                {
+                    $monto = str_replace(',', '', $row['monto']);
+                    $detalle = array(
+                        'id_encabezado' => $id,
+                        'tipo_mov' => 'O',
+                        'no_banco' => 0,
+                        'no_mov' => $numero_movimiento,
+                        //'ren' => 0,
+                        'cuenta' => $row['cuenta'],
+                        'sub_cta' => $row['sub_cta'],
+                        'monto' => $monto,
+                        'c_a' => $row['c_a'],
+                        'fecha' => $fechapoli,
+                        'concepto' => $row['concepto'],
+                        'referencia' => $row['referencia'],
+                        'no_prov' => $row['no_prov_fac'] == '' ? 0 : $row['no_prov_fac'],
+                    // 'factrefe' => 0,
+                        'nombre_cuenta' => $row['nombre_cuenta'],
+                        'ssub_cta' => $row['ssub_cta']
+                    );
+                $detalle = $this->opera->guardarDetalle($detalle);
+                }
+
              }
 
             if($detalle > 0)
