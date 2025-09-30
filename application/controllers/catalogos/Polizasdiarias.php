@@ -334,56 +334,34 @@ class Polizasdiarias extends MY_Controller
         {
             $this->opera->borrarDetalle($id);
 
-            // $tipo_mov = $this->input->post('tipo_mov');
+              $array = $this->input->post('array');
 
-            // $no_banco = $this->input->post('no_banco');
 
-            $cuenta = $this->input->post('cuenta');
+          $mensaje = array();
 
-            $sub_cta = $this->input->post('sub_cta');
-
-            $ssub_cta = $this->input->post('ssub_cta');
-
-            $no_prov_fac = $this->input->post('no_prov_fac');
-
-            $monto = $this->input->post('monto');
-
-            $c_a = $this->input->post('c_a');
-
-            $fecha = $this->input->post('fecha');
-
-            $concepto = $this->input->post('concepto');
-
-            $referencia = $this->input->post('referencia');
-
-            $nombre_cuenta = $this->input->post('nombre_cuenta');
-
-            $mensaje = array();
-
-            for($i=1; $i<count($cuenta); $i++)
-            {
-
-                $monto[$i] = str_replace(',', '', $monto[$i]);
+             foreach($array as $row)
+             {
+                $monto = str_replace(',', '', $row['monto']);
                 $detalle = array(
                     'id_encabezado' => $id,
                     'tipo_mov' => 'O',
                     'no_banco' => 0,
                     'no_mov' => $numero_movimiento,
                     //'ren' => 0,
-                    'cuenta' => $cuenta[$i],
-                    'sub_cta' => $sub_cta[$i],
-                    'monto' => $monto[$i],
-                    'c_a' => $c_a[$i],
-                    'fecha' => $fecha[$i],
-                    'concepto' => $concepto[$i],
-                    'referencia' => $referencia[$i],
-                    'no_prov' => $no_prov_fac[$i] == '' ? 0 : $no_prov_fac[$i],
+                    'cuenta' => $row['cuenta'],
+                    'sub_cta' => $row['sub_cta'],
+                    'monto' => $monto,
+                    'c_a' => $row['c_a'],
+                    'fecha' => $fechapoli,
+                    'concepto' => $row['concepto'],
+                    'referencia' => $row['referencia'],
+                    'no_prov' => $row['no_prov_fac'] == '' ? 0 : $row['no_prov_fac'],
                    // 'factrefe' => 0,
-                    'nombre_cuenta' => $nombre_cuenta[$i],
-                    'ssub_cta' => $ssub_cta[$i]
+                    'nombre_cuenta' => $row['nombre_cuenta'],
+                    'ssub_cta' => $row['ssub_cta']
                 );
-                $detalle = $this->opera->guardarDetalle($detalle);
-            }
+               $detalle = $this->opera->guardarDetalle($detalle);
+             }
 
             if($detalle > 0)
             {

@@ -302,22 +302,26 @@ function recogerDatosPoliza(tableID)
                 var rowCount = table.rows.length;           var ssub_cta = [];
                 var no_prov_fac = [];
 
-                for(var i = 0; i < rowCount; i++)
+                var array = [];
+
+                for(var i = 1; i < rowCount; i++)
                 {
-                    // tipo_mov[i] = 'O';
-                    // no_banco[i] = 0;
-                    no_mov[i] = document.getElementById('no_mov').value;
-                    //ren[i] = '';
-                    cuenta[i] = table.rows[i].cells[1].innerHTML;
-                    sub_cta[i] = table.rows[i].cells[2].innerHTML;
-                    ssub_cta[i] = table.rows[i].cells[3].innerHTML;
-                    no_prov_fac[i] = table.rows[i].cells[4].innerHTML;
-                    monto[i] = table.rows[i].cells[8].innerHTML;
-                    c_a[i] = table.rows[i].cells[9].innerHTML;
-                    fecha[i] = fechapoli;
-                    concepto[i] = table.rows[i].cells[7].innerHTML;
-                    referencia[i] = table.rows[i].cells[5].innerHTML;
-                    nombre_cuenta[i] = table.rows[i].cells[6].innerHTML;
+
+                    let obj = {
+                        'no_mov' :document.getElementById('no_mov').value,
+                        'cuenta' : table.rows[i].cells[1].innerHTML,
+                        'sub_cta' : table.rows[i].cells[2].innerHTML,
+                        'ssub_cta' : table.rows[i].cells[3].innerHTML,
+                        'no_prov_fac' : table.rows[i].cells[4].innerHTML,
+                        'monto' : table.rows[i].cells[8].innerHTML,
+                        'c_a' : table.rows[i].cells[9].innerHTML,
+                        'concepto' : table.rows[i].cells[7].innerHTML,
+                        'referencia' : table.rows[i].cells[5].innerHTML,
+                        'nombre_cuenta' : table.rows[i].cells[6].innerHTML
+                    };
+
+                    array.push(obj);
+                
                 }
                 if(rowCount==1)
                 {
@@ -331,8 +335,7 @@ function recogerDatosPoliza(tableID)
                         type:"POST",
                         url: baseurl+"catalogos/Polizasdiarias/guardarpoliza",
                         data: {id:id,tipo_movimiento:tipo_movimiento,numero_movimiento:numero_movimiento,fechapoli:fechapoli,
-                        conceptopoli:conceptopoli,no_mov:no_mov,ssub_cta:ssub_cta,no_prov_fac:no_prov_fac,
-                        cuenta:cuenta,sub_cta:sub_cta,monto:monto,c_a:c_a,fecha:fecha,concepto:concepto,referencia:referencia,nombre_cuenta:nombre_cuenta,uuidpoliza:uuidpoliza},
+                        conceptopoli:conceptopoli,uuidpoliza:uuidpoliza,array:array},
                         dataType:"html",
                         success:function(msg)
                         {
