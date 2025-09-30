@@ -304,7 +304,7 @@ function recogerDatosPoliza(tableID)
 
                 var array = [];
 
-                for(var i = 1; i < rowCount; i++)
+                for(var i = 0; i < rowCount; i++)
                 {
 
                     let obj = {
