@@ -239,7 +239,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
               <br>
               <br>
               <div class="row">
-                   <div class="col-sm-3">
+                   <div class="col-sm-2">
                         <div class="input-group">
                            <span class="input-group-addon">Receptor</span>
                            <input type="text" id="receptor" readonly name="receptor" class="form-control">
@@ -252,7 +252,11 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                            <p class="help-block">Seleccione el archivo PDF a almacenar</p>
                      </form>
                      </div>
-                     <div class="col-sm-3">
+                     <div class="col-sm-2">
+                         <button class="btn btn-primary" onclick="descargarxml()"><span class="fa fa-download"></span> Descargar xml</button>
+                     </div>
+                     <div class="col-sm-2">
+                         <button class="btn btn-danger" onclick="descargarpdf()"><span class="fa fa-download"></span> Descargar pdf</button>
                      </div>
                      <div class="col-sm-2">
                         <div class="input-group">
@@ -685,6 +689,32 @@ function aceptarasiento(tableID)
       }
 
   }
+  function descargarxml()
+{
+    var uuid = document.getElementById('uuid').value;
+
+    if(uuid == '')
+      {  
+          var n = noty({ layout: 'topRight', type: 'warning', theme: 'relax', text: 'Seleccione un registro.'});
+      }
+      else
+      {
+         window.open(baseurl + "catalogos/Beneficiarios/descargarxml?uuid="+uuid, '_blank');
+      }
+}
+function descargarpdf()
+{
+    var uuid = document.getElementById('uuid').value;
+
+    if(uuid == '')
+      {  
+          var n = noty({ layout: 'topRight', type: 'warning', theme: 'relax', text: 'Seleccione un registro.'});
+      }
+      else
+      {
+         window.open(baseurl + "catalogos/Beneficiarios/descargarpdf?uuid="+uuid, '_blank');
+      }
+}
   function actualizarpolizapago()
     {
         var oTTs = $.fn.dataTable.TableTools.fnGetInstance("tabla_polizas_pagos_prove");

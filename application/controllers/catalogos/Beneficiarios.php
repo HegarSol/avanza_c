@@ -141,6 +141,35 @@ class Beneficiarios extends MY_Controller
         $resu = curl_exec($ch);
         $response = json_decode($resu);
 
+
+       header('Content-Type: application/xml;');
+
+       $valor = $response->xmlContent;
+    
+       force_download($uuid.'.xml',$valor);   
+
+
+    }
+    public function descargarpdf()
+    {
+        $this->load->helper('download');
+         $uuid = $this->input->get('uuid');
+
+        // if(ENVIRONMENT == 'development')
+        // {
+        //   $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/archivos?uuid=".$uuid);
+        // }
+        // else
+        // {
+          $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/archivos?uuid=".$uuid);
+        //}
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $resu = curl_exec($ch);
+        $response = json_decode($resu);
+
       //  var_dump($response);
 
       header('Content-Type: application/pdf; base64');
