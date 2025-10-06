@@ -351,7 +351,7 @@ class Polizasdiarias extends MY_Controller
                     $monto = str_replace(',', '', $row['monto']);
                     $detalle = array(
                         'id_encabezado' => $id,
-                        'tipo_mov' => 'O',
+                        'tipo_mov' => $tipo_movimiento,
                         'no_banco' => 0,
                         'no_mov' => $numero_movimiento,
                         //'ren' => 0,
