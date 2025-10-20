@@ -211,7 +211,7 @@ $this->load->view('beneficiarios/modales/ModalXML');
 </center>
 
 <script>
-   
+   this.bandera = false;
    $('#Beneficiarios3').DataTable({
     responsive: true, 
     filter:true, 
@@ -325,12 +325,17 @@ function recogerDatosPoliza(tableID)
                 }
                 if(rowCount==1)
                 {
-                    var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'La poliza debe contener al menos 2 asiento.'}); 
+                    var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'La póliza debe contener al menos dos registros de asiento.'}); 
                         xyz=true;
                 }
 
                 if(xyz == false)
                 {
+                    if(this.bandera == true)
+                        {
+                            return;
+                        }
+                     this.bandera = true;
                     $.ajax({
                         type:"POST",
                         url: baseurl+"catalogos/Polizasdiarias/guardarpoliza",
