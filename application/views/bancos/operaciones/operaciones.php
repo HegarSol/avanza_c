@@ -488,7 +488,7 @@ $this->load->view('beneficiarios/modales/ModalAsientoContable');
 </div>
 </div>
 <script>
-
+this.bandera = false;
 $('#Beneficiarios3').DataTable({
     responsive: true, 
     filter:true, 
@@ -771,6 +771,7 @@ function soloNumeros(evt,input)
 
 function recogerDatosPoliza(tableID)
 {
+    
     var uuidpoliza = document.getElementById('uuidpagar').value;
     var tol = document.getElementById('totalpoliza').value;
     var mes = '<?php echo $_SESSION["mes"];?>';
@@ -910,12 +911,17 @@ function recogerDatosPoliza(tableID)
             }
             if(rowCount==2) 
             {
-                var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'La poliza debe contener al menos 2 asiento.'}); 
+                var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'La póliza debe contener al menos dos registros de asiento.'}); 
                 xyz=true;
             }
 
             if(xyz == false)
             {
+                if(this.bandera == true)
+                {
+                    return;
+                }
+                this.bandera = true;
                 var tm = JSON.stringify(tipo_mov);      var nob = JSON.stringify(no_banco);
                 var nom = JSON.stringify(no_mov);       var re = JSON.stringify(ren);
                 var ct = JSON.stringify(cuenta);        var su_cta = JSON.stringify(sub_cta);
