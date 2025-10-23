@@ -221,8 +221,12 @@ class OperacionesModel extends MY_Model
         $query = $this->db2->query('CALL getAuxiliarCliente(\''.$subcta.'\',\''.$fechaini.'\',\''.$fechafin.'\')');
 
         return $query->result();
+    }
+    public function balancegeneral($fechaini,$cuenta)
+    {
+        $query = $this->db2->query('CALL balance(\''.$fechaini.'\',\''.$cuenta.'\')');
 
-
+        return $query->result();
     }
     public function auxiliardetalle($cuenta,$subcuenta,$subcuen2,$fechaini,$fechafin,$agrupa)
     {
