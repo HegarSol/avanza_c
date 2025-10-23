@@ -35,4 +35,11 @@ class menuModel extends CI_Model{
         $query=$this->db->get();
         return $query->result_array();
     }
+    public function menusdisponibles()
+    {
+        $this->db->select('*');
+        $this->db->from('menus');
+        $query=$this->db->get();
+        return $query->result_array();
+    }
 }

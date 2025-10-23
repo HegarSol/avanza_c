@@ -19,10 +19,11 @@ class BalanceGeneral extends MY_Controller
     public function index()
     {
 
-        $items=$this->menuModel->menus($_SESSION['tipo']);
-        if($items[23]['mante'] == 1)
+        $items2=$this->menuModel->menusdisponibles();
+        if($items2[23]['mante'] == 1)
         {
                 $data=array('titulo'=>'No disponible por el momento');
+                $items=$this->menuModel->menus($_SESSION['tipo']);
                 $this->multi_menu->set_items($items);
                 $this->load->view('templates/header');
                 $this->load->view('templates/navigation',$data);
