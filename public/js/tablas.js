@@ -40,15 +40,7 @@ $(function () {
          ajax: { "url": baseurl + "catalogos/Cuentas/ajax_list", "type": "POST" },  "language": { "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json" }
    })
  });
-//CONFIG CUENTAS
- $(function () {
-   $('#configcuentas').DataTable({
-      responsive: true, filter:true, columnDefs:
-       [ { responsivePriority: 1, targets: 0 }, { responsivePriority: 2, targets: -1 }, { responsivePriority: 3, targets: 2 } ],
-        processing: true, 
-        ajax: { "url": baseurl + "Configuracion/ajax_list2", "type": "POST" },  "language" : {"url":"//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"}
-    })
- });
+
 
  //BANCOS
  $(function (){

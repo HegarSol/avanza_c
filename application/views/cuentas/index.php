@@ -215,6 +215,17 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
     </div>
 
     <script>
+
+      //CONFIG CUENTAS
+//  $(function () {
+   var tableconfigucarioncta = $('#configcuentas').DataTable({
+      responsive: true, filter:true, columnDefs:
+       [ { responsivePriority: 1, targets: 0 }, { responsivePriority: 2, targets: -1 }, { responsivePriority: 3, targets: 2 } ],
+        processing: true, 
+        ajax: { "url": baseurl + "Configuracion/ajax_list2", "type": "POST" },  "language" : {"url":"//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"}
+    })
+//  });
+
          function checar()
    {
          var detallereci = [];
@@ -476,6 +487,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
                 {
                   $('#modalConfig').modal('hide');
                   swal('Correcto','Se guardo correctamente la configuración', 'success');
+                  tableconfigucarioncta.ajax.reload();
                 }
                 else
                 {
