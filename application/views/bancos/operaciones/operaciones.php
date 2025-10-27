@@ -1357,9 +1357,9 @@ function agregarasiento()
     var monto = document.getElementById('cuenta').value;
     var sub_cue = document.getElementById('sub_cuenta').value;
     var ssub_cue = document.getElementById('ssub_cuenta').value;
-    if(monto == '' || sub_cue == '' || ssub_cue == '')
+    if(monto == '' || sub_cue == '' || ssub_cue == '' || monto == 0 || sub_cue == 0 || ssub_cue ==0)
     {
-        swal('Advertencia','Agregue la cuenta, sub cuenta y ssub cuenta','warning');
+        swal('Advertencia','La cuenta, sub cuenta y ssub cuenta no pueden ir vacias ni es ceros','warning');
     }
     else
     {
