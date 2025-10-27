@@ -10,7 +10,7 @@
            parent::__construct(true);
            $this->table = 'catalogocta';
            $this->column_order = array('cuenta','sub_cta','ssub_cta');
-           $this->column_search = array('idcuenta','cuenta','sub_cta','nombre','tipo','ctasat','natur','cvecobro','ssub_cta');
+           $this->column_search = array('cuenta','sub_cta','nombre','ssub_cta');
            if(isset($_SESSION['idEmpresa'])){
              $this->db2 = $this->hegardb->getDatabase($_SESSION['idEmpresa']);
              if(!$this->db2){show_error('No se puede establecer conexion con la base de datos');}

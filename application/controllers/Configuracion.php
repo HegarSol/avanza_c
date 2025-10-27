@@ -42,7 +42,7 @@ class Configuracion extends MY_Controller{
             show_error('No tiene permiso para entrar a la configuracion');
         }
     }
-    public function ajax_list()
+    public function ajax_list2()
     {
         $confgcuen = $this->configModel->getConfigCuentas();        
         $data = array();
