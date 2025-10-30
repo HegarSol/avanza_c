@@ -451,14 +451,15 @@ class Beneficiarios extends MY_Controller
     public function getpendientes()
     {
         $rfc =  $this->input->post('rfc');
+        $pendiente = 0;
         
-        //if(ENVIRONMENT == 'development')
-       // {
-        //     $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/pendientes?empresa=".$rfc);
-        // }
-        // else
-        // {
-            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/pendientes?empresa=".$rfc);
+    //     if(ENVIRONMENT == 'development')
+    //    {
+    //         $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/pendientes?empresa=".$rfc."&pendiente=".$pendiente);
+    //     }
+    //     else
+    //     {
+            $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/pendientes?empresa=".$rfc."&pendiente=".$pendiente);
        // }
 
 
@@ -871,6 +872,7 @@ class Beneficiarios extends MY_Controller
         date_default_timezone_set("America/Mexico_City");
 
         $uuid = $this->input->post('uuid');
+        $estado = '';
 
         if(ENVIRONMENT == 'development')
         {
@@ -883,7 +885,7 @@ class Beneficiarios extends MY_Controller
 
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uuid);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "uuid=".$uuid."&estado=".$estado);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -1416,7 +1418,8 @@ class Beneficiarios extends MY_Controller
             'centro_costos' => $this->input->post('cen_cos'),
             'no_cta3' => $this->input->post('no_cta3') ? $this->input->post('no_cta3') : 0,
             'sub_cta3' => $this->input->post('sub_cta3') ? $this->input->post('sub_cta3') : 0,
-            'traslada_ieps' => $this->input->post('trasieps')
+            'traslada_ieps' => $this->input->post('trasieps'),
+            'conciliado' => $this->input->post('concilia1')
         );
 
         if($id>0)

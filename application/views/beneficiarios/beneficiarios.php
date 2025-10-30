@@ -222,22 +222,30 @@ if(isset($mensaje))
                                                                  <?php
                                                                  $costos = 0;
                                                                  $ieps = 0;
+                                                                 $concilia = 0;
                                                                  if(isset($datos))
                                                                  {
                                                                  $costos = $datos[0]['centro_costos'];
                                                                  $ieps = $datos[0]['traslada_ieps'];
+                                                                 $concilia = $datos[0]['conciliado'];
                                                                  }
 
                                                                  ?>
                                                                  <div class="row">
-                                                                      <div class="col-sm-1"></div>
-                                                                      <div class="col-sm-4">
-                                                                      <div><input type="checkbox" id="cen_cos" name="cen_cos" <?php echo $costos == 1 ? 'checked':  '' ?> > Sus facturas son para centro de costos</div>
-                                                                      </div>
+                                                                 <div class="col-sm-1"></div>
+                                                                 <div class="col-sm-4">
+                                                                 <div><input type="checkbox" id="concilia" name="concilia" <?php echo $concilia == 1 ? 'checked':  '' ?> > Concilia</div>
+                                                                 </div>
                                                                  </div>
                                                                  <div class="row">
                                                                  <div class="col-sm-1"></div>
-                                                                 <div class="col-sm-6">
+                                                                 <div class="col-sm-4">
+                                                                 <div><input type="checkbox" id="cen_cos" name="cen_cos" <?php echo $costos == 1 ? 'checked':  '' ?> > Sus facturas son para centro de costos</div>
+                                                                 </div>
+                                                                 </div>
+                                                                 <div class="row">
+                                                                 <div class="col-sm-1"></div>
+                                                                 <div class="col-sm-4">
                                                                       <div><input type="checkbox" id="trasieps" name="trasieps" <?php echo $ieps == 1 ? 'checked':  '' ?> > Sus facturas tienen IEPS para trasladar y/o provisionar</div>
                                                                  </div>
                                                                  </div>
@@ -381,6 +389,15 @@ function guardardatos(tableID)
    {
       var tranieso1 = 0;
    }
+   var concilia = document.getElementById('concilia');
+   if(concilia.checked == true)
+   {
+      var concilia1 = 1;
+   }
+   else
+   {
+      var concilia1 = 0;
+   }
 
     var xyz = false; var table = x(tableID); 
     var clave = []; var nomb = []; var no_cuent = [];
@@ -445,7 +462,7 @@ function guardardatos(tableID)
                     pais:pais,cp:cp,curp:curp,rfc:rfc,telefono:telefono,email:email,no_cta:no_cta,
                     sub_cta:sub_cta,cta_com:cta_com,sub_com:sub_com,venci:venci,concep:concep,
                     tipo:tipo,cen_cos:cen_cos1,trasieps:tranieso1,no_cta3:no_cta3,sub_cta3:sub_cta3,
-                    clave:clave,nomb:nomb,no_cuent:no_cuent},
+                    clave:clave,nomb:nomb,no_cuent:no_cuent,concilia1:concilia1},
                     success:function(msg)
                     {
                          if(msg.status == 0)
