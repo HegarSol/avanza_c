@@ -29,6 +29,7 @@
         <th style="display:none">ieps</th>
         <th style="display:none">estado sat</th>
         <th style="display:none">poliza_pago</th>
+        <th style="display:none">status</th>
      </tr>
    </thead>
    <tbody>
@@ -67,6 +68,7 @@
              <td style="display:none"><?php echo $comprobante->ieps;?></td>
              <td style="display:none"><?php echo $comprobante->estado_sat;?></td>
              <td style="display:none"><?php echo $comprobante->poliza_pago?></td>
+             <td style="display:none"><?php echo $comprobante->status;?></td>
           </tr>
       <?php endforeach;?>
       <?php endif; ?>
