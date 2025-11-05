@@ -109,7 +109,7 @@ class BalanceGeneral extends MY_Controller
         {
             $erSaldo += $row->sini + $row->periodo;
         }
-         $databalanze[] = (object) array('cuenta' => $pnUN, 'sub_cta' => $pnUN2,'nombre' => 'Resultado del ejercicio', 'saldo' => $erSaldo*-1);
+         $databalanze[] = (object) array('cuenta' => $pnUN, 'sub_cta' => $pnUN2,'nombre' => 'Resultado del ejercicio', 'saldo' => $erSaldo);
       //  var_dump($databalanze);
 
       $tActivoC = 0;
@@ -218,7 +218,7 @@ $this->pdf->SetAutoPageBreak(true,10);
                     $this->pdf->setcol(.9);
                     $this->pdf->cell(20,5,'TOTAL ACTIVO:',0,0,'');
                     $this->pdf->SetCol(2.16);
-                    $this->pdf->Cell(30,5,number_format($tActivoC + $tActivoO, 2),0,0,'R');
+                    $this->pdf->Cell(30,5,number_format($tActivoC + $tActivoF + $tActivoO, 2),0,0,'R');
                        $this->pdf->SetFont('Helvetica','B',8);
                     $this->pdf->Cell(35);
                     $bpc = 1;
