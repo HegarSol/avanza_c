@@ -85,14 +85,16 @@ class BalanceGeneral extends MY_Controller
         $pnCtaEgr2 = $dta9[0]['sub_cta'];
 
 
-        $fechaini = $this->input->post('fechaini');
-
-        $datosfecha = explode('-',$fechaini);
+        $fecha = $this->input->post('fechaini');
+        /// obtener el ultimo día del mes
+        $ultimoDia = date("Y-m-t", strtotime($fecha));
+        $databalanze = $this->operaciones->balancegeneral($ultimoDia,$pnCa2);
+        $datosfecha = explode('-',$fecha);
 
         $anol = $datosfecha[0];
         $mese = $datosfecha[1];
 
-        $databalanze = $this->operaciones->balancegeneral($fechaini,$pnCa2);
+        
 
         $tf0 = $anol.'-01-01';
 
@@ -102,12 +104,12 @@ class BalanceGeneral extends MY_Controller
         $tff = $L->format( 'Y-m-t' );
 
         $dataestado = $this->cuentas->getestadoresultado($tf0,$tfi,$tff);
-
+        $erSaldo = 0;
         foreach($dataestado as $row)
         {
-             $databalanze[] = (object) array('cuenta' => $pnUN, 'sub_cta' => $pnUN2, 'saldo' => $row->sini+$row->periodo);
+            $erSaldo += $row->sini + $row->periodo;
         }
-
+         $databalanze[] = (object) array('cuenta' => $pnUN, 'sub_cta' => $pnUN2,'nombre' => 'Resultado del ejercicio', 'saldo' => $erSaldo*-1);
       //  var_dump($databalanze);
 
       $tActivoC = 0;
@@ -117,48 +119,220 @@ class BalanceGeneral extends MY_Controller
       $tPasivoF = 0;
       $tCapital = 0;
 
+$this->pdf->SetAutoPageBreak(true,10);
+          $this->pdf->AddPage();
+          $this->pdf->SetTitle('Balanza de comprobación');
+          $this->pdf->SetFillColor(220,220,220);
+          $this->pdf->SetDrawColor(220,220,220);
+
+          $this->encabezado();
+
+          $this->pdf->SetFont('Helvetica','B',8);
+          $this->pdf->Ln(10);
+          
+          $this->pdf->SetY(55);
+          $this->pdf->SetCol(0.6);
+          $this->pdf->Cell(70,5,'Nombre',0,0,'');
+          $this->pdf->SetY(55);
+         $this->pdf->SetCol(2.2);
+          $this->pdf->Cell(17,5,'Monto',0,0,'');
+        $this->pdf->Ln(5);
+          $this->pdf->SetCol(.1);
+          $this->pdf->Cell(17,5,'ACTIVO',0,0,'');
+        $this->pdf->Ln(5);
+          $this->pdf->SetCol(.2);
+          $this->pdf->Cell(17,5,'CIRCULANTE',0,0,'');
+        
+         $this->pdf->SetCol(0.1);
+          $this->pdf->Ln(10);
+//          $this->pdf->SetWidths(array(26,50,30,20,25,25,20));
+          $this->pdf->SetFont('Helvetica','',8);
+          $baf = 0;
+          $boa = 0;
+        $bpc = 0;
+          $bpf = 0;
+          $bc = 0;      
+
+            
+
+
+
+          
         foreach($databalanze as $row2)
         {
- 
-            var_dump($row2);
-           // echo "<br>";
-            if($row2->cuenta >= $pnPC && $row2->cuenta <= $pnPF2)
+            if(($row2->cuenta >= $pnPC && $row2->cuenta <= $pnPF2) || ($row2->cuenta >= $pnCa && $row2->sub_cta <= $pnCa2))
             {
                 $row2->saldo = $row2->saldo * -1;
             }
-
-            if($row2->cuenta == $pnCa && $row2->cuenta == $pnCa2)
+            if($row2->cuenta >= $pnAC && $row2->cuenta <= $pnAC2)
             {
-                $row2->saldo = $row2->saldo * -1;
+                $tActivoC += $row2->saldo;
             }
 
-          //  var_dump($row2);
-            echo "<br>";
-            // if($row2['cuenta'] == $pnAC && $row2['sub_cta'] == $pnAC2)
-            // {
-            //     $tActivoC =+ $row2['saldo'];
-            // }
-            // if($row2['cuenta'] == $pnAF && $row2['sub_cta'] == $pnAF2)
-            // {
-            //     $tActivoF =+ $row2['saldo'];
-            // }
-            // if($row2['cuenta'] == $pnOA && $row2['sub_cta'] == $pnOA2)
-            // {
-            //     $tActivoO =+ $row2['saldo'];
-            // }
-            // if($row2['cuenta'] == $pnPC && $row2['sub_cta'] == $pnPC2)
-            // {
-            //     $tPasivoC =+ $row2['saldo'];
-            // }
-            // if($row2['cuenta'] == $pnPF && $row2['sub_cta'] == $pnPF2)
-            // {
-            //     $tPasivoF =+ $row2['saldo'];
-            // }
-            // if($row2['cuenta'] == $pnCa && $row2['sub_cta'] == $pnCa2)
-            // {
-            //     $tCapital =+ $row2['saldo'];
-            // }
+            if(($row2->cuenta >= $pnAF && $row2->cuenta <= $pnAF2) || ($row2->cuenta > $pnAF2 && $row2->cuenta < $pnOA2))
+            {
+                
+                if($baf == 0)
+                {   
+                    $this->pdf->SetFont('Helvetica','B',8);
+                    $this->pdf->Cell(35);
+                    // format number with commas
+                   // $this->pdf->Cell(0,5,'Total activo circulante:',0,0,'R',true);
+                    $this->pdf->Cell(115,5,number_format($tActivoC, 2),0,0,'R');
+                    $baf = 1;
+                    $this->pdf->Ln(10);
+                    $this->pdf->Cell(8);
+                    $this->pdf->Cell(0,0,'FIJO:',0,0,'');
+                    $this->pdf->Ln(5);
+                    $this->pdf->SetFont('Helvetica','',8);
+                }
+                 if($row2->cuenta >= $pnAF && $row2->cuenta <= $pnAF2)
+                {
+                $tActivoF += $row2->saldo;
+                }
+            }
+            if($row2->cuenta >= $pnOA && $row2->cuenta <= $pnOA2)
+            {
+                 if($boa == 0)
+                {   
+                     $this->pdf->SetFont('Helvetica','B',8);
+                    $this->pdf->Cell(35);
+                    $this->pdf->Cell(115,5,number_format($tActivoF, 2),0,0,'R');
+                    $boa = 1;
+                    $this->pdf->Ln(10);
+                    $this->pdf->Cell(8);
+                    $this->pdf->Cell(0,0,'OTROS ACTIVOS:',0,0,'',true);
+                     $this->pdf->SetFont('Helvetica','',8);
+                    $this->pdf->Ln(5);
+                }
+                $tActivoO += $row2->saldo;
+            }
+            if($row2->cuenta >= $pnPC && $row2->cuenta <= $pnPC2)
+            {
+                 if($bpc == 0)
+                 {
+                     $this->pdf->SetFont('Helvetica','B',9);
+                    $this->pdf->Cell(35);
+                    $this->pdf->Cell(115,5,number_format($tActivoO, 2),0,0,'R');
+                    $this->pdf->Ln(10);
+                    $this->pdf->setcol(.9);
+                    $this->pdf->cell(20,5,'TOTAL ACTIVO:',0,0,'');
+                    $this->pdf->SetCol(2.16);
+                    $this->pdf->Cell(30,5,number_format($tActivoC + $tActivoO, 2),0,0,'R');
+                       $this->pdf->SetFont('Helvetica','B',8);
+                    $this->pdf->Cell(35);
+                    $bpc = 1;
+                    $this->pdf->Ln(10);
+                    $this->pdf->Cell(8);
+                    $this->pdf->SetCol(.1);
+                    $this->pdf->Cell(0,5,'PASIVO',0,0,'');
+                    $this->pdf->Ln(10);
+                      $this->pdf->SetCol(.2);
+                    $this->pdf->Cell(17,5,'CIRCULANTE',0,0,'');
+                    $this->pdf->SetCol(0.1);
+                     $this->pdf->SetFont('Helvetica','',8);
+                    $this->pdf->Ln(10);
+                }
+                $tPasivoC += $row2->saldo;
+            }
+            if(($row2->cuenta >= $pnPF && $row2->cuenta <= $pnPF2) || ($row2->cuenta > $pnPF2 && $row2->cuenta < $pnCa2))
+            {
+                    if($bpf == 0)
+                    {   
+                        $this->pdf->Cell(35);
+                        $this->pdf->SetCol(2.16);
+                        $this->pdf->SetFont('Helvetica','B',8);
+                        $this->pdf->Cell(115,5,number_format($tPasivoC, 2),0,0,'');
+                        $bpf = 1;
+                        $this->pdf->Ln(5);
+                        $this->pdf->SetCol(.2);
+                        $this->pdf->Cell(17,5,'NO CIRCULANTE:',0,0,'');
+                        $this->pdf->SetFont('Helvetica','',8);
+                        $this->pdf->Ln(5);
+                    }
+                    if($row2->cuenta >= $pnPF && $row2->cuenta <= $pnPF2)
+            {
+                $tPasivoF += $row2->saldo;
+            }
+            }
+            if($row2->cuenta >= $pnCa && $row2->cuenta <= $pnCa2)
+            {
+                  if($bc == 0)
+                    {   
+                        $this->pdf->Cell(35);
+                         $this->pdf->SetFont('Helvetica','B',8);
+                        $this->pdf->Cell(109,5,number_format($tPasivoF, 2),0,0,'R');
+                        $bc = 1;
+                        $this->pdf->Ln(5);
+                        $this->pdf->SetCol(.1);
+                        $this->pdf->Cell(17,5,'CAPITAL',0,0,'');
+                         $this->pdf->SetFont('Helvetica','',8);
+                        $this->pdf->Ln(5);
+                    }
+                $tCapital += $row2->saldo;
+            }
+                 $this->pdf->Cell(20);
+                $this->pdf->Cell(0,0,$row2->cuenta,0,1,'');
+                $this->pdf->Cell(35);
+                $this->pdf->Cell(0,0,$row2->nombre,0,1,'');
+
+                $this->pdf->Cell(35);
+                $this->pdf->Cell(115,0,number_format($row2->saldo, 2),0,1,'R');
+                $this->pdf->Ln(5);
+        }
+        // toal de capital
+            $this->pdf->Cell(35);
+            $this->pdf->SetFont('Helvetica','B',8);
+            $this->pdf->Cell(115,5,number_format($tCapital, 2),0,0,'R');
+             $this->pdf->SetFont('Helvetica','',8);
+            $this->pdf->Ln(10);
+            $this->pdf->SetFont('Helvetica','B',9);
+            $this->pdf->setcol(.9);
+                    $this->pdf->cell(20,5,'TOTAL PASIVO + CAPITAL:',0,0,'');
+                    $this->pdf->SetCol(2.16);
+                    $this->pdf->Cell(30,5,number_format($tPasivoC + $tPasivoF + $tCapital, 2),0,0,'R');
+                       $this->pdf->SetFont('Helvetica','B',8);
+
+        $this->pdf->footer2();
+          $this->pdf->Output('I','ReporteBalanceGeneral.pdf');
+
+    }
+    public function encabezado()
+    {
+        $this->rowc = $this->configModel->getConfig();
+      //  date_default_timezone_set("America/Mexico_City");
+        // $img = $this->rowc[0]['imgName'];
+        // $formato = explode(".",$this->rowc[0]['imgName']);
+        // $imagen = $this->rowc[0]['img'];
+        // base64_decode($imagen));
+        if(!empty($this->rowc[0]['img']) || $this->rowc[0]['img']!='' ){
+
+          
+            $formato = explode(".", $this->rowc[0]['imgName']);
+            $imagen =$this->rowc[0]['img'];
+          
+          // Guardamos la imagen
+          file_put_contents(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1] ,
+            base64_decode($imagen));
+            // if($this->rowSerie[0]['noLogo']!=1)
+            // {$this->pdf->Image(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1],2,2,90,30);}
+        }
+        if(isset($formato))
+        {
+          $this->pdf->Image(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1],2,2,80,50);
         }
 
+        $this->pdf->SetFont('Helvetica','B',15);
+        $this->pdf->Cell(70);
+        $this->pdf->Cell(10,0,$this->rowc[0]['nombreEmpresa'],0,0,'L');
+        $this->pdf->Ln(20);
+        $this->pdf->Cell(70);
+        $this->pdf->SetFont('Helvetica','B',10);
+        $this->pdf->Cell(10,0,'Reporte: Balance general');
+        $this->pdf->Ln(5);
+        $this->pdf->Cell(70);
+        $this->pdf->SetFont('Helvetica','B',10);
+        $this->pdf->Cell(10,0,'Periodo: '.$this->input->post('fechaini'));
+        
     }
 }
