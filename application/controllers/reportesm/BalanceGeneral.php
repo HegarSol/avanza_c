@@ -94,8 +94,6 @@ class BalanceGeneral extends MY_Controller
         $anol = $datosfecha[0];
         $mese = $datosfecha[1];
 
-        
-
         $tf0 = $anol.'-01-01';
 
         $tfi = date($anol.'-'.$mese.'-01');
@@ -121,14 +119,14 @@ class BalanceGeneral extends MY_Controller
 
 $this->pdf->SetAutoPageBreak(true,10);
           $this->pdf->AddPage();
-          $this->pdf->SetTitle('Balanza de comprobación');
+          $this->pdf->SetTitle('Balance general');
           $this->pdf->SetFillColor(220,220,220);
           $this->pdf->SetDrawColor(220,220,220);
 
           $this->encabezado();
 
           $this->pdf->SetFont('Helvetica','B',8);
-          $this->pdf->Ln(10);
+          //$this->pdf->Ln(10);
           
           $this->pdf->SetY(55);
           $this->pdf->SetCol(0.6);
@@ -319,13 +317,13 @@ $this->pdf->SetAutoPageBreak(true,10);
         }
         if(isset($formato))
         {
-          $this->pdf->Image(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1],2,2,80,50);
+          $this->pdf->Image(APPPATH . 'public'.DIRECTORY_SEPARATOR.'Logo_' . $this->rowc[0]['rfc'] .'.'.$formato[1],10,5,50,25);
         }
 
         $this->pdf->SetFont('Helvetica','B',15);
         $this->pdf->Cell(70);
         $this->pdf->Cell(10,0,$this->rowc[0]['nombreEmpresa'],0,0,'L');
-        $this->pdf->Ln(20);
+        $this->pdf->Ln(5);
         $this->pdf->Cell(70);
         $this->pdf->SetFont('Helvetica','B',10);
         $this->pdf->Cell(10,0,'Reporte: Balance general');
