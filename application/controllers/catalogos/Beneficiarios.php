@@ -17,6 +17,8 @@ class Beneficiarios extends MY_Controller
         $this->load->model('CatalogosModel','catalogos');
         $this->load->model('EmpresasModel','empresas');
         $this->load->model('DepartamentoCostosModel','deparcostos');
+        $this->load->model('ConfigCuentasModel','configcuentas');
+        $this->load->model('CuentasModel','cuentas');
     }
     public function index()
     {
@@ -25,7 +27,6 @@ class Beneficiarios extends MY_Controller
         {
            if($this->aauth->is_loggedin())
            {
-
                $errores=array();
                $rfc = $this->configModel->getConfig();
                $CXP = 'bene';
@@ -1344,9 +1345,20 @@ class Beneficiarios extends MY_Controller
 
             if(isset($permisos) && $permisos['add'] == "1")
             {
+                $emp = $this->empresas->datosEmpresa($_SESSION['idEmpresa']);
+                if($emp[0]['usactacontable'] == 1)
+                {
+                  $configcta = $this->configcuentas->getidcuentaconfi(29);
+                  $cuentactabene = $configcta[0]['cuenta'].'-'.$configcta[0]['sub_cta'].'-';
+                }
+                else
+                {
+                  $cuentactabene = '';
+                }
+
                  $rfc = $this->input->get('rfc');
                  $nombre = $this->input->get('nombre');
-                 $data = array('titulo' => 'Nuevo beneficiario','datas' => $datas,'rfc' => $rfc,'nombre' => $nombre,'accion' => 'catalogos/Beneficiarios/guardarbenefi','permisosGrupo' => $permisos, 'mensaje' => $mensaje);
+                 $data = array('titulo' => 'Nuevo beneficiario','datas' => $datas,'configcta' => $cuentactabene,'rfc' => $rfc,'nombre' => $nombre,'accion' => 'catalogos/Beneficiarios/guardarbenefi','permisosGrupo' => $permisos, 'mensaje' => $mensaje);
                  $this->load->view('templates/navigation',$data);
                  $this->load->view('beneficiarios/beneficiarios');
                  $this->load->view('templates/footer');
@@ -1368,9 +1380,20 @@ class Beneficiarios extends MY_Controller
             $permisos = $this->permisosForma($_SESSION['id'],8);
              if(isset($permisos) && $permisos['add'] == "1")
              {
+                $emp = $this->empresas->datosEmpresa($_SESSION['idEmpresa']);
+                if($emp[0]['usactacontable'] == 1)
+                {
+                  $configcta = $this->configcuentas->getidcuentaconfi(29);
+                  $cuentactabene = $configcta[0]['cuenta'].'-'.$configcta[0]['sub_cta'].'-';
+                }
+                else
+                {
+                  $cuentactabene = '';
+                }
+
                   $datos=$this->benefi->datosBenefi($id);
                   $detalle = $this->benefi->detallebene($datos[0]['no_prov']);
-                  $data = array('titulo' => 'Editar beneficiario', 'accion' => 'catalogos/Beneficiarios/guardarbenefi','permisosGrupo' => $permisos, 'datos' => $datos, 'detalle' => $detalle);
+                  $data = array('titulo' => 'Editar beneficiario','configcta' => $cuentactabene, 'accion' => 'catalogos/Beneficiarios/guardarbenefi','permisosGrupo' => $permisos, 'datos' => $datos, 'detalle' => $detalle);
                   $this->load->view('templates/navigation',$data);
                   $this->load->view('beneficiarios/beneficiarios');
                   $this->load->view('templates/footer');
@@ -1385,148 +1408,179 @@ class Beneficiarios extends MY_Controller
             redirect('/inicio/login','refresh');
         }
     }
+    public function guardatosbenefi($id)
+    {
+               $correcto = false;
+                        $datos = array(
+                            'no_prov' => $this->input->post('no_prov'),
+                            'nombre' => $this->input->post('nombre'),
+                            'direccion' => $this->input->post('direccion'),
+                            'no_interior' => $this->input->post('no_inte'),
+                            'no_exterior' => $this->input->post('no_ext'),
+                            'ciudad' => $this->input->post('ciudad'),
+                            'colonia' => $this->input->post('colonia'),
+                            'municipio' => $this->input->post('municipio'),
+                            'estado' => $this->input->post('estado'),
+                            'pais' => $this->input->post('pais'),
+                            'cp' => $this->input->post('cp') ? $this->input->post('cp') : 0,
+                            'curp' => $this->input->post('curp'),
+                            'rfc' => $this->input->post('rfc'),
+                            'telefono' => $this->input->post('telefono'),
+                            'email' => $this->input->post('email'),
+                            'solo_credito' => 0,
+                            'no_cta' => $this->input->post('no_cta') ? $this->input->post('no_cta') : 0,
+                            'sub_cta' => $this->input->post('sub_cta') ? $this->input->post('sub_cta') : 0,
+                            'ctacom' => $this->input->post('cta_com') ? $this->input->post('cta_com') : 0,
+                            'subcom' => $this->input->post('sub_com') ? $this->input->post('sub_com') : 0,
+                            'vencim' => $this->input->post('venci') ? $this->input->post('venci') : 0,
+                            'concepto' => $this->input->post('concep') ? $this->input->post('concep') : '',
+                            'tipo_prov' => $this->input->post('tipo'),
+                            'centro_costos' => $this->input->post('cen_cos'),
+                            'no_cta3' => $this->input->post('no_cta3') ? $this->input->post('no_cta3') : 0,
+                            'sub_cta3' => $this->input->post('sub_cta3') ? $this->input->post('sub_cta3') : 0,
+                            'traslada_ieps' => $this->input->post('trasieps'),
+                            'conciliado' => $this->input->post('concilia1'),
+                            'cta_contable' => $this->input->post('cta_contable') != '' ? $this->input->post('cta_contable') : null,
+                        );
+
+                        if($id>0)
+                        {
+                            $opera = array('usuario' => $_SESSION['nombreU'],
+                                            'tipo_mov' => '',
+                                            'no_banco' => '',
+                                            'no_mov' => '',
+                                            'accion' => 'Modificar',
+                                            'cuando' => date('Y-m-d H:i:s'),
+                                            'comentario' => 'Modifico el proveddor numero: '.$this->input->post('no_prov'),
+                                            'modulo' => 'Catalogos -> Beneficiario');
+                                $this->bitacora->operacion($opera);
+                            $correcto=$this->benefi->EditarBeneficiario($id,$datos);
+                            $tra = 0;
+                        }
+                        else
+                        {
+                            $checar = $this->benefi->verificarsiexiste($this->input->post('no_prov'));
+
+                            if(count($checar) > 0)
+                            {
+                               return $mensaje = array('status' => 0,'mensage' => 'Ya existe este numero de beneficiario.');
+                                $tra = 1;
+                            }
+                            else
+                            {
+                                $opera = array('usuario' => $_SESSION['nombreU'],
+                                            'tipo_mov' => '',
+                                            'no_banco' => '',
+                                            'no_mov' => '',
+                                            'accion' => 'Agregar',
+                                            'cuando' => date('Y-m-d H:i:s'),
+                                            'comentario' => 'Agrego la beneficiario ó proveedor: '.$this->input->post('nombre'). ' con numero: '.$this->input->post('no_prov'),
+                                            'modulo' => 'Catalogos -> Beneficiario');
+                                $this->bitacora->operacion($opera);
+
+                                $correcto=$this->benefi->crearBeneficiario($datos);
+                                $tra = 0;
+
+                            }
+                        }
+
+                        if($tra == 0)
+                        {
+                            if($correcto == true)
+                            {
+
+                                $this->benefi->borrarbancoDetalle($this->input->post('no_prov'));
+                    
+                                $clav = $this->input->post('clave');
+                                $nomb = $this->input->post('nomb');
+                                $no_cu = $this->input->post('no_cuent');
+                                
+                                if(isset($clav[1]))
+                                {
+                                    $vr = 1;
+                                }
+                                else
+                                {
+                                    $vr = 0;
+                                }
+                                if($vr == 1)
+                                {
+                                    if(count($clav) > 0)
+                                    {
+                                        for($i=1; $i<count($clav); $i++)
+                                        {
+                                            $detalle = array(
+                                                'no_prov' => $this->input->post('no_prov'),
+                                                'ctaBan' => $no_cu[$i],
+                                                'bancoSat' => $clav[$i],
+                                                'ctaClabe' => '',
+                                                'nombre' => $nomb[$i]
+                                            );
+                                            $detalle = $this->benefi->guardarDetalle($detalle);
+                                        }
+
+                                        if($detalle > 0)
+                                        {
+                                              return $mensaje = array('status' => 1,'mensage' => 'Insertado correctamente.');
+                                        
+                                        }
+                                        else
+                                        {
+                                           return $mensaje = array('status' => 2,'mensage' => 'Hubo un error al insertar el banco del beneficiario.');
+                                        }
+                                    }
+                                    else
+                                    {
+                                        return $mensaje = array('status' => 1,'mensage' => 'Insertado correctamente.');
+                                    }
+                                }
+                                else
+                                {
+                                    return $mensaje = array('status' => 1,'mensage' => 'Insertado correctamente.');
+                                }
+
+                            }
+                            else
+                            {
+                                return $mensaje = array('status' => 2,'mensage' => 'Hubo un error la insertar los datos, intentelo mas tarde.');
+                            
+                            }
+                        }
+    }
     public function guardarbenefi()
     {
         date_default_timezone_set("America/Mexico_City");
         $id = $this->input->post('id');
 
-        $correcto = false;
-        $datos = array(
-            'no_prov' => $this->input->post('no_prov'),
-            'nombre' => $this->input->post('nombre'),
-            'direccion' => $this->input->post('direccion'),
-            'no_interior' => $this->input->post('no_inte'),
-            'no_exterior' => $this->input->post('no_ext'),
-            'ciudad' => $this->input->post('ciudad'),
-            'colonia' => $this->input->post('colonia'),
-            'municipio' => $this->input->post('municipio'),
-            'estado' => $this->input->post('estado'),
-            'pais' => $this->input->post('pais'),
-            'cp' => $this->input->post('cp') ? $this->input->post('cp') : 0,
-            'curp' => $this->input->post('curp'),
-            'rfc' => $this->input->post('rfc'),
-            'telefono' => $this->input->post('telefono'),
-            'email' => $this->input->post('email'),
-            'solo_credito' => 0,
-            'no_cta' => $this->input->post('no_cta') ? $this->input->post('no_cta') : 0,
-            'sub_cta' => $this->input->post('sub_cta') ? $this->input->post('sub_cta') : 0,
-            'ctacom' => $this->input->post('cta_com') ? $this->input->post('cta_com') : 0,
-            'subcom' => $this->input->post('sub_com') ? $this->input->post('sub_com') : 0,
-            'vencim' => $this->input->post('venci') ? $this->input->post('venci') : 0,
-            'concepto' => $this->input->post('concep') ? $this->input->post('concep') : '',
-            'tipo_prov' => $this->input->post('tipo'),
-            'centro_costos' => $this->input->post('cen_cos'),
-            'no_cta3' => $this->input->post('no_cta3') ? $this->input->post('no_cta3') : 0,
-            'sub_cta3' => $this->input->post('sub_cta3') ? $this->input->post('sub_cta3') : 0,
-            'traslada_ieps' => $this->input->post('trasieps'),
-            'conciliado' => $this->input->post('concilia1')
-        );
 
-        if($id>0)
-        {
-               $opera = array('usuario' => $_SESSION['nombreU'],
-                              'tipo_mov' => '',
-                              'no_banco' => '',
-                              'no_mov' => '',
-                              'accion' => 'Modificar',
-                              'cuando' => date('Y-m-d H:i:s'),
-                              'comentario' => 'Modifico el proveddor numero: '.$this->input->post('no_prov'),
-                              'modulo' => 'Catalogos -> Beneficiario');
-                  $this->bitacora->operacion($opera);
-            $correcto=$this->benefi->EditarBeneficiario($id,$datos);
-            $tra = 0;
-        }
-        else
-        {
-            $checar = $this->benefi->verificarsiexiste($this->input->post('no_prov'));
+         $emp = $this->empresas->datosEmpresa($_SESSION['idEmpresa']);
 
-            if(count($checar) > 0)
-            {
-                $mensaje = array('status' => 0,'mensage' => 'Ya existe este numero de beneficiario.');
-                $tra = 1;
-            }
-            else
-            {
-                $opera = array('usuario' => $_SESSION['nombreU'],
-                               'tipo_mov' => '',
-                               'no_banco' => '',
-                               'no_mov' => '',
-                               'accion' => 'Agregar',
-                               'cuando' => date('Y-m-d H:i:s'),
-                               'comentario' => 'Agrego la beneficiario ó proveedor: '.$this->input->post('nombre'). ' con numero: '.$this->input->post('no_prov'),
-                               'modulo' => 'Catalogos -> Beneficiario');
-                   $this->bitacora->operacion($opera);
-
-                $correcto=$this->benefi->crearBeneficiario($datos);
-                $tra = 0;
-
-            }
-        }
-
-         if($tra == 0)
+          if($emp[0]['usactacontable'] == 1 && $this->input->post('cta_contable') == '')
          {
-            if($correcto == true)
-            {
-
-                $this->benefi->borrarbancoDetalle($this->input->post('no_prov'));
-    
-                $clav = $this->input->post('clave');
-                $nomb = $this->input->post('nomb');
-                $no_cu = $this->input->post('no_cuent');
-                
-                if(isset($clav[1]))
+                    $mensaje = array('status' => 3,'mensage' => 'Su empresa esta configurada para que agregue una cuenta contable a su beneficiario o proveedor.');
+         }
+         else
+         {
+                if($this->input->post('cta_contable') != '')
                 {
-                    $vr = 1;
-                }
-                else
-                {
-                    $vr = 0;
-                }
-                if($vr == 1)
-                {
-                    if(count($clav) > 0)
+                    $cta = explode('-',$this->input->post('cta_contable'));
+                    $ctaexis = $this->cuentas->verificarsiexiste($cta[0],$cta[1],$cta[2]);
+                    if(count($ctaexis) == 0)
                     {
-                        for($i=1; $i<count($clav); $i++)
-                        {
-                            $detalle = array(
-                                'no_prov' => $this->input->post('no_prov'),
-                                'ctaBan' => $no_cu[$i],
-                                'bancoSat' => $clav[$i],
-                                'ctaClabe' => '',
-                                'nombre' => $nomb[$i]
-                            );
-                            $detalle = $this->benefi->guardarDetalle($detalle);
-                        }
-
-                        if($detalle > 0)
-                        {
-                        $mensaje = array('status' => 1,'mensage' => 'Insertado correctamente.');
-                        
-                        }
-                        else
-                        {
-                            $mensaje = array('status' => 2,'mensage' => 'Hubo un error al insertar el banco del beneficiario.');
-                        }
+                        $mensaje = array('status' => 2,'mensage' => 'La cuenta contable que registro, no existe en el catalogo de cuentas.');
                     }
                     else
                     {
-                        $mensaje = array('status' => 1,'mensage' => 'Insertado correctamente.');
+                        $mensaje = $this->guardatosbenefi($id);
                     }
                 }
-                else
+                else 
                 {
-                    $mensaje = array('status' => 1,'mensage' => 'Insertado correctamente.');
+                   $mensaje = $this->guardatosbenefi($id);
                 }
+         }
 
-            }
-            else
-            {
-                $mensaje = array('status' => 2,'mensage' => 'Hubo un error la insertar los datos, intentelo mas tarde.');
-             
-            }
-        }
-        
-            $this->output->set_content_type('application/json')->set_output(json_encode($mensaje));
+      $this->output->set_content_type('application/json')->set_output(json_encode($mensaje));
     }
     public function eliminar($id)
     {
