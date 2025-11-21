@@ -167,6 +167,13 @@ if(isset($mensaje))
                                                                       </div>
                                                                  </div>
                                                                  <br> -->
+                                                                 <div class="row">
+                                                                        &nbsp;&nbsp; <p id="mensaje" style="color:red;"></p>
+                                                                        <div class="col-sm-2">
+                                                                             <label for="cta contable" >Cuenta contable</label>
+                                                                             <input type="text" class="form-control" onkeyup="validar()" maxlength="13" value="<?php echo isset($datos[0]['cta_contable']) ? $datos[0]['cta_contable'] : $configcta ?>" id="cta_contable" name="cta_contable">
+                                                                        </div>
+                                                                 </div>
                                                                  <div class="row" style="display:none">
                                                                       <label class="control-label col-sm-3" for="cta cont. gato">Cta Cont. Gato: &nbsp;&nbsp;<a class="glyphicon glyphicon-search" data-toggle="modal" data-target="#myModalCuentasBeneficiario"></a></label>
                                                                            <div class="col-sm-2">
@@ -325,6 +332,26 @@ if(isset($mensaje))
 </div>
 
 <script>
+     document.getElementById("cta_contable").addEventListener("input", function() {
+    this.value = this.value.replace(/[^\d-]/g, ""); // elimina todo excepto números y guion
+});
+function validarFormato(valor) {
+    const regex = /^\d{3,4}-\d{1,3}-\d{3,4}$/;
+    return regex.test(valor);
+}
+
+function validar() {
+    const valor = document.getElementById("cta_contable").value;
+    const mensaje = document.getElementById("mensaje");
+
+    if (validarFormato(valor)) {
+        mensaje.textContent = "Formato correcto";
+        mensaje.style.color = "green";
+    } else {
+        mensaje.textContent = "Formato incorrecto (usa 1234-123-1234 o 123-123-123)";
+        mensaje.style.color = "red";
+    }
+}
 function guardardatos(tableID)
 {
    var id = document.getElementById('id').value;
@@ -370,6 +397,7 @@ function guardardatos(tableID)
    var no_cta3 = document.getElementById('no_cta3').value == 0 ? '' : document.getElementById('no_cta3').value;
    var sub_cta3 = document.getElementById('sub_cta3').value == 0 ? '' : document.getElementById('sub_cta3').value;
    var venci = document.getElementById('venci').value;
+   var cta_contable = document.getElementById('cta_contable').value;
    var concep = document.getElementById('concep').value;
    var cen_cos = document.getElementById("cen_cos");
    if(cen_cos.checked == true)
@@ -462,7 +490,7 @@ function guardardatos(tableID)
                     pais:pais,cp:cp,curp:curp,rfc:rfc,telefono:telefono,email:email,no_cta:no_cta,
                     sub_cta:sub_cta,cta_com:cta_com,sub_com:sub_com,venci:venci,concep:concep,
                     tipo:tipo,cen_cos:cen_cos1,trasieps:tranieso1,no_cta3:no_cta3,sub_cta3:sub_cta3,
-                    clave:clave,nomb:nomb,no_cuent:no_cuent,concilia1:concilia1},
+                    clave:clave,nomb:nomb,no_cuent:no_cuent,concilia1:concilia1,cta_contable:cta_contable},
                     success:function(msg)
                     {
                          if(msg.status == 0)
@@ -473,6 +501,14 @@ function guardardatos(tableID)
                          {
                               swal('Correcto',msg.mensage,'success');
                                setTimeout(function(){ window.location.href=baseurl+'catalogos/Beneficiarios/index'; }, 500);
+                         }
+                         else if(msg.status == 2)
+                         {
+                              swal('Error',msg.mensage,'error');
+                         }
+                         else if(msg.status == 4)
+                         {
+                              swal('Error',msg.mensage,'error');
                          }
                          else
                          {

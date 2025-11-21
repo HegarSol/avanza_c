@@ -13,7 +13,7 @@ class Servicio extends CI_Controller
     }
     public function pendientes()
     {
-        $json = file_get_contents('empresas.json');
+        $json = file_get_contents('empre.json');
         $data = json_decode($json, true);
         $inserycance = 1;
 

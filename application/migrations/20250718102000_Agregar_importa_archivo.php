@@ -17,6 +17,6 @@ class Migration_Agregar_importa_archivo extends CI_Migration {
     }
     public function down()
     {
-        $this->db->delete('menus',array('id' => 20));
+        $this->db->delete('menus',array('id' => 24));
     }
 }

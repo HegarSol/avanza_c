@@ -59,6 +59,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
         $CI->load->model('ConfiguracionesGenemodel','configene');
         $CI->load->model('CuentasModel','cuentas');
         $CI->load->model('BeneficiarioModel','beneficiario');
+        $CI->load->model('EmpresasModel','empresas');
 
        $conf = $CI->configcon->getConfig();
 
@@ -617,7 +618,23 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                       //  var_dump($sumaimpueeips);
                         $activo = $CI->configene->getcxpprovpropios();
-                        $propios = $CI->conficue->getidcuentaconfi(29);
+                        $emp = $CI->empresas->datosEmpresa($_SESSION['idEmpresa']);
+                
+                        if($emisordatos[0]['cta_contable'] != '' && $emp[0]['usactacontable'] == 1)
+                        {
+                           $pro = explode('-', $emisordatos[0]['cta_contable']);
+                           $nom_cuen = $CI->cuentas->get_cuenta($pro[0],$pro[1],$pro[2]);
+                           $propios[0] = array('cuenta' => $pro[0],
+                                                'sub_cta' => $pro[1],
+                                                'descrip' => $nom_cuen[0]['nombre'],
+                                                'ssub_cta' => $pro[2]
+                                                ); 
+                        }
+                        else
+                        {
+                           $propios = $CI->conficue->getidcuentaconfi(29);
+                        }
+
                         $acreedor = $CI->conficue->getidcuentaconfi(58);
                     
                          //SI EL RFC DE LA EMPRESA ES LA MISMA AL RFC DEL RECEPTOR DE LA FACTURA ENTONCES EN PROVEEDOR PROPIO
