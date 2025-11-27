@@ -38,14 +38,14 @@
                 $this->dbEmpresa->from('catalogocta');
                 $this->dbEmpresa->where('cuenta',$cuentamayor);
                 $query = $this->dbEmpresa->get();
-                return $row->result_array();
+                return $query->result_array();
             }
             else
             {
                 $this->dbEmpresa->select('*');
                 $this->dbEmpresa->from('catalogocta');
                 $query = $this->dbEmpresa->get();
-                return $row->result_array();
+                return $query->result_array();
             }
         }
         public function getcuentastodas()
