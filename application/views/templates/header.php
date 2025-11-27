@@ -9,7 +9,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Pagina de presentacion e Inicio de Sesion de los usuarios">
-  <link rel="shortcut icon" href="<?php echo base_url('public');?>/favicon.ico">
+    <link rel="icon" href="<?= base_url('public/favicon.ico');?>" type="image/x-icon">
   <link href="<?php echo base_url('public/css');?>/bootstrap.min.css" rel="stylesheet">
   <link href="<?php echo base_url('public/css');?>/dataTables.bootstrap.css" rel="stylesheet">
   <link href="<?php echo base_url('public/css');?>/dataTables.tableTools.css" rel="stylesheet">

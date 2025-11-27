@@ -106,6 +106,23 @@ class Archivo extends REST_Controller
         }
 
     }
+    public function traercuentas_get()
+    {
+        $idempre = $this->get('idempre');
+        $cuentamyor = $this->get('cuentamayor');
+
+        if($idempre)
+        {
+            $this->cuentas->set_database($idempre);
+            $datos = $this->cuentas->getCuentastodosEmpresa($cuentamyor);
+            $this->response(array('status' => true, 'data' => $datos));
+        }
+        else
+        {
+            $this->response(array('status' => false, 'data' => 'ID de empresa no proporcionado o no existe.'));
+        }
+
+    }
     public function insertarapipoliza_post()
     {
         $body = file_get_contents('php://input');
