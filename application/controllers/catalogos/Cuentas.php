@@ -23,7 +23,7 @@ class Cuentas extends MY_Controller
            if(isset($permisos) && $permisos['leer']=="1")
            {
                $nombrempre = $this->confi->getConfig();
-               $data = array('titulo' => 'Cátalogo de cuentas','permisosGrupo' =>  $permisos,'empresanombre'=>$nombrempre);
+               $data = array('titulo' => 'Catálogo de cuentas','permisosGrupo' =>  $permisos,'empresanombre'=>$nombrempre);
                $this->load->view('templates/navigation',$data);
                $this->load->view('cuentas/index');
                $this->load->view('templates/footer');
