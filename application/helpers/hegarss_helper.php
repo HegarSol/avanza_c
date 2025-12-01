@@ -620,28 +620,29 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         $activo = $CI->configene->getcxpprovpropios();
                         $emp = $CI->empresas->datosEmpresa($_SESSION['idEmpresa']);
                 
-                        if($emisordatos[0]['cta_contable'] != '' && $emp[0]['usactacontable'] == 1)
+                        
+                       
+                    
+                         //SI EL RFC DE LA EMPRESA ES LA MISMA AL RFC DEL RECEPTOR DE LA FACTURA ENTONCES EN PROVEEDOR PROPIO
+                         //var_dump($totalfactu);
+
+                        if($totalgastos > 0)
+                        {  
+                           if($emisordatos[0]['cta_contable'] != '' && $emp[0]['usactacontable'] == 1)
                         {
                            $pro = explode('-', $emisordatos[0]['cta_contable']);
                            $nom_cuen = $CI->cuentas->get_cuenta($pro[0],$pro[1],$pro[2]);
-                           $propios[0] = array('cuenta' => $pro[0],
+                           $acreedor[0] = array('cuenta' => $pro[0],
                                                 'sub_cta' => $pro[1],
                                                 'descrip' => $nom_cuen[0]['nombre'],
                                                 'ssub_cta' => $pro[2]
                                                 ); 
                         }
                         else
-                        {
-                           $propios = $CI->conficue->getidcuentaconfi(29);
-                        }
-
+                        {    
                         $acreedor = $CI->conficue->getidcuentaconfi(58);
-                    
-                         //SI EL RFC DE LA EMPRESA ES LA MISMA AL RFC DEL RECEPTOR DE LA FACTURA ENTONCES EN PROVEEDOR PROPIO
-                         //var_dump($totalfactu);
-
-                        if($totalgastos > 0)
-                        {                            
+                        } 
+                            
                             $totalron = round($totalgastos,2);
                             $totaldescu = round($gDescuento,2);
                             $totalrealg = round($totalrealproacreg,2);
@@ -658,6 +659,20 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         }
                         if($totalcompras > 0)
                         {
+                            if($emisordatos[0]['cta_contable'] != '' && $emp[0]['usactacontable'] == 1)
+                        {
+                           $pro = explode('-', $emisordatos[0]['cta_contable']);
+                           $nom_cuen = $CI->cuentas->get_cuenta($pro[0],$pro[1],$pro[2]);
+                           $propios[0] = array('cuenta' => $pro[0],
+                                                'sub_cta' => $pro[1],
+                                                'descrip' => $nom_cuen[0]['nombre'],
+                                                'ssub_cta' => $pro[2]
+                                                ); 
+                        }
+                        else
+                        {
+                           $propios = $CI->conficue->getidcuentaconfi(29);
+                        }
                             $totalron = round($totalcompras,2);
                             $totaldescu = round($cDescuento,2);
                             $totalrealc = round($totalrealproacrec,2);
