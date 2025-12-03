@@ -13,6 +13,7 @@ class Herramientas extends MY_Controller
        $this->load->model('Configuraciones_model','configModel');
        $this->load->model('ConfigCuentasModel','conficue');
        $this->load->model('OperacionesModel','opera');
+       $this->load->model('DicCuentasModel','diccue');
        $this->load->library('PHPExcel');
     }
 
@@ -35,6 +36,75 @@ class Herramientas extends MY_Controller
         {
             redirect('inicio/login','refresh');
         }
+    }
+    public function Diccionarioconta()
+    {
+        if($this->aauth->is_loggedin())
+        {
+             $errores=array();
+             $rfc = $this->configModel->getConfig();
+             $permisos=$this->permisosForma($_SESSION['id'],17);
+             $data=array('titulo'=>'Diccionario Contable','rfc'=>$rfc[0]['rfc'],'razon'=>$this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores'=>$errores,'permisosGrupo'=>$permisos);
+             $items=$this->menuModel->menus($_SESSION['tipo']);
+             $this->multi_menu->set_items($items);
+             $this->load->view('templates/header');
+             $this->load->view('templates/navigation',$data);
+             $this->load->view('herramientas/diccionarioconta');
+             $this->load->view('templates/footer');
+        }
+        else
+        {
+            redirect('inicio/login','refresh');
+        }
+    }
+    public function editarcuenta()
+    {
+        $id = $this->input->post('id');
+        $cuenta = $this->input->post('cuenta');
+        $sub_cta = $this->input->post('sub_cta');
+        $ssub_cta = $this->input->post('ssub_cta');
+        $codigoSAT = $this->input->post('codigoSAT');
+
+        $datos = array(
+            'cuenta' => $cuenta,
+            'sub_cta' => $sub_cta,
+            'ssub_cta' => $ssub_cta,
+            'codigoSAT' => $codigoSAT
+        );
+        $this->diccue->editarCuenta($id,$datos);
+        echo json_encode(array('status' => true, 'code' => 0 ,'data' => 'Cuenta editada correctamente'));
+        exit();
+    }
+    public function ajax_list_cta_contable()
+    {
+        $permisos = $this->permisosForma($_SESSION['id'],17);
+        $edit = $permisos['edit'];
+        $del = $permisos['del'];
+        $print = $permisos['print'];
+        if($edit=="0"){$edit='class="disabled"';} else {$edit="";}
+        if($del=="0"){$del='class="disabled"';} else {$del="";}
+        if($print=="0"){$print='class="disabled"';} else{$print="";}
+        $list = $this->diccue->get_datatables();
+
+        $data = array();
+        foreach($list as $dicon)
+        {
+            $row = array();
+            $row[] = $dicon->id;
+            $row[] = $dicon->codigoSAT;
+            $row[] = $dicon->cuenta;
+            $row[] = $dicon->sub_cta;
+            $row[] = $dicon->ssub_cta;
+            $row[] = '<button onclick="editarcuenta(\''.$dicon->cuenta.'\',\''.$dicon->sub_cta.'\',\''.$dicon->ssub_cta.'\',\''.$dicon->codigoSAT.'\',\''.$dicon->id.'\')" '.$edit.' class="btn btn-primary" title="Editar cuenta"><i class="fa fa-pencil"></i></button>';
+            $data[] = $row;
+        }
+        $output = array(
+            'draw' => $this->input->post('draw'),
+            'recordsTotal' =>  $this->diccue->count_all(),
+            'recordsFiltered' => $this->diccue->count_filtered(),
+            'data' => $data
+            );
+            $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
     public function upload()
     {
