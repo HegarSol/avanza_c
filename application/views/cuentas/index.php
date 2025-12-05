@@ -36,6 +36,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
             <button type="button" class="btn btn-success btn-lg" onclick="generalcuentaxml()"><span class="fa fa-file-code-o"></span> XML SAT</button>
             <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#modalConfig"><span class="fa fa-gear"></span> Configuración</button>
             <a href="https://www.sat.gob.mx/minisitio/BuzonTributario/index.html" class="btn btn-primary btn-lg" target="_blank"><span class="fa fa-qrcode"></span> Buzón SAT</a>
+            <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#modalCuenta"><span class="fa fa-search"></span> Buscar cuenta</button>
       </div>
   </div>
   </div>
@@ -119,6 +120,27 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
           </div>
         </div>
       </div>
+</div>
+
+<div class="modal fade" id="modalCuenta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-blue" style="background-color:#222222; color:white;">
+           
+            <h4 class="modal-title" id="myModalLabel">Buscar Cuenta</h4>
+          </div>
+              <div class="modal-body">
+                 
+                     <label for="">Cuenta:</label>
+                     <input type="text" class="form-control" id="cuentabuscar" name="cuentabuscar">
+              </div>
+          <div class="modal-footer">
+            <button type="button" onclick="buscarcuentaindividual()" data-dismiss="modal" class="btn btn-primary">Aceptar</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
 </div>
 
 
@@ -215,6 +237,34 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
     </div>
 
     <script>
+
+    // $(document).ready(function(){buscarcuentaindividual();});
+
+    var table2;
+
+    //CUENTAS
+    $(function () {
+       table2 = $("#cuentas").DataTable({
+        responsive: true, 
+        filter:true, 
+        columnDefs:
+        [ { responsivePriority: 1, targets: 1, name:'cuenta' }, { responsivePriority: 2, targets: -1 }, { responsivePriority: 3, targets: 2 },{ targets: [0], visible: false } ],
+            processing: true, serverSide: true,
+            ajax: { "url": baseurl + "catalogos/Cuentas/ajax_list", "type": "POST" },  "language": { "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json" }
+      })
+    });
+
+    function buscarcuentaindividual(){
+           let id = $("#cuentabuscar").val();
+          // console.log(id);
+          table2.column(1).search(id).draw();
+          //  $.ajax({
+          //    url: "<?php echo base_url();?>inicio/actualizarSerie/"+id,
+          //    type: 'POST',
+          //    dataType: 'json',
+          //    success: function (response){},
+          //  });
+        };
 
       //CONFIG CUENTAS
 //  $(function () {
