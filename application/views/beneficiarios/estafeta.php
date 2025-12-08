@@ -1626,7 +1626,7 @@ function aceptarDoc()
                jQuery.ajax({
                   url : baseurl + "catalogos/Beneficiarios/getbeneficirfc",
                   type:"POST",
-                  data:{rfc:aData2[0][6]},
+                  data:{rfc:aData[0][6]},
                   dataType:"html",
                   success:function(response2)
                   {
@@ -1648,7 +1648,7 @@ function aceptarDoc()
                               },
                               function(isConfirm){
                               if (isConfirm)
-                              { location.href=baseurl+"catalogos/Beneficiarios/agregar?rfc="+aData2[0][6]+"&nombre="+aData2[0][7];  }
+                              { location.href=baseurl+"catalogos/Beneficiarios/agregar?rfc="+aData[0][6]+"&nombre="+aData[0][7];  }
                               else {
                                  swal("Cancelado", "No se creara al proveedor.", "error");
                               }
