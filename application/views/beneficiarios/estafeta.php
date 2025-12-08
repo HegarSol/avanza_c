@@ -1623,61 +1623,101 @@ function aceptarDoc()
             {
 
 
-              jQuery.ajax({
+               jQuery.ajax({
                   url : baseurl + "catalogos/Beneficiarios/getbeneficirfc",
                   type:"POST",
-                  data:{rfc:aData[0][6]},
+                  data:{rfc:aData2[0][6]},
                   dataType:"html",
                   success:function(response2)
                   {
                      response2=JSON.parse(response2);
-                    if(response2[0].conciliado == 1 && aData[0][27] != 'C')
-                    {
-                         var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: 'No se puede aceptar la factura, ya que el proveedor no esta conciliado o la factura no esta conciliada.'});
-                         return;
-                    }
-                    else
-                    {
-                        if(aData[0][2] == 'P')
-                        {
-                           jQuery.ajax({
-                                    url: baseurl+"catalogos/Beneficiarios/getaceptar",
-                                    type:"POST",
-                                    data:{uuid:aData[0][1]},
-                                    dataType:"html",
-                                    success:function(response)
-                                    {
-                                    response=JSON.parse(response);
-                                       if(response.status == true)
-                                       {
-                                          var n = noty({ layout:'topRight',type: 'success',  theme: 'relax',text: 'ACEPTADA.'});
-                                       //  $('#myModalPUEpagada').modal('hide');
-                                          btnPantalla();
-                                       }
-                                       else
-                                       {
-                                          var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: response.error});
-                                       }
-                                    }
-                              });
-                        }
-                        else
-                        {
-                           var metodopago = aData[0][10];
 
-                           // if(metodopago == 'PUE')
-                           // {
-                              document.getElementById('uuid_poliza').value = aData[0][1];
-                              $('#myModalPUEpagada').modal('show');
-                           // }
-                           // else
-                           // {
-                           //     alert('la factura es PPD');
-                           // }
-                        }
-                    }
+                     if(response2=='')
+                     {
+                        //var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: 'No tiene agregado a este proveedor, para aceptar esta factura agregelo primero.'});
+                           swal({
+                              title: "¿Desea agregarlo?",
+                              text: "No tiene agregado a este proveedor, para adjuntar a la poliza.",
+                              type: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#DD6B55",
+                              confirmButtonText: "Aceptar",
+                              cancelButtonText: "No, Cancelar",
+                              closeOnConfirm: false,
+                              closeOnCancel: false
+                              },
+                              function(isConfirm){
+                              if (isConfirm)
+                              { location.href=baseurl+"catalogos/Beneficiarios/agregar?rfc="+aData2[0][6]+"&nombre="+aData2[0][7];  }
+                              else {
+                                 swal("Cancelado", "No se creara al proveedor.", "error");
+                              }
+                           });
+                     }
+                     else
+                     {
+
+                       jQuery.ajax({
+                           url : baseurl + "catalogos/Beneficiarios/getbeneficirfc",
+                           type:"POST",
+                           data:{rfc:aData[0][6]},
+                           dataType:"html",
+                           success:function(response2)
+                           {
+                              response2=JSON.parse(response2);
+                           if(response2[0].conciliado == 1 && aData[0][27] != 'C')
+                           {
+                                 var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: 'No se puede aceptar la factura, ya que el proveedor no esta conciliado o la factura no esta conciliada.'});
+                                 return;
+                           }
+                           else
+                           {
+                                 if(aData[0][2] == 'P')
+                                 {
+                                    jQuery.ajax({
+                                             url: baseurl+"catalogos/Beneficiarios/getaceptar",
+                                             type:"POST",
+                                             data:{uuid:aData[0][1]},
+                                             dataType:"html",
+                                             success:function(response)
+                                             {
+                                             response=JSON.parse(response);
+                                                if(response.status == true)
+                                                {
+                                                   var n = noty({ layout:'topRight',type: 'success',  theme: 'relax',text: 'ACEPTADA.'});
+                                                //  $('#myModalPUEpagada').modal('hide');
+                                                   btnPantalla();
+                                                }
+                                                else
+                                                {
+                                                   var n = noty({ layout:'topRight',type: 'warning', theme:'relax', text: response.error});
+                                                }
+                                             }
+                                       });
+                                 }
+                                 else
+                                 {
+                                    var metodopago = aData[0][10];
+
+                                    // if(metodopago == 'PUE')
+                                    // {
+                                       document.getElementById('uuid_poliza').value = aData[0][1];
+                                       $('#myModalPUEpagada').modal('show');
+                                    // }
+                                    // else
+                                    // {
+                                    //     alert('la factura es PPD');
+                                    // }
+                                 }
+                           }
+                           }
+                        });
+                     }
                   }
                });
+
+
+              
             }
 }
 function rechazarDoc()
