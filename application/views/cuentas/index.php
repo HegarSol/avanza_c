@@ -36,7 +36,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
             <button type="button" class="btn btn-success btn-lg" onclick="generalcuentaxml()"><span class="fa fa-file-code-o"></span> XML SAT</button>
             <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#modalConfig"><span class="fa fa-gear"></span> Configuración</button>
             <a href="https://www.sat.gob.mx/minisitio/BuzonTributario/index.html" class="btn btn-primary btn-lg" target="_blank"><span class="fa fa-qrcode"></span> Buzón SAT</a>
-            <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#modalCuenta"><span class="fa fa-search"></span> Buscar cuenta</button>
+            <button type="button" class="btn btn-success btn-lg" onclick="abrirbusquedacta()"><span class="fa fa-search"></span> Filtrar cuenta</button>
       </div>
   </div>
   </div>
@@ -127,10 +127,10 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
         <div class="modal-content">
           <div class="modal-header bg-blue" style="background-color:#222222; color:white;">
            
-            <h4 class="modal-title" id="myModalLabel">Buscar Cuenta</h4>
+            <h4 class="modal-title" id="myModalLabel">Activar/Desctivar filtro</h4>
           </div>
               <div class="modal-body">
-                 
+                     <label for=""><b>Para desactivar el filtro deja el campo vacio y dar click al boton de Aceptar</b></label>
                      <label for="">Cuenta:</label>
                      <input type="text" class="form-control" id="cuentabuscar" name="cuentabuscar">
               </div>
@@ -237,6 +237,13 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
     </div>
 
     <script>
+      function abrirbusquedacta()
+      {
+          $('#modalCuenta').on('shown.bs.modal', function () {
+        document.getElementById('cuentabuscar').focus();
+    });
+    $('#modalCuenta').modal('show');
+      }
 
     // $(document).ready(function(){buscarcuentaindividual();});
 
