@@ -158,8 +158,8 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
           $emisordatos = $CI->beneficiario->datosbenerfc($rfcEmisor);
           $tieneieps = 0; 
-          $iepss = [];
-          $gastos = $CI->conficue->getidcuentaconfi(15);
+          $iepss = [] && ;
+       >  $gastos = $CI->conficue->getidcuentaconfi(15);
           $compras = $CI->conficue->getidcuentaconfi(16);
                 $conceplist = $CI->xmlDom->getElementsBytagName('Concepto');
                 foreach($conceplist as $conceptod)
@@ -389,7 +389,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                           //-------------------------------------------------------------------------------------------------------------
 
                                             
-                                            if($t['cuenta'] == $gastos[0]['cuenta'])
+                                            if($t['cuenta'] >= $gastos[0]['cuenta'])
                                             {
                                                $totalgastos= $totalgastos+ $t['importe'];
                                                $gDescuento = $gDescuento + $t['descuento'];
