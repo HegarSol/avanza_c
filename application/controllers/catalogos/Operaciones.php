@@ -10,6 +10,7 @@ class Operaciones extends MY_Controller
         $this->load->view('templates/header');
         $this->load->model('OperacionesModel','opera');
         $this->load->model('BitacoraModel','bitacora');
+        $this->load->model('BancosModel','bancos');
         $this->load->model('ConfigCuentasModel','conficta');
         $this->load->model('Configuraciones_model','confi');
         $this->load->helper('hegarss');
@@ -306,7 +307,23 @@ class Operaciones extends MY_Controller
         $id = $this->input->post('id');
         $tipo_movimento = $this->input->post('tipo_movimiento');
         $numero_banco = $this->input->post('numero_banco');
-        $numero_movimento = $this->input->post('numero_movimiento');
+        $informativo = $this->input->post('numero_movimiento');
+
+        $datos=$this->bancos->datosBancos($numero_banco);
+        if($tipo_movimento == 'T')
+        {
+            $numero_movimento = $datos[0]['movimiento'] + 1;
+        }
+        else if($tipo_movimento == 'C')
+        {
+            $numero_movimento = $datos[0]['cheques'] + 1;
+        }
+        else if($tipo_movimento == 'D')
+        {
+            $numero_movimento = $datos[0]['depositos'] + 1;
+        }
+
+
         $fechapoli = $this->input->post('fechapoli');
         $beneficariopoli = $this->input->post('beneficiariopoli');
         $conceptopoli = $this->input->post('conceptopoli');
@@ -599,7 +616,7 @@ class Operaciones extends MY_Controller
              {
 
                 $uuid = '';
-                $poliza = $datosope[0]['tipo_mov'].'  '.$datosope[0]['no_banco'].'        '.$datosope[0]['no_mov'];
+                $poliza = $datosope[0]['tipo_mov'].str_pad($datosope[0]['no_banco'], 2, ' ', STR_PAD_LEFT).str_pad($datosope[0]['no_mov'], 8, ' ', STR_PAD_LEFT);
                 $empresa = $getrfcempresa[0]['rfc'];
 
                 if(ENVIRONMENT == 'development')
