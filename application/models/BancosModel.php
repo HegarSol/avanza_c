@@ -213,4 +213,19 @@ class BancosModel extends MY_Model
             $this->dbEmpresa->update('catalogo_banco',$datos);
         }
     }
+    public function actualizar_pagado($idempre,$referencia)
+    {
+
+        if($referencia == '') 
+        {
+           $datos = array('pagado' => 0, 'referencia' => '');
+        }
+        else
+        {
+           $datos = array('pagado' => 1, 'referencia' => $referencia);
+        }
+
+        $this->dbEmpresa->where('referencia',$referencia);
+        return $this->dbEmpresa->update('opera_banco_encabe',$datos);
+    }
 }

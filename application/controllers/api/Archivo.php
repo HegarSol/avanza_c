@@ -23,6 +23,15 @@ class Archivo extends REST_Controller
         $this->load->model('PagosModel','pagos');
         $this->load->model('BancosModel','bancos');
     }
+    public function actuzaliarpago_post()
+    {
+        $idempre = $_POST['idempre'];
+        $referecnia = $_POST['referencia'];
+        
+        $this->bancos->set_database($idempre);
+
+        $datos = $this->bancos->actualizar_pagado($idempre,$referencia);
+    }
     public function actualizarpago_post()
     {
         $idpago = $_POST['idpago'];
