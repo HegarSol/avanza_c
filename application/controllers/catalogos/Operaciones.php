@@ -309,19 +309,27 @@ class Operaciones extends MY_Controller
         $numero_banco = $this->input->post('numero_banco');
         $informativo = $this->input->post('numero_movimiento');
 
-        $datos=$this->bancos->datosBancos($numero_banco);
-        if($tipo_movimento == 'T')
+        if($id > 0)
         {
-            $numero_movimento = $datos[0]['movimiento'] + 1;
+            $numero_movimento = $informativo;
         }
-        else if($tipo_movimento == 'C')
+        else
         {
-            $numero_movimento = $datos[0]['cheques'] + 1;
+            $datos=$this->bancos->datosBancos($numero_banco);
+            if($tipo_movimento == 'T')
+            {
+                $numero_movimento = $datos[0]['movimiento'] + 1;
+            }
+            else if($tipo_movimento == 'C')
+            {
+                $numero_movimento = $datos[0]['cheques'] + 1;
+            }
+            else if($tipo_movimento == 'D')
+            {
+                $numero_movimento = $datos[0]['depositos'] + 1;
+            }
         }
-        else if($tipo_movimento == 'D')
-        {
-            $numero_movimento = $datos[0]['depositos'] + 1;
-        }
+
 
 
         $fechapoli = $this->input->post('fechapoli');
