@@ -318,7 +318,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                        // if($repeat==false)
 
                             $result[] = array('clave' => $t['clave'], 
-                                              'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? number_format(doubleval($t['importe']),2,'.',''): number_format(doubleval($t['importe']),2,'.','')+ doubleval($t['importeieps']),
+                                              'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? number_format(doubleval($t['importe']),6,'.',''): number_format(doubleval($t['importe']),6,'.','')+ doubleval($t['importeieps']),
                                               'descuento' => doubleval($t['descuento']),
                                               'descripcion' => $t['descripcion'],
                                                 'importeiva' => doubleval($t['importeiva']),
@@ -392,6 +392,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                             if($t['cuenta'] >= $gastos[0]['cuenta'] && $t['cuenta'] <= $gastos[0]['sub_cta'] )
                                             {
                                                $totalgastos= $totalgastos+ $t['importe'];
+
                                                $gDescuento = $gDescuento + $t['descuento'];
                                             
                                                 if($t['tasaiva'] ==  '0.080000')
@@ -461,7 +462,6 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                             }
 
                     }
-
 
 
                     $sumatotalimpuestosg = ($sumaimpueiva8g + ($sumaimpueiva16g + $sumaimpueeipsg));
@@ -628,24 +628,26 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                         if($totalgastos > 0)
                         {  
+                           // var_dump(1);
                            if($emisordatos[0]['cta_contable'] != '' && $emp[0]['usactacontable'] == 1)
-                        {
-                           $pro = explode('-', $emisordatos[0]['cta_contable']);
-                           $nom_cuen = $CI->cuentas->get_cuenta($pro[0],$pro[1],$pro[2]);
-                           $acreedor[0] = array('cuenta' => $pro[0],
-                                                'sub_cta' => $pro[1],
-                                                'descrip' => $nom_cuen[0]['nombre'],
-                                                'ssub_cta' => $pro[2]
-                                                ); 
-                        }
-                        else
-                        {    
-                        $acreedor = $CI->conficue->getidcuentaconfi(58);
-                        } 
+                            {
+                            $pro = explode('-', $emisordatos[0]['cta_contable']);
+                            $nom_cuen = $CI->cuentas->get_cuenta($pro[0],$pro[1],$pro[2]);
+                            $acreedor[0] = array('cuenta' => $pro[0],
+                                                    'sub_cta' => $pro[1],
+                                                    'descrip' => $nom_cuen[0]['nombre'],
+                                                    'ssub_cta' => $pro[2]
+                                                    ); 
+                            }
+                            else
+                            {    
+                            $acreedor = $CI->conficue->getidcuentaconfi(58);
+                            } 
                             
                             $totalron = round($totalgastos,2);
                             $totaldescu = round($gDescuento,2);
                             $totalrealg = round($totalrealproacreg,2);
+
 
                             $total = array('importe' => ($totalron-$totaldescu)+$totalrealg, 'c_a' => '-',
                             'cuenta' => $acreedor[0]['cuenta'],
@@ -655,10 +657,13 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             
                           );
 
+                         // var_dump($total);
+
                           array_push($result, $total);
                         }
                         if($totalcompras > 0)
                         {
+                           // var_dump(2);
                             if($emisordatos[0]['cta_contable'] != '' && $emp[0]['usactacontable'] == 1)
                         {
                            $pro = explode('-', $emisordatos[0]['cta_contable']);
@@ -684,6 +689,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             'ssub_cta' => $propios[0]['ssub_cta']
                             
                           );
+                          
 
                           array_push($result, $total);
                         }
@@ -726,20 +732,23 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                         array_push($result, $des);
                     }
-
+//var_dump($result);
                     $result2 = array();
                     foreach($result as $t) {
                         $repeat=false;
                         for($i=0;$i<count($result2);$i++)
                         {
+                  //          var_Dump($result2[$i]['importe']);
                             if($result2[$i]['cuenta']==$t['cuenta'] && $result2[$i]['sub_cta']==$t['sub_cta'] && $result2[$i]['ssub_cta']==$t['ssub_cta'])
                             {
+
                                 $result2[$i]['importe']+=$t['importe'];
                                 $repeat=true;
                                 break;
                             }
                         }
                         if($repeat==false)
+
                             $result2[] = array('importe' => $t['importe'],
                                             'cuenta' => $t['cuenta'],
                                             'sub_cta' => $t['sub_cta'],
@@ -748,6 +757,9 @@ defined('BASEPATH') or exit('No direct script access alloed');
                                               'c_a' => $t['c_a'],
                                             );
                     }
+
+
+
 
                      return $result2;
     }
