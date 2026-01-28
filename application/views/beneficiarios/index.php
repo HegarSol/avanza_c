@@ -11,6 +11,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
   $this->load->view('beneficiarios/modales/Autorizacion');
   $this->load->view('beneficiarios/modales/ModalAsientoContable');
   $this->load->view('beneficiarios/modales/TablaCuentasOperaciones');
+  $this->load->view('beneficiarios/modales/TablaCuentasOperacionesProvision');
 
 
 ?>
