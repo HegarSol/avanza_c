@@ -650,10 +650,9 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             $totalron = round($totalgastos,2);
                             $totaldescu = round($gDescuento,2);
                             $totalrealg = round($totalrealproacreg,3);
-                           // var_dump($totalrealg);
 
 
-                            $total = array('importe' => ($totalron-$totaldescu)+floor($totalrealg * 100) / 100, 'c_a' => '-',
+                            $total = array('importe' => ($totalron-$totaldescu)+$totalrealg, 'c_a' => '-',
                             'cuenta' => $acreedor[0]['cuenta'],
                             'sub_cta' => $acreedor[0]['sub_cta'],
                             'nombre_cta' => $acreedor[0]['descrip'],
