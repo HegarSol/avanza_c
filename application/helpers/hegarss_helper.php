@@ -318,7 +318,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                        // if($repeat==false)
 
                             $result[] = array('clave' => $t['clave'], 
-                                              'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? number_format(doubleval($t['importe']),6,'.',''): number_format(doubleval($t['importe']),6,'.','')+ doubleval($t['importeieps']),
+                                              'importe' => $emisordatos[0]['traslada_ieps'] == 1 ? number_format(doubleval($t['importe']),2,'.',''): number_format(doubleval($t['importe']),2,'.','')+ doubleval($t['importeieps']),
                                               'descuento' => doubleval($t['descuento']),
                                               'descripcion' => $t['descripcion'],
                                                 'importeiva' => doubleval($t['importeiva']),
@@ -649,7 +649,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             
                             $totalron = round($totalgastos,2);
                             $totaldescu = round($gDescuento,2);
-                            $totalrealg = round($totalrealproacreg,3);
+                            $totalrealg = round($totalrealproacreg,2);
 
 
                             $total = array('importe' => ($totalron-$totaldescu)+$totalrealg, 'c_a' => '-',
