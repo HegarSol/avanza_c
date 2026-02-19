@@ -23,6 +23,57 @@ if(isset($_SESSION['img']) && $_SESSION['img']!=""){ $foto=$_SESSION['img'];} el
        }
        if(isset($_SESSION['tipo']) && $_SESSION['tipo'] != "usuario")
        {
+
+          if(isset($_SESSION['mesletra']) && isset($_SESSION['ano']))
+            {
+
+            }
+            else
+            {
+              switch (date('m')) {
+                case '01':
+                  $_SESSION['mesletra']='Enero';
+                  break;
+                case '02':
+                  $_SESSION['mesletra']='Febrero';
+                  break;
+                case '03':
+                  $_SESSION['mesletra']='Marzo';
+                  break;
+                case '04':
+                  $_SESSION['mesletra']='Abril';
+                  break;
+                case '05':
+                  $_SESSION['mesletra']='Mayo';
+                  break;
+                case '06':
+                  $_SESSION['mesletra']='Junio';
+                  break;
+                case '07':
+                  $_SESSION['mesletra']='Julio';
+                  break;
+                case '08':
+                  $_SESSION['mesletra']='Agosto';
+                  break;
+                case '09':
+                  $_SESSION['mesletra']='Septiembre';
+                  break;
+                case '10':
+                  $_SESSION['mesletra']='Octubre';
+                  break;
+                case '11':
+                  $_SESSION['mesletra']='Noviembre';
+                  break;
+                case '12':
+                  $_SESSION['mesletra']='Diciembre';
+                  break;
+
+              }
+
+              $_SESSION['mes']=date('m');
+              $_SESSION['ano']=date('Y');
+            }
+
         echo '<label class="navbar-brand" style="color:white">'.$_SESSION['mesletra'].' - '.$_SESSION['ano'].'</label>';
         echo '<label class="navbar-brand" onclick="abrirejercicio()">Cambiar ejercicio de trabajo</label>';
         // echo '<a class="navbar-brand" data-toggle="tooltip" title="Subir Logo y Certificados" href="'.base_url().'configuracion/certificados"><span class="glyphicon glyphicon-open-file"></span></a>';
