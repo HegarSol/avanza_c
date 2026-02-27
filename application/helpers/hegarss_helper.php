@@ -649,7 +649,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             
                             $totalron = round($totalgastos,2);
                             $totaldescu = round($gDescuento,2);
-                            $totalrealg = round($totalrealproacreg,3);
+                            $totalrealg = round($totalrealproacreg,2);
 
 
                             $total = array('importe' => ($totalron-$totaldescu)+$totalrealg, 'c_a' => '-',
