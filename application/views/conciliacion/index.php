@@ -716,7 +716,7 @@ function btnConciliacion(tipo)
 
                 var saldoesta = parseFloat(document.getElementById('saldoestado').value);
                 var saldoba = parseFloat(document.getElementById('saldobancos').value);
-                var difere = saldoba + saldoesta;
+                var difere = saldoba - saldoesta;
                 document.getElementById('diferenciaestado').value = difere.toFixed(2);
           }
       });
