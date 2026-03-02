@@ -304,6 +304,7 @@ class Operaciones extends MY_Controller
         setlocale(LC_TIME, 'es_ES.UTF-8');
         $correcto = false;
         //cabezera poliza
+         $configempre = $this->confi->getConfig();
         $id = $this->input->post('id');
         $tipo_movimento = $this->input->post('tipo_movimiento');
         $numero_banco = $this->input->post('numero_banco');
@@ -322,7 +323,14 @@ class Operaciones extends MY_Controller
             }
             else if($tipo_movimento == 'C')
             {
-                $numero_movimento = $datos[0]['cheques'] + 1;
+                if($tipo_movimento == 'C' && $configempre[0]['rfc'] == 'MBF230623FEA')
+                {
+                    $numero_movimento = $informativo;
+                }
+                else
+                {
+                    $numero_movimento = $datos[0]['cheques'] + 1; 
+                }
             }
             else if($tipo_movimento == 'D')
             {
@@ -423,7 +431,16 @@ class Operaciones extends MY_Controller
                $this->bitacora->operacion($crearopera);
                $correcto = true;
 
-               $this->opera->actualizarmovimiento($numero_banco,$tipo_movimento,$numero_movimento);
+              
+               if($tipo_movimento == 'C' && $configempre[0]['rfc'] == 'MBF230623FEA')
+                {
+
+                }
+                else
+                {
+                   $this->opera->actualizarmovimiento($numero_banco,$tipo_movimento,$numero_movimento);
+                }
+
            }
         }   
            if($uuidpoliza =! '' && ($ca_poli == '-' && $tipo_movimento == 'T') || $tipo_movimento == 'C')
