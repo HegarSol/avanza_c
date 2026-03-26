@@ -16,29 +16,45 @@ class EstadoCuenta extends MY_Controller {
 
     public function index()
     {
-        if($this->aauth->is_loggedin())
+
+       $items2=$this->menuModel->menusdisponibles();
+        if($items2[26]['mante'] == 1)
         {
-            $permisos= $this->permisosForma($_SESSION['id'],18);
-            if(isset($permisos) && $permisos['leer']=="1")
-            {
-                $errores=array();
-                $rfc = $this->configModel->getConfig();
-                $data=array('titulo'=>'Estado de cuenta','rfc' => $rfc[0]['rfc'],'razon'=>$this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores'=>$errores,'permisosGrupo'=>$permisos);
-                // $items=$this->menuModel->menus($_SESSION['tipo']);
-                // $this->multi_menu->set_items($items);
+                $data=array('titulo'=>'No disponible por el momento');
+                $items=$this->menuModel->menus($_SESSION['tipo']);
+                $this->multi_menu->set_items($items);
                 $this->load->view('templates/header');
                 $this->load->view('templates/navigation',$data);
-                $this->load->view('reportesespe/estadocuenta');
+                $this->load->view('nodisponible');
                 $this->load->view('templates/footer');
-            }
-            else
-            {
-                redirect('welcome', 'refresh');
-            }
+
         }
         else
         {
-            redirect('/inicio/login','refresh');
+            if($this->aauth->is_loggedin())
+            {
+                $permisos= $this->permisosForma($_SESSION['id'],18);
+                if(isset($permisos) && $permisos['leer']=="1")
+                {
+                    $errores=array();
+                    $rfc = $this->configModel->getConfig();
+                    $data=array('titulo'=>'Estado de cuenta','rfc' => $rfc[0]['rfc'],'razon'=>$this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores'=>$errores,'permisosGrupo'=>$permisos);
+                    // $items=$this->menuModel->menus($_SESSION['tipo']);
+                    // $this->multi_menu->set_items($items);
+                    $this->load->view('templates/header');
+                    $this->load->view('templates/navigation',$data);
+                    $this->load->view('reportesespe/estadocuenta');
+                    $this->load->view('templates/footer');
+                }
+                else
+                {
+                    redirect('welcome', 'refresh');
+                }
+            }
+            else
+            {
+                redirect('/inicio/login','refresh');
+            }
         }
     }
     public function imprimir()
