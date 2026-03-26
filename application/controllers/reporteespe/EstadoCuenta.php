@@ -23,7 +23,7 @@ class EstadoCuenta extends MY_Controller {
             {
                 $errores=array();
                 $rfc = $this->configModel->getConfig();
-                $data=array('titulo'=>'Estado cuenta','rfc' => $rfc[0]['rfc'],'razon'=>$this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores'=>$errores,'permisosGrupo'=>$permisos);
+                $data=array('titulo'=>'Estado de cuenta','rfc' => $rfc[0]['rfc'],'razon'=>$this->validaempresas->get_razon($_SESSION['idEmpresa']),'errores'=>$errores,'permisosGrupo'=>$permisos);
                 // $items=$this->menuModel->menus($_SESSION['tipo']);
                 // $this->multi_menu->set_items($items);
                 $this->load->view('templates/header');

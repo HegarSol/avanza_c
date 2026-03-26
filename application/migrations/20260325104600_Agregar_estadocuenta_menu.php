@@ -6,7 +6,7 @@ class Migration_Agregar_estadocuenta_menu extends CI_Migration{
         $data = array(
             'id' => 28,
             'parent' => 27,
-            'name' => 'Estado cuenta',
+            'name' => 'Estado de cuenta',
             'icon' => '',
             'slug' => 'reporteespe/EstadoCuenta/index',
             'number' => 1,
