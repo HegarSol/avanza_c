@@ -232,7 +232,7 @@ class OperacionesModel extends MY_Model
     {
         if($acude == true)
         {
-            $this->db2->select('ac.tipo_mov,ac.no_banco,ac.no_mov,ac.cuenta,ac.sub_cta,ac.ssub_cta,ac.fecha,ac.c_a as signo,SUM(IF(ac.c_a = "+", ac.monto,0.00)) as cargo,SUM(IF(ac.c_a = "-", ac.monto,0.00)) as abono,ac.referencia,ac.no_prov')
+            $this->db2->select('ac.tipo_mov,ac.no_banco,ac.no_mov,ac.cuenta,ac.sub_cta,ac.ssub_cta,MIN(ac.fecha) as fecha,ac.c_a as signo,SUM(IF(ac.c_a = "+", ac.monto,0.00)) as cargo,SUM(IF(ac.c_a = "-", ac.monto,0.00)) as abono,ac.referencia,ac.no_prov')
             ->from('opera_banco_detalle ac')
             ->where('ac.cuenta',$cuenta)
             ->where('ac.fecha >=',$fechaini)
@@ -241,7 +241,7 @@ class OperacionesModel extends MY_Model
         }
         else
         {
-            $this->db2->select('ac.tipo_mov,ac.no_banco,ac.no_mov,ac.cuenta,ac.sub_cta,ac.fecha,ac.c_a as signo,SUM(IF(ac.c_a = "+", ac.monto,0.00)) as cargo,SUM(IF(ac.c_a = "-", ac.monto,0.00)) as abono,ac.referencia,ac.no_prov')
+            $this->db2->select('ac.tipo_mov,ac.no_banco,ac.no_mov,ac.cuenta,ac.sub_cta,ac.ssub_cta,MIN(ac.fecha) as fecha,ac.c_a as signo,SUM(IF(ac.c_a = "+", ac.monto,0.00)) as cargo,SUM(IF(ac.c_a = "-", ac.monto,0.00)) as abono,ac.referencia,ac.no_prov')
             ->from('opera_banco_detalle ac')
             ->where('ac.cuenta',$cuenta)
             ->where('ac.sub_cta ',$subcta)
