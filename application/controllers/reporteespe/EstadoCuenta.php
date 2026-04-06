@@ -62,29 +62,37 @@ class EstadoCuenta extends MY_Controller {
 
             $this->rowc = $this->configModel->getConfig();
 
-        // $this->cuenta = $this->input->post('cuenta');
-        // $this->subcun = $this->input->post('subcuenta');
-        // $this->subcun2 = $this->input->post('subcuenta2');
+        $this->cuenta = $this->input->post('cuenta');
+        $this->subcun = $this->input->post('subcuenta');
+        $this->subcun2 = $this->input->post('subcuenta2');
 
         $this->fechaini = $this->input->post('fechaini');
         $this->fechafin = $this->input->post('fechafin');
 
         $valor5 = $this->input->post('acude');
+        $this->cuentacliente = $this->configCuentas->getidcuentaconfi(9);
         if($valor5 == 1)
         {
+           //funcion que se obtiene de ConfigCuentasModel de la carpeta models, se le pasa el id de la cuenta cliente que se obtiene de la tabla de configuraciones para obtener el numero de cuenta
            $acude = true;
            $descripcion = 'ACUMULADO';
+           $nombrecta = '';
+           $this->datosdetalle = $this->operaciones->detalleEstadocuenta($this->cuentacliente[0]['cuenta'],$this->fechaini,$this->fechafin,$acude,'','');
         }
         else
         {
+           //funcion que se obtiene de OperacionesModel de la carpeta models, se le pasan los parametros de cuenta, subcuenta, subcuenta2, fecha inicio, fecha fin y acumulado o detallado
            $acude = '';
            $descripcion = 'DETALLADO';
+           $nombrecta = $this->cuentas->get_cuenta_existe_empresa($this->cuenta,$this->subcun,$this->subcun2);
+           $nombrecta = $nombrecta[0]['nombre'];
+           $this->datosdetalle = $this->operaciones->detalleEstadocuenta($this->cuenta,$this->fechaini,$this->fechafin,$acude,$this->subcun,$this->subcun2);
         }
-        //funcion que se obtiene de ConfigCuentasModel de la carpeta models, se le pasa el id de la cuenta cliente que se obtiene de la tabla de configuraciones para obtener el numero de cuenta
-        $this->cuentacliente = $this->configCuentas->getidcuentaconfi(9);
 
-        //funcion que se obtiene de OperacionesModel de la carpeta models, se le pasan los parametros de cuenta, subcuenta, subcuenta2, fecha inicio, fecha fin y acumulado o detallado
-        $this->datosdetalle = $this->operaciones->detalleEstadocuenta($this->cuentacliente[0]['cuenta'],$this->fechaini,$this->fechafin,$acude);
+        
+
+
+        
 
 
         $this->pdf->SetAutoPageBreak(true,10);
@@ -93,27 +101,30 @@ class EstadoCuenta extends MY_Controller {
         $this->pdf->SetFillColor(220,220,220);
         $this->pdf->SetDrawColor(220,220,220);
 
-        $this->encabezado($descripcion);
+        $this->encabezado($descripcion,$nombrecta);
 
         $this->pdf->Ln(15);
 
         if($acude == true)
         {
-          $this->pdf->Cell(55,5,'Cuenta',0,1,'',true);
+          $this->pdf->Cell(85,5,'Cuenta',0,1,'',true);
         }
          else
         {
-          $this->pdf->Cell(55,5,'Referencia',0,1,'',true);
+          $this->pdf->Cell(75,5,'Referencia',0,1,'',true);
+          $this->pdf->SetY(55);
+          $this->pdf->SetCol(0.7);
+          $this->pdf->Cell(40,5,'Fecha',0,1,'',true);
         }
-            $this->pdf->SetY(55);
-        $this->pdf->SetCol(0.8);
+        $this->pdf->SetY(55);
+        $this->pdf->SetCol(1.3);
         $this->pdf->Cell(55,5,'Cargo',0,1,'',true);
         $this->pdf->SetY(55);
-        $this->pdf->SetCol(1.5);
+        $this->pdf->SetCol(1.9);
         $this->pdf->Cell(55,5,'Abono',0,1,'',true);
         $this->pdf->SetY(55);
-        $this->pdf->SetCol(2.3);
-        $this->pdf->Cell(47,5,'Saldo',0,1,'',true);
+        $this->pdf->SetCol(2.5);
+        $this->pdf->Cell(30,5,'Saldo',0,1,'',true);
         $this->pdf->Ln(5);
         $totalcargo = 0;
         $totalabono = 0;
@@ -126,18 +137,21 @@ class EstadoCuenta extends MY_Controller {
                 $this->pdf->SetCol(0);
                 if($acude == true)
                 {
-                   $this->pdf->Cell(17,0,$this->datosdetalle[$i]->cuenta.' - '.$this->datosdetalle[$i]->sub_cta.' - '.$this->datosdetalle[$i]->ssub_cta,0,1,'R'); 
+                   $nombrecta = $this->cuentas->get_cuenta_existe_empresa($this->datosdetalle[$i]->cuenta,$this->datosdetalle[$i]->sub_cta,$this->datosdetalle[$i]->ssub_cta);
+                   $this->pdf->Cell(17,0,utf8_decode($nombrecta[0]['nombre']),0,1,'L'); 
                 }
                 else
                 {
                    $this->pdf->Cell(17,0,$this->datosdetalle[$i]->referencia,0,1,'L');
+                   $this->pdf->SetCol(0.7);
+                     $this->pdf->Cell(17,0,date('d-m-Y',strtotime($this->datosdetalle[$i]->fecha)),0,1,'L');
                 }
                 //$this->pdf->Cell(17,0,$this->datosdetalle[$i]->referencia,0,1,'L');
-                $this->pdf->SetCol(0.8);    
+                $this->pdf->SetCol(1.3);    
                 $this->pdf->Cell(17,0,number_format($this->datosdetalle[$i]->cargo,2,'.',','),0,1,'R');
-                $this->pdf->SetCol(1.5);    
+                $this->pdf->SetCol(1.9);    
                 $this->pdf->Cell(17,0,number_format($this->datosdetalle[$i]->abono,2,'.',','),0,1,'R');
-                $this->pdf->SetCol(2.3);
+                $this->pdf->SetCol(2.5);
                 $this->pdf->Cell(17,0,number_format($this->datosdetalle[$i]->cargo-$this->datosdetalle[$i]->abono,2,'.',','),0,1,'R');                    
                 $this->pdf->Ln(5);
             //}            
@@ -161,7 +175,7 @@ class EstadoCuenta extends MY_Controller {
 
         $this->pdf->Output('I','EstadoCuenta.pdf');
     }
-    public function encabezado($descripcion)
+    public function encabezado($descripcion,$nombrecta)
     {
         date_default_timezone_set("America/Mexico_City");
         // $img = $this->rowc[0]['imgName'];
@@ -196,10 +210,15 @@ class EstadoCuenta extends MY_Controller {
         $this->pdf->SetFont('Helvetica','B',10);
         $this->pdf->Cell(10,0,'Del: '.date('d-m-Y',strtotime($this->fechaini)).' Al '.date('d-m-Y',strtotime($this->fechafin)));
         $this->pdf->Ln(5);
-        // $this->pdf->Cell(70);
-        // $this->pdf->SetFont('Helvetica','B',10);
-       // $this->pdf->Cell(10,0,'Cuenta: '.$this->datoscuenta[0]['cuenta'].' - '.$this->datoscuenta[0]['sub_cta'].' - '.$this->datoscuenta[0]['ssub_cta']);
-       // $this->pdf->Cell(10,0,'Cuenta: '.$this->datoscuenta[0]['nombre']);
+        $this->pdf->Cell(70);
+        $this->pdf->SetFont('Helvetica','B',10);
+     //   $this->pdf->Cell(10,0,'Cuenta: '.$this->datoscuenta[0]['cuenta'].' - '.$this->datoscuenta[0]['sub_cta'].' - '.$this->datoscuenta[0]['ssub_cta']);
+        if($nombrecta  != '')
+        {
+          $this->pdf->Cell(10,0,'Cuenta: '.$nombrecta);
+        }
+            
+
         
     }
 }

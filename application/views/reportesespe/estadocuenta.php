@@ -18,19 +18,21 @@ $this->load->view('beneficiarios/modales/TablaCuentasOperaciones');
              <div class="panel-body">
                    <input type="hidden" value="<?php echo $rfc;?>" id="rfcempresa" name="rfcempresa" readonly>
                    <div class="row">
-                  <!-- <div class="col-md-3">
-                      <label for="">De la cuenta:</label>&nbsp;&nbsp;<a class="glyphicon glyphicon-search" data-toggle="modal" data-target="#myModalCuentasOperaciones"></a>
-                      <input type="text" id="cuenta" name="cuenta" class="form-control">
-                  </div>
-                  <div class="col-md-3">
-                      <label for=""><br></label>
-                      <input type="text" id="subcuenta" name="subcuenta" class="form-control">
-                  </div>
-                  <div class="col-md-3">
-                      <label for="">A la cuenta:</label>
-                      <input type="text" id="subcuenta2" name="subcuenta2" class="form-control">
-                  </div> -->
-              </div>
+                    <div id="seccionCuentas" style="display:none">
+                        <div class="col-md-3">
+                            <label for="">De la cuenta:</label>&nbsp;&nbsp;<a class="glyphicon glyphicon-search" data-toggle="modal" data-target="#myModalCuentasOperaciones"></a>
+                            <input type="text" id="cuenta" name="cuenta" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label for=""><br></label>
+                            <input type="text" id="subcuenta" name="subcuenta" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="">A la cuenta:</label>
+                            <input type="text" id="subcuenta2" name="subcuenta2" class="form-control">
+                        </div>
+                    </div>
+                 </div>
                    <br>
                    <div class="row">
                         <div class="col-md-3">
@@ -46,8 +48,8 @@ $this->load->view('beneficiarios/modales/TablaCuentasOperaciones');
                    <br>
                    <div class="row">
                         <div class="col-md-3">
-                            <input type="radio" id="" value="1" name="acude" checked> Acumulado
-                            <input type="radio" id="" value="" name="acude"> Detallado
+                            <input type="radio" id="acumulado" value="1" name="acude" checked> Acumulado
+                            <input type="radio" id="detallado" value="" name="acude"> Detallado
                         </div>
                     </div>
              </div>
@@ -73,4 +75,19 @@ function seleccionarcunetaoperaciones(cuenta, subcuenta, nombre, ssubcuenta)
     
 }
 
+const radioDetallado = document.getElementById("detallado");
+const radioAcumulado = document.getElementById("acumulado");
+const seccion = document.getElementById("seccionCuentas");
+
+radioDetallado.addEventListener("change", function () {
+  if (this.checked) {
+    seccion.style.display = "block";
+  }
+});
+
+radioAcumulado.addEventListener("change", function () {
+  if (this.checked) {
+    seccion.style.display = "none";
+  }
+});
 </script>
