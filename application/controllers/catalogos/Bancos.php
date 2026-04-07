@@ -14,6 +14,7 @@ class Bancos extends MY_Controller
         $this->load->model('OperacionesModel','opera');
         $this->load->model('BeneficiarioModel','benefi');
         $this->load->model('Configuraciones_model','configModel');
+        $this->load->model('DepartamentoCostosModel','deparcostos');
         $this->load->model('BitacoraModel','bitacora');
         $this->load->model('ConfigCuentasModel','conficta');
         $this->load->model('CuentasModel','cuentas');
@@ -386,6 +387,7 @@ class Bancos extends MY_Controller
               $datos=$this->bancos->datosBancos($no_banco);
               $detalle = $this->opera->detallepoliza($id);
               $datospoliza = $this->opera->datosOpera($id);
+              $departa = $this->deparcostos->getalldepartamento();
               $datosprove = $this->benefi->verificarsiexiste($datospoliza[0]['no_prov']);
 
               $montoposito = 0;
@@ -465,7 +467,7 @@ class Bancos extends MY_Controller
 
               $CXP = 'BAN';
               $editopera = 1;
-              $data = array('titulo' => $titulo,'tipo_letra' => $letra,'datosprove' => $datosprove,'editopera' => $editopera,'totalmontopoliza' => $totalmontopoliza,'impPagado' => $imppagago,'impDife' => $impdife,'totalPago' => $totalPAgo,'saldoInso' => $saldoinso,'pagos_detalle' => $pagos_detalle,'pagos' => $pagos,'monedas' => $monedas,'formapago' => $formapago,'CXP' => $CXP,'rfc' => $rfc[0]['rfc'],'montonegativo' => $montonegati,'bc' => $bc ,'montopositivo' => $montoposito , 'id' => $no_banco, 'tipo' => $tipo , 'permisosGrupo' => $permisos , 'datos' => $datos, 'datospoliza' => $datospoliza,'detalle'=>$detalle);
+              $data = array('titulo' => $titulo,'tipo_letra' => $letra,'departamentos' => $departa,'datosprove' => $datosprove,'editopera' => $editopera,'totalmontopoliza' => $totalmontopoliza,'impPagado' => $imppagago,'impDife' => $impdife,'totalPago' => $totalPAgo,'saldoInso' => $saldoinso,'pagos_detalle' => $pagos_detalle,'pagos' => $pagos,'monedas' => $monedas,'formapago' => $formapago,'CXP' => $CXP,'rfc' => $rfc[0]['rfc'],'montonegativo' => $montonegati,'bc' => $bc ,'montopositivo' => $montoposito , 'id' => $no_banco, 'tipo' => $tipo , 'permisosGrupo' => $permisos , 'datos' => $datos, 'datospoliza' => $datospoliza,'detalle'=>$detalle);
               $this->load->view('templates/navigation',$data);
               $this->load->view('bancos/operaciones/operaciones');
               $this->load->view('templates/footer');
@@ -509,12 +511,13 @@ class Bancos extends MY_Controller
                 $rfc = $this->configModel->getConfig();
                 $formapago = $this->cat->selectformapago();
                 $monedas = $this->cat->selectmoneda();
+                $departa = $this->deparcostos->getalldepartamento();
                 $noprovb = $this->benefi->getNoProv();
                 $datas = $noprovb[0]['no_prov'] + 1;
                // $pagos = $this->pagos->get_pagos_by_movi($increme,$tipo_letra);
                 $CXP = 'BAN';
                 $editopera = 0;
-                $data = array('titulo' => $titulo,'tipo_letra' => $tipo_letra,'datas' => $datas,'id' => $id,'editopera' => $editopera,'monedas' => $monedas,'formapago' => $formapago,'consecu' => $increme,'CXP' => $CXP,'rfc' => $rfc[0]['rfc'],'tipo' => $tipo, 'permisosGrupo' => $permisos,'datos' => $datos,'bc' => $bc);
+                $data = array('titulo' => $titulo,'tipo_letra' => $tipo_letra,'departamentos' => $departa,'datas' => $datas,'id' => $id,'editopera' => $editopera,'monedas' => $monedas,'formapago' => $formapago,'consecu' => $increme,'CXP' => $CXP,'rfc' => $rfc[0]['rfc'],'tipo' => $tipo, 'permisosGrupo' => $permisos,'datos' => $datos,'bc' => $bc);
                 $this->load->view('templates/navigation',$data);
                 $this->load->view('bancos/operaciones/operaciones');
                 $this->load->view('templates/footer');
@@ -681,8 +684,6 @@ class Bancos extends MY_Controller
 
         $uuid = $this->input->post('uuid');
 
-
-
         if($clasi == 1)
         {
 
@@ -720,6 +721,7 @@ class Bancos extends MY_Controller
                  }
                  else
                  {                 
+
                     array_push($dast, $data2);
 
                     foreach ($dast as $key => $row) 

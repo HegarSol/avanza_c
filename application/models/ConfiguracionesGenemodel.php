@@ -47,7 +47,8 @@ class ConfiguracionesGenemodel extends MY_Model
     {
         $row = $this->db2->select('*')
         ->from('configuraciones_general')
-        ->where('idConfiguracion','cxp_ManejarSubcuentaXProv')
+        ->where('idConfiguracion','cxp_ManejarSubsubcuentaXProv')
+        ->where('inactiva',0)
         ->get();
 
         return $row->result_array();
@@ -57,6 +58,7 @@ class ConfiguracionesGenemodel extends MY_Model
         $row = $this->db2->select('*')
         ->from('configuraciones_general')
         ->where('idConfiguracion','cxp_ManejarsubcuentaXProvTerc')
+        ->where('inactiva',0)
         ->get();
 
         return $row->result_array();
