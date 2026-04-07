@@ -3,7 +3,7 @@
 class Migration_Add_data_configuraciones_general extends CI_Migration{
     public function up()
     {
-        $data['idConfiguracion'] = 'cxp_ManejarSubcuentaXProv';
+        $data['idConfiguracion'] = 'cxp_ManejarSubsubcuentaXProv';
         $data['descripcion'] = 'Cuando segenere un pasivo, no se enviara a la subcuenta que este configurada en config (32), sino en la subcuenta que le corresponde a cada proveedor.';
         $data['tipo'] = 'L';
         $data['valor'] = 1;

@@ -425,7 +425,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                                                 $sumaretenisrg = $sumaretenisrg + $t['importeretisr'];
                                             }
-   
+
                                             if($t['cuenta'] == $compras[0]['cuenta'])
                                             {
                                                $totalcompras= $totalcompras + $t['importe'];
@@ -622,7 +622,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                         $emp = $CI->empresas->datosEmpresa($_SESSION['idEmpresa']);
                 
                         
-                       
+                       $manejarsubsubctaprover = $CI->configene->getcxpprovpropios();
                     
                          //SI EL RFC DE LA EMPRESA ES LA MISMA AL RFC DEL RECEPTOR DE LA FACTURA ENTONCES EN PROVEEDOR PROPIO
                          //var_dump($totalfactu);
@@ -656,7 +656,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             'cuenta' => $acreedor[0]['cuenta'],
                             'sub_cta' => $acreedor[0]['sub_cta'],
                             'nombre_cta' => $acreedor[0]['descrip'],
-                            'ssub_cta' => $acreedor[0]['ssub_cta']
+                            'ssub_cta' => $manejarsubsubctaprover[0]['valor'] == 1 ? $nom_prov : $acreedor[0]['ssub_cta']
                             
                           );
 
@@ -685,11 +685,12 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             $totaldescu = round($cDescuento,2);
                             $totalrealc = round($totalrealproacrec,2);
 
+                            
                             $total = array('importe' => ($totalron-$totaldescu)+$totalrealc, 'c_a' => '-',
                             'cuenta' => $propios[0]['cuenta'],
                             'sub_cta' => $propios[0]['sub_cta'],
                             'nombre_cta' => $propios[0]['descrip'],
-                            'ssub_cta' => $propios[0]['ssub_cta']
+                            'ssub_cta' => $manejarsubsubctaprover[0]['valor'] == 1 ? $nom_prov : $propios[0]['ssub_cta']
                             
                           );
                           

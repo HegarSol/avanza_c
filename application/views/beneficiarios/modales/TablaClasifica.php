@@ -117,6 +117,7 @@ function cuentaautomaticabanco(tableID)
 {
    var table = x(tableID);
    var tipomovs = '<?php echo $tipo;?>';
+   var departame = document.getElementById('departamentos').value;
    if('<?php echo $tipo;?>' == '4')
       {
          var monto = 1;
