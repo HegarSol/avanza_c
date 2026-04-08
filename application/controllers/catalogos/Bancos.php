@@ -727,7 +727,6 @@ class Bancos extends MY_Controller
                     foreach ($dast as $key => $row) 
                     {
                         $aux[$key] = $row['cta'];
-
                     }
 
                     array_multisort($aux, SORT_ASC, $dast);

@@ -1478,6 +1478,20 @@ class Beneficiarios extends MY_Controller
                                             'modulo' => 'Catalogos -> Beneficiario');
                                 $this->bitacora->operacion($opera);
 
+                                $configcta = $this->configcuentas->getidcuentaconfi(29);
+
+                                $datoscta = array('cuenta' => $configcta[0]['cuenta'],
+                                'sub_cta' => $configcta[0]['sub_cta'],
+                                'nombre'=> $this->input->post('nombre'),
+                                'tipo' => $this->input->post('tipo'),
+                                'ctasat' => 201.01,
+                                'natur' => 'A',
+                                'cvecobro'=> 0,
+                                'ssub_cta' => $this->input->post('no_prov'),
+                                );
+                        
+                                $this->cuentas->crearCuenta($datoscta);
+
                                 $correcto=$this->benefi->crearBeneficiario($datos);
                                 $tra = 0;
 
