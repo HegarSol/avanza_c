@@ -651,12 +651,24 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             $totaldescu = round($gDescuento,2);
                             $totalrealg = round($totalrealproacreg,2);
 
+                            if(isset($manejarsubsubctaprover[0]['valor']) && $manejarsubsubctaprover[0]['valor'] == 1) 
+                            {
+                                $ssubctaacre = $nom_prov;
+                                $nom_cuen = $CI->cuentas->get_cuenta($acreedor[0]['cuenta'],$acreedor[0]['sub_cta'],$nom_prov);
+                                $descripacrred = $nom_cuen[0]['nombre'];
+                            }
+                            else
+                            {
+                                $ssubctaacre = $acreedor[0]['ssub_cta'];
+                                $descripacrred = $acreedor[0]['descrip'];
+                            }
+
 
                             $total = array('importe' => ($totalron-$totaldescu)+$totalrealg, 'c_a' => '-',
                             'cuenta' => $acreedor[0]['cuenta'],
                             'sub_cta' => $acreedor[0]['sub_cta'],
-                            'nombre_cta' => $acreedor[0]['descrip'],
-                            'ssub_cta' => $manejarsubsubctaprover[0]['valor'] == 1 ? $nom_prov : $acreedor[0]['ssub_cta']
+                            'nombre_cta' => $descripacrred,
+                            'ssub_cta' => $ssubctaacre
                             
                           );
 
@@ -685,12 +697,23 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             $totaldescu = round($cDescuento,2);
                             $totalrealc = round($totalrealproacrec,2);
 
+                            if(isset($manejarsubsubctaprover[0]['valor']) && $manejarsubsubctaprover[0]['valor'] == 1) 
+                            {
+                                $ssubctaprop = $nom_prov;
+                                $nom_cuen = $CI->cuentas->get_cuenta($propios[0]['cuenta'],$propios[0]['sub_cta'],$nom_prov);
+                                $descriporpios = $nom_cuen[0]['nombre'];
+                            }
+                            else
+                            {
+                                $ssubctaprop = $propios[0]['ssub_cta'];
+                                $descriporpios = $propios[0]['descrip'];
+                            }
                             
                             $total = array('importe' => ($totalron-$totaldescu)+$totalrealc, 'c_a' => '-',
                             'cuenta' => $propios[0]['cuenta'],
                             'sub_cta' => $propios[0]['sub_cta'],
-                            'nombre_cta' => $propios[0]['descrip'],
-                            'ssub_cta' => $manejarsubsubctaprover[0]['valor'] == 1 ? $nom_prov : $propios[0]['ssub_cta']
+                            'nombre_cta' => $descriporpios,
+                            'ssub_cta' => $ssubctaprop
                             
                           );
                           
