@@ -75,6 +75,15 @@ class PagosModel extends MY_Model
         ->get()
         ->result();
     }
+    public function get_pagos_by_nombre($nombre)
+    {
+        return $this->dbEmpresa
+        ->select('nombre_cliente,fechaPago,monto')
+        ->from('pagos')
+        ->where('nombre_cliente', $nombre)
+        ->get()
+        ->result();
+    }
     public function guardardetalle($datos)
     {
         $this->dbEmpresa->insert('pagos_relacion', $datos);

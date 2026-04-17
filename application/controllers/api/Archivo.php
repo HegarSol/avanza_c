@@ -54,6 +54,24 @@ class Archivo extends REST_Controller
 
         $this->response(array('status' => true, 'data' => $datos));
     }
+    public function traerpagospornombre_post()
+    {
+        $nombre = $_POST['nombre'];
+        $idempre = $_POST['idempre'];
+
+        $this->pagos->set_database($idempre);
+
+        $datos = $this->pagos->get_pagos_by_nombre($nombre);
+
+        if(count($datos) > 0)
+        {
+            $this->response(array('status' => true, 'data' => $datos));
+        }
+        else
+        {
+            $this->response(array('status' => false, 'data' => 'No se encontraron pagos para el nombre proporcionado.'));
+        }
+    }
     public function traerpagosrelacionados_post()
     {
         $idpago = $_POST['idpago'];
