@@ -580,11 +580,11 @@ class Operaciones extends MY_Controller
                $row[] = date('d-m-Y',strtotime($opera->fecha));
                $row[] = $opera->beneficia.' - '.$opera->concepto;
                $row[] = '$'.number_format($opera->monto,2,'.',',');
-               $row[] = '<a href="'.base_url().'catalogos/Bancos/editaroperacion/'.$opera->id.'/'.$opera->tipo_mov.'/'.$opera->no_banco.'" class="btn btn-primary" title="Editar '.$title.'"><i class="fa fa-pencil-square-o"></i></a>
+               $row[] = '<button class="btn btn-success" title="Editar póliza" onClick="checkPeriodo(\''.$opera->id.'\',\''.$opera->tipo_mov.'\',\''.$opera->no_banco.'\',\''.$opera->fecha.'\')"><i class="fa fa-eye"></i></button>
                <a href="#"  onClick="EliminarPoliza(\''.$opera->id.'\',\''.$id.'\',\''.$tipo.'\')" class="btn btn-danger" title="Cancelar '.$title.'"><i class="fa fa-times"></i></a>
                <a href="'.base_url().'Reportes/ReportePoliza/'.$opera->id.'/'.$opera->tipo_mov.'" target="_blank" class="btn btn-info" title="Imprimir"> <i class="fa fa-print"></i></a>';
                $data[] = $row;
-
+//a href="'.base_url().'catalogos/Bancos/editaroperacion/'.$opera->id.'/'.$opera->tipo_mov.'/'.$opera->no_banco.'" class="btn btn-primary" title="Editar '.$title.'"><i class="fa fa-pencil-square-o"></i></a>
         }
         $output = array(
             'draw' => $this->input->post('draw'),

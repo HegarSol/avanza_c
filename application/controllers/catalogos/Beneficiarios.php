@@ -412,14 +412,14 @@ class Beneficiarios extends MY_Controller
 
        $rfc = $this->configModel->getConfig();
 
-       if(ENVIRONMENT == 'development')
-        {
-            $ch = curl_init("http://localhost:85/avanza_facturacion_github/api/Conta/buscar_cliente?rfc=".$rfc[0]['rfc']);
-        }
-        else
-        {
+       //if(ENVIRONMENT == 'development')
+       // {
+       //     $ch = curl_init("http://localhost:85/avanza_facturacion_github/api/Conta/buscar_cliente?rfc=".$rfc[0]['rfc']);
+       // }
+       // else
+       // {
             $ch = curl_init("http://avanzaf.hegarss.com/api/Conta/buscar_cliente?rfc=".$rfc[0]['rfc']);
-        }
+      //  }
 
 
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
