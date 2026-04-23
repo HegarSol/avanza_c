@@ -31,14 +31,14 @@ class Pagos extends MY_Controller
 
         $rfc = $this->configModel->getConfig();
        
-        if(ENVIRONMENT == 'development')
-        {
-          $ch = curl_init("http://localhost:85/avanza_facturacion_github/api/Conta/get_docto?id_pago=".$id_pago.'&id_cliente_pago='.$id_cliente_pago.'&serie='.$serie.'&folio='.$folio.'&rfc='.$rfc[0]['rfc']);
-        }
-        else
-        {
+        // if(ENVIRONMENT == 'development')
+        // {
+        //   $ch = curl_init("http://localhost:85/avanza_facturacion_github/api/Conta/get_docto?id_pago=".$id_pago.'&id_cliente_pago='.$id_cliente_pago.'&serie='.$serie.'&folio='.$folio.'&rfc='.$rfc[0]['rfc']);
+        // }
+        // else
+        // {
             $ch = curl_init("https://avanzaf.hegarss.com/api/Conta/get_docto?id_pago=".$id_pago.'&id_cliente_pago='.$id_cliente_pago.'&serie='.$serie.'&folio='.$folio.'&rfc='.$rfc[0]['rfc']);
-        }
+        // }
 
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);

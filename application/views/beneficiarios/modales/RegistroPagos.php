@@ -55,9 +55,15 @@
                             </div>
                             <div class="col-md-3">
                                 <label for="">Forma de Pago</label>
+                                
                                 <select name="formaDePago" id="formaDePago" class="form-control">
                                   <?php foreach($formapago as $formaspago): ?>
-                                     <option value="<?php echo $formaspago['c_FormaPago']?>" <?php echo ($formaspago['c_FormaPago'] == $formapag ? 'selected' : '') ?> >
+                                     <option value="<?php echo $formaspago['c_FormaPago']?>" 
+                                     <?php if($tipo_letra == 'T'): ?>
+                                     <?php echo ($formaspago['c_FormaPago'] == '03' ? 'selected' : '') ?>
+                                     <?php else: ?> 
+                                     <?php echo ($formaspago['c_FormaPago'] == $formapag ? 'selected' : '') ?>
+                                     <?php endif; ?>>
                                          <?php echo $formaspago['c_FormaPago'] . ' - ' . $formaspago['descripcion']; ?>
                                      </option>
                                   <?php endforeach; ?>
@@ -308,11 +314,11 @@
                    </div>
                    <div class="col-md-2">
                       <label for="">Pago:</label>
-                      <input type="text" readonly class="form-control" id="pago_pago_detalle" name="pago_pago_detalle">
+                      <input onblur="calculo()" type="text" readonly class="form-control" id="pago_pago_detalle" name="pago_pago_detalle">
                    </div>
                    <div class="col-md-2">
                        <label for="">Dif. Importe:</label>
-                       <input type="text" class="form-control" id="dif_impo_pago_detalle" name="dif_impo_pago_detalle">
+                       <input onblur="calculo()" type="text" class="form-control" id="dif_impo_pago_detalle" name="dif_impo_pago_detalle">
                    </div>
                    <div class="col-md-2">
                       <label for="">Total Pago:</label>
@@ -447,6 +453,17 @@
 </div>
 
 <script>
+function calculo()
+{
+    var pago = parseFloat(document.getElementById('pago_pago_detalle').value);
+    var dif_impo = parseFloat(document.getElementById('dif_impo_pago_detalle').value);
+    var total_pago = pago + dif_impo;
+    document.getElementById('total_pago_pago_detalle').value = total_pago.toFixed(2);
+
+    var saldo = parseFloat(document.getElementById('saldo_pago_detalle').value);
+    var saldo_insoluto = saldo - pago;
+    document.getElementById('saldo_inso_pago_detalle').value = saldo_insoluto.toFixed(2);
+}
 function cerrar_pago()
 {
    document.getElementById('agregar_pago').checked = false;
@@ -828,10 +845,10 @@ function agregar_tabla_pagos()
 
             if(response.data.metodoDePagoDR == 'PPD')
             {
-                //document.getElementById('tipo_pago_detalle').value = response.data.tipo;
+                document.getElementById('tipo_pago_detalle').value = 1;
                 document.getElementById('serie_pago_detalle').value = response.data.serie;
                 document.getElementById('folio_pago_detalle').value = response.data.folio;
-                document.getElementById('referencia_pago_detalle').value = response.data.referencia;
+                document.getElementById('referencia_pago_detalle').value = response.data.serie + response.data.folio;
                 //document.getElementById('referencia').value = response.data.referencia;
                 document.getElementById('uuid_pago_detalle').value = response.data.uuid;
                 document.getElementById('moneda_pago_detalle').value = response.data.monedaDR;
@@ -840,8 +857,8 @@ function agregar_tabla_pagos()
                 document.getElementById('saldo_pago_detalle').value = response.data.impSaldoAnt;
                 document.getElementById('parc_pago_detalle').value = response.data.numParcialidad;
                 document.getElementById('pago_pago_detalle').value = response.data.impPagado;
-                //document.getElementById('dif_impo_pago_detalle').value = response.data.c_aPorDiferencia;
-                document.getElementById('total_pago_pago_detalle').value = response.data.totalPago;
+                document.getElementById('dif_impo_pago_detalle').value = 0.00;
+                document.getElementById('total_pago_pago_detalle').value = response.data.impPagado;
                 document.getElementById('saldo_inso_pago_detalle').value = response.data.impSaldoInsoluto;
             }
             else

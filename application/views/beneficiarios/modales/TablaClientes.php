@@ -3,18 +3,18 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h1 class="modal-title">Busqueda Clientes</h1>
+            <h1 class="modal-title">Búsqueda de clientes</h1>
         </div>
         <div class="modal-body" >
           <table id="tblClientes" class="stripe row-border responsive nowrap" cellspacing="0" width="90%">
               <thead style="background-color:#3C7A78; color:white;">
-                <th>Accion</th>
+                <th>Acción</th>
                 <th>Id</th>
                 <th>Clave</th>
                 <th>Nombre</th>
                 <th>RFC</th>
                 <th>Dirección</th>
-                <th>Correo Electrónico</th>
+                <th>Correo electrónico</th>
                 <th>Teléfono</th>
               </thead>
           </table>

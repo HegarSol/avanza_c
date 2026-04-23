@@ -112,4 +112,33 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
       ajax: { "url": baseurl + "catalogos/Operaciones/ajax_list/"+'<?php echo $tipo;?>/'+'<?php echo $id;?>',"type": "POST" },"language" : {"url":"//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"}
     })
  });
+ function checkPeriodo(id,tipo,no_banco,fecha)
+ {
+   var mes = '<?php echo $_SESSION["mes"];?>';
+   var ano = '<?php echo $_SESSION["ano"];?>';
+   var data = fecha.split('-');
+   if(parseInt(data[1]) != mes && parseInt(data[0]) != ano)
+   {
+      var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'No se puede editar la póliza, esta fuera del periodo seleccionado.'});
+   }
+   else
+   {
+     window.location.href = baseurl + 'catalogos/Bancos/editaroperacion/'+id+'/'+tipo+'/'+no_banco;
+   }
+   //  $.ajax({
+   //      url: baseurl + "catalogos/Operaciones/CheckPeriodo",
+   //      type: "POST",
+   //      data: {id:id,tipo:tipo,no_banco:no_banco,fecha:fecha},
+   //      success:function(respuesta){
+   //          if(respuesta == 1)
+   //          {
+   //              window.open(baseurl + 'Reportes/ReportePoliza/'+id+'/'+tipo,'_blank');
+   //          }
+   //          else
+   //          {
+   //              var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'No se puede mostrar la póliza, el periodo contable se encuentra cerrado.'});
+   //          }
+   //      }
+   //  });
+ }
 </script>
