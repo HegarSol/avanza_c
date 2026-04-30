@@ -117,7 +117,7 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
    var mes = '<?php echo $_SESSION["mes"];?>';
    var ano = '<?php echo $_SESSION["ano"];?>';
    var data = fecha.split('-');
-   if(parseInt(data[1]) != mes && parseInt(data[0]) != ano)
+   if(parseInt(data[1]) != mes || parseInt(data[0]) != ano)
    {
       var n = noty({ layout:'topRight',type: 'warning',  theme: 'relax',text: 'No se puede editar la póliza, esta fuera del periodo seleccionado.'});
    }
