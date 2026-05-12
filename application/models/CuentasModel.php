@@ -9,14 +9,14 @@
        {
            parent::__construct(true);
            $this->table = 'catalogocta';
-           $this->column_order = array('cuenta','sub_cta','ssub_cta');
-           $this->column_search = array('cuenta','sub_cta','nombre','ssub_cta');
+           $this->column_order = array('cuenta','sub_cta','ssub_cta','nombre');
+           $this->column_search = array('cuenta','sub_cta','ssub_cta','nombre');
            if(isset($_SESSION['idEmpresa'])){
              $this->db2 = $this->hegardb->getDatabase($_SESSION['idEmpresa']);
              if(!$this->db2){show_error('No se puede establecer conexion con la base de datos');}
            }
         }
-
+        
         public function crearCuenta($datos)
         {
             $this->dbEmpresa->insert('catalogocta',$datos);
@@ -106,9 +106,10 @@
             $row = $this->db2->select('*')->from('catalogocta')->where('cuenta',$cuenta)->where('sub_cta',$sub_cta)->where('ssub_cta',$ssub_cta)->get();
             return $row->result_array();
         }
-        public function verificarreportecuenta($cuenta,$sub_cta,$ssub_cta)
+        public function verificarreportecuenta($cuenta,$sub_cta,$ssub_cta,$sub_cta2,$ssub_cta2)
         {
-            $row = $this->db2->select('*')->from('catalogocta')->where('cuenta',$cuenta)->where('sub_cta',$sub_cta)->where('ssub_cta',$ssub_cta)->get();
+            $row = $this->db2->select('cuenta,sub_cta,ssub_cta,nombre')->from('catalogocta')->where('cuenta',$cuenta)
+            ->where('sub_cta >=',$sub_cta)->where('sub_cta <=',$sub_cta2)->where('ssub_cta >=',$ssub_cta)->where('ssub_cta <=',$ssub_cta2)->get();
             return $row->result_array();
         }
         public function borrarCuenta($id)

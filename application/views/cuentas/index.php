@@ -257,7 +257,8 @@ exit('<b><font style="font-size:130px; font-family:arial"> <p align="center">Ups
         columnDefs:
         [ { responsivePriority: 1, targets: 1, name:'cuenta' }, { responsivePriority: 2, targets: -1 }, { responsivePriority: 3, targets: 2 },{ targets: [0], visible: false } ],
             processing: true, serverSide: true,
-            ajax: { "url": baseurl + "catalogos/Cuentas/ajax_list", "type": "POST" },  "language": { "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json" }
+            ajax: { "url": baseurl + "catalogos/Cuentas/ajax_list", "type": "POST" }, 
+            "language": { "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json" }
       })
     });
 

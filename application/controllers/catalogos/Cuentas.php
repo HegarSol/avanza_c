@@ -168,7 +168,9 @@ class Cuentas extends MY_Controller
     }
     public function ajax_cuentaselejiroperaciones()
     {
-        $list = $this->cuentas->get_datatables();
+        
+        
+        $list = $this->cuentas->get_datatables( );
         $data = array();
         foreach($list as $cuentas)
         {
@@ -177,8 +179,8 @@ class Cuentas extends MY_Controller
             // $row[] = $cuentas->idcuenta;
             $row[] = $cuentas->cuenta;
             $row[] = $cuentas->sub_cta;
-            $row[] = $cuentas->nombre;
             $row[] = $cuentas->ssub_cta;
+            $row[] = $cuentas->nombre;
             $data[] = $row;
         }
         $output = array(

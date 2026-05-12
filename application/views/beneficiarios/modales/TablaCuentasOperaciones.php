@@ -13,23 +13,44 @@
                 <!-- <th>Id</th> -->
                 <th>Cuenta</th>
                 <th>Sub Cuenta</th>
-                <th>Nombre</th>
                 <th>Ssub cuenta</th>
+                <th>Nombre</th>
               </thead>
           </table>
             <!-- <button class="btn btn-success" onclick="returnIdCliente()" data-dismiss="modal" aria-hidden="true" ><span class="glyphicon glyphicon-ok"></span> Seleccionar</button> -->
         </div>
     </div>
     <script>
+
+      var table3;
+
     $(function ()
     {
-      $("#tblCuentas23").dataTable({
+      table3 = $("#tblCuentas23").DataTable({
         responsive: true, filter:true,
+        columnDefs:
+        [ { responsivePriority: 1, targets: 1, name:'cuenta' }, { responsivePriority: 2, targets: -1 }, { responsivePriority: 3, targets: 2 },{ targets: [0], visible: true } ],
              processing: true, serverSide: true,
              ajax: { "url": baseurl + "catalogos/Cuentas/ajax_cuentaselejiroperaciones", "type": "POST" },
              "language" : {"url":"//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"}
        })
      });
+     function abrirModalCuentasOperaciones(tipo)
+{
+    if (tipo == 1) {
+    $('#myModalCuentasOperaciones').modal('show');
+     $('#tipo').val(tipo);
+    } else if (tipo == 2) {
+         $('#tipo').val(tipo);
+       let id = document.getElementById('cuenta').value;
+       console.log(id);
+          table3.column(1).search(id).draw();
+        $('#myModalCuentasOperaciones').modal('show');
+    }
+    
+       
+
+}
 
     </script>
 </div></div>
