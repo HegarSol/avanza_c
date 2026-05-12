@@ -203,13 +203,15 @@ class OperacionesModel extends MY_Model
 
         return $row->result_array();
     }
-    public function saldoinicial($cuenta,$subcuen,$ssubcue,$fechaini)
+    public function saldoinicial($cuenta,$subcuen,$ssubcue,$subcuen2,$ssubcue2,$fechaini)
     {
       $row = $this->db2->select('cuenta,sub_cta,ssub_cta,SUM(IF(c_a = "+",monto,-monto)) as saldo')
       ->from('opera_banco_detalle')
       ->where('cuenta',$cuenta)
-      ->where('sub_cta',$subcuen)
-      ->where('ssub_cta',$ssubcue)
+      ->where('sub_cta >=',$subcuen)
+      ->where('sub_cta <=',$subcuen2)
+      ->where('ssub_cta >=',$ssubcue)
+      ->where('ssub_cta <=',$ssubcue2)
       ->where('fecha <',$fechaini)
       ->group_by('cuenta,sub_cta,ssub_cta')
       ->get();
@@ -253,14 +255,17 @@ class OperacionesModel extends MY_Model
 
        return $this->db2->get()->result();
     }
-    public function auxiliardetalle($cuenta,$subcuenta,$subcuen2,$fechaini,$fechafin,$agrupa)
+    public function auxiliardetalle($cuenta,$subcuenta,$ssubcuenta,$subcuenta2,$ssubcuenta2,$fechaini,$fechafin,$agrupa)
     {
        $this->db2->select('ac.tipo_mov,ac.no_banco,ac.no_mov,ac.cuenta,ac.sub_cta,ac.ssub_cta,ac.fecha,ac.c_a as signo,ac.monto,t.concepto as conceenca,ac.referencia as rece,ac.no_prov,t.beneficia,ac.concepto as concedeta')
        ->from('opera_banco_detalle ac')
-       ->join('opera_banco_encabe t','ac.tipo_mov = t.tipo_mov AND ac.no_banco = t.no_banco AND ac.no_mov = t.no_mov','left')
+       //->join('opera_banco_encabe t','ac.tipo_mov = t.tipo_mov AND ac.no_banco = t.no_banco AND ac.no_mov = t.no_mov','left')
+         ->join('opera_banco_encabe t','ac.id_encabezado = t.id','left')
        ->where('ac.cuenta',$cuenta)
-       ->where('ac.sub_cta ',$subcuenta)
-       ->where('ac.ssub_cta ',$subcuen2)
+       ->where('ac.sub_cta >=',$subcuenta)
+       ->where('ac.sub_cta <=',$subcuenta2)
+       ->where('ac.ssub_cta >=',$ssubcuenta)
+       ->where('ac.ssub_cta <=',$ssubcuenta2)
        ->where('ac.fecha >=',$fechaini)
        ->where('ac.fecha <=',$fechafin);
        if($agrupa == 1)
@@ -269,7 +274,7 @@ class OperacionesModel extends MY_Model
        }
        else
        {
-          $this->db2->order_by('ac.cuenta,ac.sub_cta,ac.fecha,ac.no_mov');
+          $this->db2->order_by('ac.cuenta,ac.sub_cta,ac.ssub_cta,ac.fecha,ac.no_mov');
        }
      //  $this->db2->group_by('ac.tipo_mov,ac.no_banco,ac.no_mov');
 
