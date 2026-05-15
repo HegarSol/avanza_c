@@ -11,6 +11,7 @@ $this->load->view('beneficiarios/modales/TablaClientes');
 $this->load->view('beneficiarios/modales/TablaClasifica');
 $this->load->view('beneficiarios/modales/TablaCuentasOperaciones');
 $this->load->view('beneficiarios/modales/ModalXML');
+$this->load->view('beneficiarios/modales/ModalPolizadiario');
 ?>
 
 <input type="hidden" id="identi" name="identi" readonly value="<?php echo isset($datos[0]['id']) ? $datos[0]['id'] : '0'?>">
@@ -69,7 +70,7 @@ $this->load->view('beneficiarios/modales/ModalXML');
 <input type="hidden" class="form-control" id="valorporpagar" name="valorporpagar" readonly value="1">
     <div class="row">
         <div class="col-sm-2">
-            <label for="">Cuenta</label>&nbsp;&nbsp;<a class="glyphicon glyphicon-search" data-toggle="modal" data-target="#myModalCuentas"></a>
+            <label for="">Cuenta</label>&nbsp;&nbsp;<a class="glyphicon glyphicon-search" data-toggle="modal" data-target="#myModalCuentasDiario"></a>
             <input type="text" class="form-control" id="cuenta">
         </div>
         <div class="col-sm-2">
