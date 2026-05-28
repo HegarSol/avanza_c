@@ -438,7 +438,7 @@ class Bancos extends MY_Controller
               $formapago = $this->cat->selectformapago();
               $monedas = $this->cat->selectmoneda();
 
-              $pagos = $this->pagos->get_pagos_by_movi($datospoliza[0]['no_mov'],$letra);
+              $pagos = $this->pagos->get_pagos_by_movi($datospoliza[0]['no_mov'],$letra,$datospoliza[0]['no_banco']);
               
               if(count($pagos) > 0)
               {

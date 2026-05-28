@@ -135,7 +135,7 @@ class Polizasdiarias extends MY_Controller
                  $letra = $datos[0]['tipo_mov'];
                  $no_banco = 0;
 
-                 $pagos = $this->pagos->get_pagos_by_movi($datos[0]['no_mov'],$letra);
+                 $pagos = $this->pagos->get_pagos_by_movi($datos[0]['no_mov'],$letra,$datos[0]['no_banco']);
 
                  if(count($pagos) > 0)
                  {
