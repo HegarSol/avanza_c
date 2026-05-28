@@ -48,11 +48,12 @@ class PagosModel extends MY_Model
         ->delete('pagos_relacion');
         return $this->dbEmpresa->affected_rows();
     }
-    public function get_pagos_by_movi($no_mov,$tipo_mov)
+    public function get_pagos_by_movi($no_mov,$tipo_mov,$no_banco)
     {
         return $this->dbEmpresa->from('pagos')
         ->where('ban_no_mov', $no_mov)
         ->where('tipo_mov',$tipo_mov)
+        ->where('no_banco',$no_banco)
         ->get()
         ->result();
     }
