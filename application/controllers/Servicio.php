@@ -5,21 +5,23 @@ class Servicio extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->model('BancosModel','bancos');
     }
     public function index()
     {
        $this->pendientes();
+     
       // $this->cancelados();
     }
     public function pendientes()
     {
-        $json = file_get_contents('empre.json');
-        $data = json_decode($json, true);
+        // $json = file_get_contents('empre.json');
+        // $data = json_decode($json, true);
+        $data = $this->bancos->getEmpresas();
         $inserycance = 1;
 
         foreach($data as $dat)
         {
-
             if(ENVIRONMENT == 'development')
             {
                $ch = curl_init("http://localhost:85/avanza_facturacion_github/api/Contabilidad/obtener_polizas_ingreso?id=".$dat['IdEmpresa']);
@@ -38,7 +40,7 @@ class Servicio extends CI_Controller
                         $this->db2 = $this->hegardb->getDatabase($dat['IdEmpresa']);
                         if(!$this->db2)
                         {
-                            show_error('No se puede establecer conexion con la base de datos: '.$dat['IdEmpresa']);
+                            show_error('No se puede establecer conexión con la base de datos: '.$dat['IdEmpresa']);
                         }
                     }
 
