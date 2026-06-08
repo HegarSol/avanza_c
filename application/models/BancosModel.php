@@ -16,6 +16,11 @@ class BancosModel extends MY_Model
             if(!$this->db2){show_error('No se puede establecer conexion con la base de datos');}
         }
     }
+    public function getEmpresas()
+    {
+        $row = $this->db->select('*')->from('enlaceAvanzaF')->get();
+        return $row->result_array();
+    }
     public function getBancos()
     {
         $row = $this->db2->select('*')->from('catalogo_banco')->get();
