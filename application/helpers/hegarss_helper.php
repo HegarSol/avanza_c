@@ -84,6 +84,12 @@ defined('BASEPATH') or exit('No direct script access alloed');
         $CI->xmlDom->loadXML($response->xmlContent);
         $xml2 = simplexml_load_string($response->xmlContent);
 
+        $addenda = $CI->xmlDom->getElementsByTagName('Addenda')->item(0);
+
+        if ($addenda) {
+            $addenda->parentNode->removeChild($addenda);
+        }
+
         $sumaimpueiva16 = 0;
         $sumaimpueiva8 = 0;
         $sumareteniva = 0;
@@ -388,9 +394,13 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                                           //-------------------------------------------------------------------------------------------------------------
 
-                                            
+                                           // var_dump(0);
+                                          // var_dump($t['cuenta']);
+                                        //   var_dump($gastos[0]['cuenta']);
+                                      //     var_dump($gastos[0]['sub_cta']);
                                             if($t['cuenta'] >= $gastos[0]['cuenta'] && $t['cuenta'] <= $gastos[0]['sub_cta'] )
                                             {
+                                             //   var_dump(1);
                                                $totalgastos= $totalgastos+ $t['importe'];
 
                                                $gDescuento = $gDescuento + $t['descuento'];
@@ -428,6 +438,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
 
                                             if($t['cuenta'] == $compras[0]['cuenta'])
                                             {
+                                                                                 //               var_dump(2);
                                                $totalcompras= $totalcompras + $t['importe'];
                                                $cDescuento = $cDescuento + $t['descuento'];
                                                if($t['tasaiva'] ==  '0.080000')
@@ -614,6 +625,7 @@ defined('BASEPATH') or exit('No direct script access alloed');
                 else
                 {
 
+
                     if($conf[0]['rfc'] == $rfcReceptor)
                     {
 
@@ -644,13 +656,11 @@ defined('BASEPATH') or exit('No direct script access alloed');
                             {    
                             $acreedor = $CI->conficue->getidcuentaconfi(58);
                             } 
-
-
                             
                             $totalron = round($totalgastos,2);
                             $totaldescu = round($gDescuento,2);
                             $totalrealg = round($totalrealproacreg,2);
-
+                                                        
                             if(isset($manejarsubsubctaprover[0]['valor']) && $manejarsubsubctaprover[0]['valor'] == 1) 
                             {
                                 $ssubctaacre = $nom_prov;
