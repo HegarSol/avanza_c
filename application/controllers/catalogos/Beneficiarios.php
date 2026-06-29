@@ -371,7 +371,7 @@ class Beneficiarios extends MY_Controller
         }
         else
         {
-            $poliza = $tipo.'  '.$no_banco.'        '.$no_mov;
+             $poliza = $tipo. str_pad($no_banco, 2, ' ', STR_PAD_LEFT).str_pad($no_mov, 8, ' ', STR_PAD_LEFT);
         }
        
 
