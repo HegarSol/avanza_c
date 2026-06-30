@@ -736,7 +736,8 @@ class Bancos extends MY_Controller
         {
             $dast=$this->bancos->datosBancos($id);
         }
-        
+         if($uuid != null)
+         {
                 if(ENVIRONMENT == 'development')
                         {
                             $ch = curl_init("http://localhost:85/git_hub_repo/avanza_buzon_github/api/Comprobantes/actualizarreferencia");
@@ -746,6 +747,7 @@ class Bancos extends MY_Controller
                              $ch = curl_init("http://avanzab.hegarss.com/api/Comprobantes/actualizarreferencia");
                          }
          //foreach($uuid as $uuids )
+        
          for ($i = 0; $i < count($uuid); $i++)
          {
             if($uuid[$i] != 'UUID')
@@ -762,7 +764,7 @@ class Bancos extends MY_Controller
                             //var_dump($uuid[$i]);
             }
         }
-
+         }
 
         $this->output->set_content_type('application/json')->set_output(json_encode($dast));
     }

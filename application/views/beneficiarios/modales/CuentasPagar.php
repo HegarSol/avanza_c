@@ -626,7 +626,7 @@ function checartodo()
                 var monto = parseFloat($(this).parent().parent().find('td').eq(20).html());
                 total += monto;             
                 campos+= tipo+',';
-                console.log(campos);
+              
 
             });
             document.getElementById('uuidpagar').value = campos;
@@ -860,7 +860,7 @@ function recorrercuentas()
                                              element1.type = "checkbox";
                                              element1.name="chkbox[]"; 
                                              
-                                             console.log(response.data[i].nombre_cta);
+                                             //console.log(response.data[i].nombre_cta);
                                              
                                              var td0 = document.createElement("TD")
                                              td0.style.textAlign = 'center';
@@ -1056,7 +1056,7 @@ function abrirregistro(r)
    let numprov = document.getElementById('tableclasifica').tBodies[0].rows[p-1].cells[2].innerHTML;
    let no_prov = document.getElementById('numprov').innerHTML;
    let porpaga = document.getElementById('valorporpagar').value;
-console.log(1);
+//console.log(1);
 
    document.getElementById('renglonclasi').value = p;
   
@@ -1879,11 +1879,24 @@ function verTabla(rfcReceptor,formapago)
 
     }
     var historico = '';
+    if('<?php echo $editopera; ?>' == 1)
+    {
+    var tipo = '<?php if($tipo == 1){echo 'T';}else if($tipo == 2){ echo 'C'; }else{echo 'D';}?>';
+    var no_banco =  '<?php echo $datos[0]["no_banco"];?>';
+    var mov = document.getElementById('no_mov').value;
+   }
+   else
+   {
+    var tipo = null;
+    var no_banco = null;
+    var mov = null;
+   }
+
 
 jQuery.ajax({
        url: baseurl+"catalogos/Beneficiarios/getpendientesPagar",
        type:"POST",
-       data:{rfc:rfc,rfcemisor:rfcemisor,historico:historico,formapago:forma},
+       data:{rfc:rfc,rfcemisor:rfcemisor,historico:historico,formapago:forma,tipo:tipo,no_banco:no_banco,mov:mov},
        dataType:"html",
        success:function(data)
        {
