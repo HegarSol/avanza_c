@@ -1198,6 +1198,7 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
                         dataType:"html",
                         success:function(response)
                         {
+                        //console.log(response);
                             response=JSON.parse(response);
 
                             var monto = parseFloat(document.getElementById('montopoli').value);
@@ -1347,7 +1348,7 @@ function selectbenefi(no_prov,nombre,rfc,direccion,telefono,tipo_proveedor)
                     }
                     
 
-                    console.log('si tiene');
+                    //console.log('si tiene');
                 }
             }
         }
