@@ -212,13 +212,13 @@ class ReporteAuxiliarContable extends MY_Controller
                         $this->pdf->SetFont('Helvetica','',8);
                         if($this->datosdetalle[$i]->signo == '+')
                         {
-                        $this->pdf->SetCol(2.1);    
+                        $this->pdf->SetCol(2.0);    
                          $totalcargo=$totalcargo + $this->datosdetalle[$i]->monto;
                          $totalsaldo= $totalsaldo + $this->datosdetalle[$i]->monto;
                         }
                         else
                         {
-                        $this->pdf->SetCol(2.4);    
+                        $this->pdf->SetCol(2.3);    
                          $totalabono=$totalabono - $this->datosdetalle[$i]->monto;
                          $totalsaldo=$totalsaldo - $this->datosdetalle[$i]->monto;
                         }
