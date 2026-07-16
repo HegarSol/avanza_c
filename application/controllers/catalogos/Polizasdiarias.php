@@ -236,7 +236,7 @@ class Polizasdiarias extends MY_Controller
         $fechapoli = $this->input->post('fechapoli');
         $conceptopoli = $this->input->post('conceptopoli');
 
-        $poliza_contble = $tipo_movimiento.' '.$numero_movimiento;
+        $poliza_contble = $tipo_movimiento.' 0'.str_pad($numero_movimiento, 8, '0', STR_PAD_LEFT);
 
         $uuidsep = substr($uuidpoliza, 0, -1);
 
