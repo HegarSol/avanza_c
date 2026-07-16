@@ -97,9 +97,9 @@ class Polizasdiarias extends MY_Controller
                 // {
                 //     $concecutivo = date('y').date('m').'0001';
                 // }
+                $editopera = 0;
 
-
-                $data = array('titulo' => 'Nueva póliza diario','tipo_letra' => $tipo_letra,'concecutivo' => $concecutivo,'CXP' => $CXP,'monedas' => $monedas,'formapago' => $formapago,'id' => $no_banco,'tipo' => $tipo,'accion' => 'catalogos/Polizasdiarias/guardarpolizadiaria','permisosGrupo'=> $permisos,'rfc' => $rfc[0]['rfc']);
+                $data = array('titulo' => 'Nueva póliza diario','tipo_letra' => $tipo_letra,'concecutivo' => $concecutivo,'editopera' => $editopera,'CXP' => $CXP,'monedas' => $monedas,'formapago' => $formapago,'id' => $no_banco,'tipo' => $tipo,'accion' => 'catalogos/Polizasdiarias/guardarpolizadiaria','permisosGrupo'=> $permisos,'rfc' => $rfc[0]['rfc']);
                 $this->load->view('templates/navigation',$data);
                 $this->load->view('polizas/polizas');
                 $this->load->view('templates/footer');
@@ -174,7 +174,8 @@ class Polizasdiarias extends MY_Controller
                     }
                  }
                  $CXP = 'BAN';
-                 $data = array('titulo' => 'Editar póliza diario','tipo_letra' => $letra,'impPagado' => $imppagago,'impDife' => $impdife,'totalPago' => $totalPAgo,'saldoInso' => $saldoinso,'pagos_detalle' => $pagos_detalle,'pagos' => $pagos,'CXP' => $CXP,'monedas' => $monedas,'formapago' => $formapago,'id' => $no_banco,'tipo' => $tipo,'rfc' => $rfc[0]['rfc'] ,'datospoliza' => $datospoliza, 'datos' => $datos,'montonegativo' => $montonegati,'montopositivo' => $montoposito,'totalmontopoliza' => $totalmontopoliza);
+                 $editopera = 1;
+                 $data = array('titulo' => 'Editar póliza diario','tipo_letra' => $letra,'impPagado' => $imppagago,'editopera' => $editopera,'impDife' => $impdife,'totalPago' => $totalPAgo,'saldoInso' => $saldoinso,'pagos_detalle' => $pagos_detalle,'pagos' => $pagos,'CXP' => $CXP,'monedas' => $monedas,'formapago' => $formapago,'id' => $no_banco,'tipo' => $tipo,'rfc' => $rfc[0]['rfc'] ,'datospoliza' => $datospoliza, 'datos' => $datos,'montonegativo' => $montonegati,'montopositivo' => $montoposito,'totalmontopoliza' => $totalmontopoliza);
                  $this->load->view('templates/navigation',$data);
                  $this->load->view('polizas/polizas');
                  $this->load->view('templates/footer');
@@ -236,7 +237,7 @@ class Polizasdiarias extends MY_Controller
         $fechapoli = $this->input->post('fechapoli');
         $conceptopoli = $this->input->post('conceptopoli');
 
-        $poliza_contble = $tipo_movimiento.' 0'.str_pad($numero_movimiento, 8, '0', STR_PAD_LEFT);
+        $poliza_contble = $tipo_movimiento.' 0'.str_pad($numero_movimiento, 8, ' ', STR_PAD_LEFT);
 
         $uuidsep = substr($uuidpoliza, 0, -1);
 
