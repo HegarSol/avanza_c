@@ -1881,7 +1881,7 @@ function verTabla(rfcReceptor,formapago)
     var historico = '';
     if('<?php echo $editopera; ?>' == 1)
     {
-    var tipo = '<?php if($tipo == 1){echo 'T';}else if($tipo == 2){ echo 'C'; }else{echo 'D';}?>';
+    var tipo = '<?php if($tipo == 1){echo 'T';}else if($tipo == 2){ echo 'C'; }else if($tipo == 3){echo 'D';} else { echo 'O';} ?>';
     var no_banco =  '<?php echo $datos[0]["no_banco"];?>';
     var mov = document.getElementById('no_mov').value;
    }
