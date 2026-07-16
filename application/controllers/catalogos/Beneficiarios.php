@@ -372,7 +372,7 @@ class Beneficiarios extends MY_Controller
         else
         {
              $poliza = $tipo. str_pad($no_banco, 2, ' ', STR_PAD_LEFT).str_pad($no_mov, 8, ' ', STR_PAD_LEFT);
-        }
+         }
       //  var_dump($autorizado);
 
         // if(ENVIRONMENT == 'development')
