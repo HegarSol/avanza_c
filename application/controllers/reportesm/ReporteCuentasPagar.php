@@ -186,18 +186,18 @@ class ReporteCuentasPagar extends MY_Controller
 
     
                 }
-                else
+                else // Detallado
                 {
                     $objsheet->setCellValue('A3','Serie');
                     $objsheet->setCellValue('B3','Folio');
                     $objsheet->setCellValue('C3','Fecha');
-                    $objsheet->setCellValue('D3','Descripcion');
-                    $objsheet->setCellValue('E3','Poliza pago');
+                    $objsheet->setCellValue('D3','Descripción');
+                    $objsheet->setCellValue('E3','Póliza pago');
                     $objsheet->setCellValue('F3','Fecha pago');
                     $objsheet->setCellValue('G3','Importe');
                     $objsheet->setCellValue('H3','Metodo pago');
                     $objsheet->setCellValue('I3','UUID');
-                    $objsheet->setCellValue('J3','Antiguedad');
+                    $objsheet->setCellValue('J3','Antigüedad');
 
                     $total = 0;
                     $summon2 = 0;
@@ -205,53 +205,55 @@ class ReporteCuentasPagar extends MY_Controller
                     {
                        $datos = $response->data;
 
-                       $tajos = [];
-                       $ordenado = [];
+                    //    $tajos = [];
+                    //    $ordenado = [];
 
-                       for($j=0;$j<count($datos); $j++)
-                       {
-                           $tajos[] = [
-                               'rfc_emisor' => $datos[$j]->rfc_emisor,
-                               'nombre_emisor' => $datos[$j]->nombre_emisor
-                           ];
-                       }
+                    //    for($j=0;$j<count($datos); $j++)
+                    //    {
+                    //        $tajos[] = [
+                    //            'rfc_emisor' => $datos[$j]->rfc_emisor,
+                    //            'nombre_emisor' => $datos[$j]->nombre_emisor
+                    //        ];
+                    //    }
 
-                       foreach($tajos as $key => $row)
-                       {
-                           $aux[$key] = $row['rfc_emisor'];
-                       }
+                    //    foreach($tajos as $key => $row)
+                    //    {
+                    //        $aux[$key] = $row['rfc_emisor'];
+                    //    }
 
-                       array_multisort($aux,SORT_ASC,$tajos);
+                    //    array_multisort($aux,SORT_ASC,$tajos);
 
-                       foreach($tajos as $key => $row)
-                       {
-                           $ordenado[] = ['rfc_emisor' => $row['rfc_emisor'],'nombre_emisor' => $row['nombre_emisor'] ];
-                       }
+                    //    foreach($tajos as $key => $row)
+                    //    {
+                    //        $ordenado[] = ['rfc_emisor' => $row['rfc_emisor'],'nombre_emisor' => $row['nombre_emisor'] ];
+                    //    }
 
-                       $datosr = array_unique($ordenado, SORT_REGULAR);
+                    //    $datosr = array_unique($ordenado, SORT_REGULAR);
 
                        $numerod = 4;
                        $numero2d = 5;
-
-                       foreach($datosr as $lai)
+                        $i = 0;
+                         $j = 0;
+                        while ($j<count($datos))
+                     //  foreach($datos as $lai)
                        {
+                         $lRfc = $datos[$j]->rfc_emisor;
                            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A'.$numerod.':G'.$numerod.'');
 
-                           $datosrfc = $this->beneficiario->datosbenerfc($lai['rfc_emisor']);
-                           if(count($datosrfc) == 0)
-                           {
-                             $objsheet->setCellValue('A'.$numerod,$lai['rfc_emisor'].' - '.$lai['nombre_emisor']);
-                           }
-                           else
-                           {
-                             $objsheet->setCellValue('A'.$numerod,$lai['rfc_emisor'].' - '.$lai['nombre_emisor']);
-                           }
+                           //$datosrfc = $this->beneficiario->datosbenerfc($lRfc);
+                           //if(count($datosrfc) == 0)
+                           //{
+                             $objsheet->setCellValue('A'.$numerod,$lRfc.' - '.$datos[$j]->nombre_emisor);
+                           //}
+                           //else
+                           //{
+                           //  $objsheet->setCellValue('A'.$numerod,$lRfc.' - '.$datos[$j]->nombre_emisor);
+                           //}
 
-                           for($i=0; $i<count($datos); $i++)
+                           //for($i=0; $i<count($datos); $i++)
+                           while($i<count($datos) && $lRfc == $datos[$i]->rfc_emisor)
                            {
 
-                                if($lai['rfc_emisor'] == $datos[$i]->rfc_emisor)
-                                {
                                     $numerod++;
                                     $numero2d++;
                                     $objsheet->setCellValue('A'.$numerod,$datos[$i]->serie);
@@ -272,16 +274,15 @@ class ReporteCuentasPagar extends MY_Controller
                                     $objsheet->setCellValue('H'.$numerod,$datos[$i]->metodo_pago);
                                     $objsheet->setCellValue('I'.$numerod,$datos[$i]->uuid);
 
-                                    $date1 = new DateTime(date('d-m-Y',strtotime($datos[$i]->fecha)));
-                                    $date2 = new DateTime(date('d-m-Y'));
-                                    $diff = $date1->diff($date2);
+                                    //$date1 = new DateTime(date('d-m-Y',strtotime($datos[$i]->fecha)));
+                                    //$date2 = new DateTime(date('d-m-Y'));
+                                    //$diff = $date1->diff($date2);
 
-                                    $objsheet->setCellValue('J'.$numerod,$diff->days.' dias');
+                                    $objsheet->setCellValue('J'.$numerod,$datos[$i]->dias.' dias');
                                     $summon2 = $summon2 + $datos[$i]->total;
-                                }
-
-                           }
-
+                               $i++;
+                          }
+                        $j = $i;    
                            $numerod++;
                            $numero2d++;
 
@@ -552,9 +553,9 @@ class ReporteCuentasPagar extends MY_Controller
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 $resu = curl_exec($ch);
                 $response = json_decode($resu);
-
-                $this->rowc = $this->configModel->getConfig();
                 
+                $this->rowc = $this->configModel->getConfig();
+
 
                 $this->pdf->SetAutoPageBreak(true,10);
                 $this->pdf->AddPage();
@@ -680,45 +681,15 @@ class ReporteCuentasPagar extends MY_Controller
                     if($response->status == true)
                     {
                         $datos = $response->data;
-
-
-                        $tajos = [];
-                        $ordenado = [];
-    
-                        for($j=0;$j<count($datos); $j++)
-                        {
-                             $tajos[] = [
-                                 'rfc_emisor' => $datos[$j]->rfc_emisor,
-                                 'nombre_emisor' => $datos[$j]->nombre_emisor
-                             ];
-                        }
-    
-                        foreach($tajos as $key => $row)
-                        {
-                            $aux[$key] = $row['rfc_emisor'];
-                        }
-    
-                        array_multisort($aux,SORT_ASC,$tajos);
-    
-                        foreach($tajos as $key => $row)
-                        {
-                            $ordenado[] = ['rfc_emisor' => $row['rfc_emisor'],'nombre_emisor' => $row['nombre_emisor']];
-                        }
-    
-    
-                        $datosr = array_unique($ordenado, SORT_REGULAR);
-    
-                        foreach($datosr as $lai)
-                        {
-    
-                            $this->pdf->Cell(200,7,$lai['rfc_emisor'].' - '.$lai['nombre_emisor'],0,0,'L',1);
-                            $this->pdf->Ln(10);
-    
-                            for($i=0; $i<count($datos); $i++)
-                            {
-    
-                                if($lai['rfc_emisor'] == $datos[$i]->rfc_emisor)
-                                {
+                           $i = 0;
+                           $j = 0;
+                        while ($j<count($datos))
+                        { 
+                            $lRfc = $datos[$j]->rfc_emisor;
+                            $this->pdf->Cell(200,7,$lRfc.' - '.$datos[$j]->nombre_emisor,0,0,'L',1);
+                           $this->pdf->Ln(10);
+                               while($i<count($datos) && $lRfc == $datos[$i]->rfc_emisor)
+                              {
                                     $this->pdf->Cell(15,1,$datos[$i]->serie,0,0,'C');
                                     $this->pdf->Cell(15,1,$datos[$i]->folio,0,0,'R');
                                     $this->pdf->Cell(25,1,date('d-m-Y',strtotime($datos[$i]->fecha)),0,0,'R');
@@ -737,18 +708,15 @@ class ReporteCuentasPagar extends MY_Controller
                                     $date1 = new DateTime(date('d-m-Y',strtotime($datos[$i]->fecha)));
                                     $date2 = new DateTime(date('d-m-Y'));
                                     $diff = $date1->diff($date2);
-
-
-                                    $this->pdf->Cell(15,1,$diff->days.' dias',0,0,'C');
+                                    $this->pdf->Cell(15,1,$datos[$i]->dias.' dias',0,0,'C');
                                     $this->pdf->Cell(25,1,'$ '.number_format($datos[$i]->total,2,'.',','),0,0,'R');
-        
-        
                                     $total = $total + $datos[$i]->total;
                                     
                                     $this->pdf->Ln(5);
-                                }
-    
-                            }
+                                
+                              $i = $i + 1;    
+                             }
+                        $j = $i;
                         }
                     }
                     else
